@@ -1,0 +1,17 @@
+Code Explainers
+
+This site contains source excerpts from:
+
+vLLM — https://github.com/vllm-project/vllm
+Copyright contributors to the vLLM project.
+
+vLLM Ascend — https://github.com/vllm-project/vllm-ascend
+Copyright Huawei Technologies Co., Ltd. All Rights Reserved.
+Copyright contributors to the vLLM Ascend project where specified upstream.
+
+Source excerpts retain their upstream provenance through pinned commit URLs,
+file paths and line numbers. The upstream projects distribute this code under
+the Apache License, Version 2.0. A copy is included in LICENSE.
+
+The explanations, illustrative identifiers, addresses and timeline layouts
+are educational adaptations, not captured traces or upstream source changes.
