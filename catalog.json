@@ -4,7 +4,7 @@
     {
       "slug": "kv-cache-pooling",
       "title": "KV Cache 池化与 P/D 分离 · 代码导览",
-      "summary": "独立开关 PD 分离与共享池，选择 V2 / V1 Pull、逐层 Push、V2 Push 或 D2RH；通过多实例时间线、元数据、内存快照与源码函数追踪完整 KV 路径。",
+      "summary": "按依赖启用 PD、P/D/两端池化与 D 读写权限；对照池优先 / PD 优先的实际来源选择，联动时间线、元数据、内存快照和固定版本源码。",
       "tags": [
         "vLLM",
         "Ascend",
@@ -14,9 +14,10 @@
         "PD",
         "Pull",
         "Push",
-        "D2RH"
+        "D2RH",
+        "MultiConnector"
       ],
-      "updated": "2026-11-17",
+      "updated": "2026-11-18",
       "source_revisions": {
         "vllm": "24420b7a341af37a9bc3186e6fc6062512e0aa58",
         "vllm-ascend": "76ea9d24f155afe032ad9ac6c98717f1f7334f36"

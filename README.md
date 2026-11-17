@@ -5,7 +5,16 @@
 - [目录首页](https://cocobronie2333-dot.github.io/code-explainers/)
 - [KV Cache 池化与 P/D 分离：Memcache / Mooncake](https://cocobronie2333-dot.github.io/code-explainers/kv-cache-pooling/)
 
-当前 KV Cache 讲解支持独立开启 / 关闭共享池与 PD 分离，PD 可选择 V2 Pull、V1 Pull、经典逐层 Push、实验性 V2 Push 和 D2RH。组合模式演示 P 端通过 AscendStore 复用前缀，再将 KV 交接给 D；D 端 DRAM staging 与共享池分别标注。每种路径保留事件、元数据、配置片段与固定版本源码入口。
+当前 KV Cache 讲解支持独立开启 / 关闭共享池与 PD 分离，PD 可选择 V2 Pull、V1 Pull、经典逐层 Push、实验性 V2 Push 和 D2RH。池化位置可选 P、D 或两端，D 的读写权限与外部来源顺序独立配置；D 端 DRAM staging 与共享池分别标注。每种路径保留事件、元数据、配置片段与固定版本源码入口。
+
+## 池化位置与 D 端来源选择
+
+- PD 与池化均开启后，才可选择 P / D / 两端；位置包含 D 时，才启用 `consumer_is_to_load` 与 `consumer_is_to_put`。D 可仅读、仅写或读写同时开启。
+- D 池读取开启后，才启用“池优先 / PD 优先”和池命中预设。顺序对应 D `MultiConnector` 的 `connectors` 数组，不是 `enable_prefix_caching`；本页本地前缀缓存固定开启。
+- 普通来源选择记录第一个正命中，继续查询后续子项，任何后续 `None` 仍令本轮等待；不取最大、不相加，也不顺次拼接两份外部前缀。池部分命中胜出时，剩余后缀由 D 计算。
+- 禁用项保留偏好，生成 JSON 与时间线使用生效值。整块异步读只在允许池读取时启用；逐层实际 `load_async=False`。
+
+页面同时展示 Ascend 分派与上游的区别：未选中子项通常收到空块表 / 0，observer 标志是例外。经典逐层 Push observer、非选中逐层 Store 的 `can_load` 保留，以及 P Store 与 V2 Push 的源块传递，均保留当前固定快照的源码核验点；页面不会把这些组合直接画成已验证成功。D2RH 即使最终未被选中，也可能已经在查询阶段启动第一跳 staging。
 
 ## 组织方式
 
