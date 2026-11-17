@@ -151,6 +151,49 @@ body[data-pd=true] .tl-row{height:83px}body[data-pd=true] .tl-event{height:60px;
 
 .placement-rules{grid-column:1/-1;margin:4px 0 0;padding:9px 0 0}.placement-rules>summary{font-size:11px;color:var(--pool)}
 
+
+/* Compact controls and an event inspector that shares the chart viewport. */
+:root{--reading-header-height:108px}
+html{scroll-padding-top:calc(var(--reading-header-height) + 12px)}
+header{padding-top:22px;padding-bottom:14px}header h1{font-size:clamp(27px,3vw,39px)}
+.reading-header{position:sticky;top:0;z-index:20;background:var(--bg);padding-bottom:9px}
+.reading-header .view-tabs{position:static;margin-bottom:0;padding:7px 0}
+.reading-summary{display:flex;align-items:center;justify-content:space-between;gap:12px;border:1px solid var(--line);border-radius:0 0 8px 8px;background:var(--paper);padding:9px 12px}
+#reading-effective{display:flex;align-items:center;gap:6px 18px;flex-wrap:wrap;min-width:0;font-size:12px}
+#reading-effective>span{display:flex;gap:7px;align-items:baseline}#reading-effective small{color:var(--muted);font-size:10px}#reading-effective b{font-weight:600}
+#reading-effective .reading-warning{color:var(--hbm);font-size:11px}#toggle-configuration{flex-shrink:0;min-height:33px;padding:5px 10px;font-size:11px}
+#configuration{grid-template-columns:1fr 1fr 1.1fr;gap:12px;margin:5px 0 10px;scroll-margin-top:0}
+#configuration .deployment-panel{padding:13px 16px;height:100%}#configuration .deployment-heading{margin:0 0 7px}#configuration .deployment-heading small{display:none}
+#configuration .configuration-status{font-size:11px;margin:0;overflow-wrap:anywhere;line-height:1.6}#configuration .deployment-heading h2{font-size:14px}
+.configuration-position .placement-setting{margin:0}.configuration-position .placement-setting>span{margin-bottom:5px}.configuration-position .placement-reason{font-size:10px;line-height:1.5;margin:5px 0 0}
+.configuration-details{margin:0 0 14px;padding:0;border:1px solid var(--line);border-radius:9px;background:var(--paper);scroll-margin-top:0}
+.configuration-details>summary{padding:10px 15px;font-size:12px;line-height:1.7}.configuration-details>summary small{font-size:10px;font-weight:400;color:var(--muted);margin-left:15px}
+.configuration-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;padding:7px 18px 18px;border-top:1px solid var(--line)}
+.configuration-section{min-width:0}.configuration-section>h3{font-size:14px;margin:10px 0}.configuration-section>p{font-size:12px;color:var(--muted)}.configuration-section .pd-variants{margin:9px 0;padding-top:9px}.configuration-section .pd-variant-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+.configuration-section .control-bar{grid-template-columns:1fr 1fr;padding:12px;gap:12px}.configuration-section .async-status{font-size:11px}.configuration-section .control-label{font-size:11px}
+.configuration-details>.placement-settings{border:0;border-top:1px solid var(--line);border-radius:0;margin:0;grid-template-columns:repeat(3,minmax(0,1fr));padding:12px 18px;gap:9px 20px}
+.configuration-details #d-hit-control{grid-column:span 2}.wb-context{margin:10px 0 15px}.scenario{margin-bottom:12px}.local-prefix-note{margin:9px 0 16px}
+.timeline-workspace{display:grid;grid-template-columns:minmax(0,1fr) minmax(360px,.7fr);gap:18px;align-items:start;scroll-margin-top:0}
+.timeline-graph{min-width:0}.timeline-details{min-width:0;position:sticky;top:calc(var(--reading-header-height) + 12px);max-height:calc(100dvh - var(--reading-header-height) - 26px);overflow:auto;overscroll-behavior:contain;border:1px solid var(--line);border-radius:9px;background:var(--paper);scrollbar-gutter:stable}
+.timeline-details .playback{position:sticky;top:0;z-index:5;margin:0;padding:10px;background:var(--paper);border-bottom:1px solid var(--line);gap:5px}.timeline-details .playback .spacer,.timeline-details .playback .speed-note{display:none}.timeline-details .playback button{padding:5px 8px;font-size:11px;min-height:33px}.timeline-details .step-count{font-size:10px;margin-left:auto}
+.timeline-details .timeline-inspector{display:block;margin:0;padding:14px;border:0}.timeline-inspector-header h3{font-size:20px;line-height:1.5;margin:5px 0 9px}.timeline-inspector-header>.detail-meta{font-size:10px}.timeline-inspector-header>code{font-size:12px;color:var(--pool);display:block;overflow-wrap:anywhere}.timeline-inspector-header>p{font-size:12px;line-height:1.8;color:var(--muted);margin:12px 0}
+.timeline-details .inspector-tabs{margin-top:14px;position:sticky;top:54px;z-index:4;background:var(--paper);padding:6px 0 10px;gap:3px}.timeline-details .inspector-tabs button{padding:5px 9px;font-size:12px;white-space:nowrap}.timeline-details .timeline-meta-tabs{flex-wrap:wrap}.timeline-details .timeline-meta pre{max-height:none;font-size:11px;line-height:1.8}.timeline-details .timeline-meta>p{font-size:10px}.timeline-details .timeline-api pre{font-size:11px}
+.timeline-details .memory-snapshot .block-grid{gap:2px}.timeline-details .memory-snapshot .memory-head{display:block}.timeline-details .memory-snapshot .block-cell{font-size:9px;padding:4px 1px}.timeline-details .memory-snapshot .route-note{font-size:10px}
+.timeline-selected-label{border-left:3px solid var(--pool);padding:8px 10px;background:var(--bg);margin:7px 0 10px;display:flex;gap:3px 10px;flex-wrap:wrap;font-size:12px;line-height:1.6}.timeline-selected-label>span{font-size:10px;color:var(--muted)}.timeline-selected-label>code{font-size:11px;color:var(--pool);width:100%;overflow-wrap:anywhere}
+.timeline-graph .chart-tools{margin-top:0;gap:6px}.timeline-graph .chart-tools small{font-size:10px}.timeline-graph .chart-tools button{min-height:33px}.timeline-graph .timeline-scroll{max-height:calc(100dvh - var(--reading-header-height) - 175px);min-height:260px;overflow:auto;scrollbar-gutter:stable;--lane-width:140px;overscroll-behavior:contain}
+#timeline-phases{position:sticky;top:0;z-index:6;height:72px}.tl-phase{overflow:hidden}.tl-phase span{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:normal;font-size:12px}.tl-phase small{font-size:10px}
+body .tl-row,body[data-pd=true] .tl-row{height:99px}body .tl-event,body[data-pd=true] .tl-event{height:79px;top:10px;padding:8px 9px}
+body .tl-event strong,body[data-pd=true] .tl-event strong{font-size:12px;line-height:1.5;overflow-wrap:normal;word-break:normal;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
+body .tl-event code,body[data-pd=true] .tl-event code{display:block;font-size:10px;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;line-height:1.6;margin-top:5px;word-break:normal;overflow-wrap:normal}
+.tl-event:focus-visible{z-index:5}.tl-event.tl-compact{padding:3px;border-radius:3px}.tl-event.tl-compact strong,.tl-event.tl-compact code{display:none}.tl-event.tl-compact:before{content:attr(data-event-number);display:block;text-align:center;font:10px/1.5 Consolas,monospace;overflow:hidden}
+.tl-lane,body[data-pd=true] .tl-lane{font-size:11px;line-height:1.6;padding:12px 9px}.tl-lane small,body[data-pd=true] .tl-lane small{font-size:10px}.timeline-graph .timeline-note{font-size:11px}.timeline-choice-details{margin:12px 0 0;padding-top:9px}.timeline-choice-details>summary{font-size:12px;color:var(--pool)}.timeline-choice-details .source-choice{padding:12px;margin:10px 0}.timeline-choice-details .choice-table{font-size:10px}
+@media(min-width:1600px){.timeline-workspace{grid-template-columns:minmax(0,1fr) 500px}}
+@media(max-width:1100px){.timeline-workspace{grid-template-columns:minmax(0,1fr) minmax(330px,.85fr);gap:12px}.timeline-details .timeline-inspector{padding:12px}.timeline-graph .timeline-scroll{--lane-width:115px}.timeline-graph .chart-tools>div{gap:4px}.chart-tools button{font-size:10px;padding:5px 7px}}
+@media(max-width:900px){#configuration{grid-template-columns:1fr 1fr 1fr}#configuration .deployment-panel{padding:12px}#configuration .deployment-heading{align-items:start;flex-direction:column;gap:6px}#reading-effective{gap:5px 12px}.configuration-details>.placement-settings{grid-template-columns:1fr 1fr}.configuration-details #d-hit-control{grid-column:auto}}
+@media(max-width:760px){.reading-header{padding-bottom:6px}.reading-summary{padding:8px 9px;gap:8px;align-items:start}#reading-effective{font-size:10px;gap:4px 9px}#reading-effective>span{gap:4px}#reading-effective small{font-size:9px}#toggle-configuration{font-size:10px;padding:5px 7px;min-height:31px}.reading-header .view-tabs{padding:6px 0;margin:0}.configuration-details>summary small{display:block;margin-left:14px}.configuration-grid{grid-template-columns:1fr;gap:5px;padding:4px 13px 14px}.configuration-details>.placement-settings{grid-template-columns:1fr;padding:12px 13px}.configuration-section .pd-variant-grid{grid-template-columns:1fr 1fr}.timeline-workspace{display:block}.timeline-details{position:static;max-height:none;overflow:visible;margin-top:16px;scrollbar-gutter:auto}.timeline-details .playback{position:static}.timeline-details .inspector-tabs{position:static}.timeline-graph .timeline-scroll{max-height:430px;min-height:240px;--lane-width:110px}.timeline-details .timeline-meta pre{max-height:460px}.timeline-details .memory-snapshot .block-grid{gap:4px}.timeline-inspector-header h3{font-size:19px}.timeline-selected-label{font-size:12px}.timeline-details .timeline-inspector{padding:14px}.timeline-title h3{font-size:18px}.timeline-reading{font-size:11px}.timeline-graph .timeline-note{font-size:10px}.timeline-graph .chart-tools button{font-size:11px}.timeline-graph .timeline-legend{font-size:10px}}
+@media(max-width:600px){#configuration{grid-template-columns:1fr 1fr;gap:8px}#configuration .configuration-position{grid-column:1/-1}#configuration .deployment-heading{flex-direction:row;align-items:center;gap:7px;flex-wrap:wrap}#configuration .deployment-heading h2{font-size:13px}#configuration .deployment-toggle button{padding:5px 9px;font-size:10px}#configuration .configuration-status{font-size:10px}.configuration-position #pool-side-control{display:flex;align-items:center;flex-wrap:wrap;gap:4px 12px}.configuration-position .placement-setting>span{font-size:10px;margin:0}.configuration-position .placement-reason{width:100%;font-size:9px}.configuration-position .segmented button{font-size:11px}.configuration-section .control-label{font-size:11px}}
+@media print{.reading-header{position:static}.reading-summary,#configuration,.configuration-details,.timeline-details .playback{display:none!important}.timeline-workspace{display:block}.timeline-details{position:static;max-height:none;overflow:visible}.timeline-graph .timeline-scroll{max-height:none;overflow:visible}.timeline-details .inspector-pane[hidden]{display:block!important}#timeline-phases{position:static}}
+
 </style>
 </head>
 <body>
@@ -721,7 +764,7 @@ document.addEventListener('click',event=>{
  if(b.dataset.timelineEvent){
   const model=timelineModel(),e=model.events.find(e=>e.id===b.dataset.timelineEvent);if(!e)return;
   stop();timelineSelection={key:timelineKey(),id:e.id};state.step=e.steps[0];state.source=0;render();
-  $('timeline-inspector').scrollIntoView({behavior:'auto',block:'nearest'});
+  if(matchMedia('(max-width:760px)').matches)$('timeline-inspector').scrollIntoView({behavior:'auto',block:'nearest'});
  }else if(b.dataset.timelineSubstep!==undefined){stop();state.step=Number(b.dataset.timelineSubstep);state.source=0;render();}
  else if(b.dataset.timelineTab){timelineMetaTab=b.dataset.timelineTab;renderTimeline();}
  else if(b.id==='timeline-more'){$('detail-title').scrollIntoView({behavior:'auto',block:'start'});}
@@ -789,7 +832,7 @@ function readWorkbenchURL(){
  for(const [key,values] of Object.entries({backend:['memcache','mooncake'],mode:['bulk','layer'],direction:['save','load']}))if(values.includes(q.get(key)))state[key]=q.get(key);
  if(['true','false'].includes(q.get('load_async')))state.asyncLoad=q.get('load_async');
  if(['overview','timeline','source','compare'].includes(q.get('view')))workbench.view=q.get('view');
- if(['metadata','memory'].includes(q.get('inspector')))workbench.inspector=q.get('inspector');
+ if(['operation','metadata','memory'].includes(q.get('inspector')))workbench.inspector=q.get('inspector');
  if(['scheduler','worker','transfer'].includes(q.get('metadata')))timelineMetaTab=q.get('metadata');
  const model=timelineModel(),event=model.events.find(e=>e.id===q.get('event'))||model.events.find(e=>e.id==='query');
  timelineSelection={key:timelineKey(),id:event.id};state.step=event.steps.find(i=>model.list[i].id===q.get('step'))??event.steps[0];
@@ -862,7 +905,7 @@ function renderWorkbench(){
 function openWorkbenchView(view,scroll=true){
  workbench.view=view;renderWorkbench();
  if(scroll)document.querySelector('.view-tabs').scrollIntoView({behavior:'auto',block:'start'});
- if(view==='timeline')requestAnimationFrame(()=>{updateWorkbenchLayout();focusTimelineEvent(false);});
+ if(view==='timeline')requestAnimationFrame(()=>{updateWorkbenchLayout();focusTimelineEvent(false);$('timeline-workspace').scrollIntoView({behavior:'auto',block:'start'});});
 }
 function focusTimelineEvent(focus){
  const button=document.querySelector(`[data-timeline-event="${currentTimeline.selected.id}"]`);if(!button)return;
@@ -978,7 +1021,7 @@ function buildDeploymentModel(){
   model.poolBase=base;const listOffset=list.length;
   list.push(...base.list.map((s,i)=>({...s,id:'p_pool_'+s.id,origin:'pool',poolIndex:i,actor:'P · '+s.actor,...(deployment.variant==='push'&&base.async&&s.id==='queue'?{description:'V2 Push 有待发送请求时把整轮 has_sync_kv_loads 置 True。因此 pre_forward 会提前调用各子 Connector 的 start_load_kv；AscendStore 仍根据自己的 load_async=True 把 GET 放进接收队列，P 请求仍需等待完成。',chain:'MooncakePushConnectorScheduler.build_connector_meta()\n → has_sync_kv_loads=True\n → pre_forward() → start_load_kv()\n → AscendStore 接收队列',refs:[...s.refs,'pd_push_prepare']}:{} )})));
   const lanes={scheduler:'p_scheduler',worker:'p_worker',npu:'p_npu',recv:'pool_load',send:'pool_save'};
-  for(const e of base.events){const mapped={...e,id:'pool_'+e.id,lane:lanes[e.lane],start:e.start+pStart,end:e.end+pStart,steps:e.steps.map(i=>i+listOffset),origin:'pool',poolEvent:e,depends:e.depends.map(d=>({...d,id:'pool_'+d.id})),title:'P · '+e.title};
+  for(const e of base.events){const mapped={...e,id:'pool_'+e.id,lane:lanes[e.lane],start:e.start+pStart,end:e.end+pStart,steps:e.steps.map(i=>i+listOffset),origin:'pool',poolEvent:e,description:e.description||(e.id==='query'?'先查询本地可复用前缀，再按 block hash 查询共享池。本例本地命中 256 token，池内额外命中 512 token；具体过程见事件子步骤。':base.list[e.steps[0]]?.description)||'准备本轮池化计划，具体处理见事件子步骤。',depends:e.depends.map(d=>({...d,id:'pool_'+d.id})),title:'P · '+e.title};
    if(e.id==='query')mapped.depends.push({id:isPush?'route_p':'query'});events.push(mapped);
    if(deployment.variant==='push'&&base.async&&e.id==='enqueue'){mapped.title='P · pre_forward 提交池异步加载';mapped.entry='pre_forward() → start_load_kv()';mapped.description='V2 Push 的 pending-send 标志使整轮 has_sync_kv_loads=True，提前到 pre_forward 调用加载入口；GET 仍在 AscendStore 后台线程执行。';mapped.source='pd_push_prepare';}
   }
@@ -1478,6 +1521,115 @@ document.addEventListener('click',event=>{
  const b=event.target.closest('button');if(!b||b.disabled)return;
  const bindings={poolSide:'poolSide',consumerLoad:'dLoad',consumerPut:'dPut',dOrder:'dOrder',dHit:'dHit'};
  for(const [attr,key] of Object.entries(bindings))if(b.dataset[attr]!==undefined){stop();deployment[key]=['dLoad','dPut'].includes(key)?b.dataset[attr]==='true':b.dataset[attr];workbench.sourceKey=null;state.source=0;const m=timelineModel(),e=m.events.find(e=>e.id==='query');state.step=e.steps[0];timelineSelection={key:timelineKey(),id:e.id};render();return;}
+});
+
+// Reading layout only: all runtime choices continue to use the shared models.
+workbench.fitTimeline=false;
+workbench.activeLanes=true;
+function setupReadingLayout(){
+ const shell=document.querySelector('.deployment-controls'),placement=document.querySelector('.placement-settings');
+ shell.id='configuration';shell.setAttribute('aria-label','常用部署开关');
+ const detailed=panelNode('details','configuration-details','<summary><span>详细配置与示例输入</span><small id="configuration-summary"></small></summary><div class="configuration-grid"></div>');detailed.id='configuration-details';shell.after(detailed);
+ const grid=detailed.querySelector('.configuration-grid');
+ const cards=[...shell.children];
+ for(const [i,card] of cards.entries()){
+  const section=panelNode('section','configuration-section');
+  section.setAttribute('aria-label',i?'池化参数':'PD 传输方案');
+  const title=panelNode('h3','',i?'池化参数与阅读侧重':'PD 传输方案');section.append(title);
+  for(const child of [...card.children])if(!child.classList.contains('deployment-heading'))section.append(child);
+  const status=panelNode('p','configuration-status');status.id=i?'configuration-pool-status':'configuration-pd-status';card.append(status);grid.append(section);
+ }
+ const position=panelNode('section','deployment-panel configuration-position');position.append($('pool-side-control'));shell.append(position);
+ detailed.append(placement);
+ $('pd-variant-details').open=true;
+ // The first expansion reveals all five variants; selecting one need not hide them.
+ $('pd-variant-details').querySelector('summary').textContent='五种 PD 方案 · 点击查看入口与边界';
+ const direction=document.querySelector('[data-direction]').closest('.control-group');direction.querySelector('.control-label').textContent='P / 单实例阅读侧重';direction.querySelector('.segmented').setAttribute('aria-label','P 或单实例阅读侧重');
+ $('deployment-path').hidden=true;
+ const header=panelNode('div','reading-header'),tabs=document.querySelector('.view-tabs');tabs.before(header);header.append(tabs);
+ const summary=panelNode('div','reading-summary','<div id="reading-effective" aria-live="polite"></div><button class="wb-button" id="toggle-configuration" aria-controls="configuration-details" aria-expanded="false">详细配置</button>');header.append(summary);
+ const updateExpanded=()=>{$('toggle-configuration').setAttribute('aria-expanded',String(detailed.open));$('toggle-configuration').textContent=detailed.open?'收起配置':'详细配置';};detailed.addEventListener('toggle',updateExpanded);
+ $('toggle-configuration').addEventListener('click',()=>{detailed.open=!detailed.open;updateExpanded();if(detailed.open)detailed.scrollIntoView({block:'start',behavior:'auto'});});
+ const section=document.querySelector('.timeline-section'),graph=panelNode('div','timeline-graph'),workspace=panelNode('div','timeline-workspace');workspace.id='timeline-workspace';
+ const tools=document.querySelector('.chart-tools');tools.querySelector('div').prepend(panelNode('button','', '全图概览'));tools.querySelector('button').id='timeline-fit';tools.querySelector('button').setAttribute('aria-pressed','false');
+ tools.querySelector('small').textContent='横轴为逻辑顺序；可横向滚动，条长不表示耗时';
+ const locate=panelNode('button','','定位选中事件');locate.id='timeline-locate';tools.querySelector('div').append(locate);
+ const active=panelNode('div','timeline-selected-label');active.id='timeline-selected-label';active.setAttribute('aria-live','polite');
+ const scroll=$('timeline-scroll');scroll.setAttribute('aria-label','可横向与纵向滚动的执行时间线');
+ graph.append(tools,active,scroll,document.querySelector('.timeline-legend'),$('timeline-note'));
+ const sourceDetails=panelNode('details','timeline-choice-details','<summary>展开 D 外部来源选择与分派表</summary>');sourceDetails.id='timeline-choice-details';sourceDetails.append($('d-choice-timeline'));graph.append(sourceDetails);
+ const aside=panelNode('aside','timeline-details');aside.setAttribute('aria-label','选中事件与元数据');aside.append(document.querySelector('.playback'),$('timeline-inspector'));
+ workspace.append(graph,aside);section.append(workspace);
+ const inspector=$('timeline-inspector'),operation=inspector.querySelector('.timeline-operation');
+ const context=panelNode('div','timeline-inspector-header');
+ for(const id of ['timeline-current-phase','timeline-current-title','timeline-entry','timeline-entry-sources','timeline-current-description','timeline-substeps'])context.append($(id));
+ inspector.prepend(context);
+ operation.id='inspector-operation';operation.classList.add('inspector-pane');operation.setAttribute('role','tabpanel');operation.setAttribute('aria-labelledby','inspector-tab-operation');
+ const tab=panelNode('button','','处理与接口');tab.id='inspector-tab-operation';tab.dataset.inspector='operation';tab.setAttribute('role','tab');tab.setAttribute('aria-controls','inspector-operation');
+ const data=inspector.querySelector('.inspector-data');data.querySelector('.inspector-tabs').prepend(tab);data.querySelector('.inspector-tabs').after(operation);
+ const q=new URL(location.href).searchParams;if(q.get('inspector')==='operation')workbench.inspector='operation';
+ if(q.get('chart')==='overview')workbench.fitTimeline=true;
+ const measure=()=>{document.documentElement.style.setProperty('--reading-header-height',Math.ceil(header.getBoundingClientRect().height)+'px');if(currentTimeline)updateWorkbenchLayout();};
+ new ResizeObserver(measure).observe(header);
+ window.addEventListener('resize',measure);
+}
+let readingSelectedKey='';
+function updateReadingLayout(){
+ if(!$('reading-effective')||!currentTimeline)return;
+ const m=currentTimeline.model,p=m.policy,v=PD_VARIANTS[deployment.variant],e=currentTimeline.selected;
+ const asyncActive=deployment.pool&&state.mode==='bulk'&&(pPoolEnabled()||dLoadEnabled())&&state.asyncLoad==='true';
+ const transferMode=state.mode==='layer'?'逐层':asyncActive?'整块异步':'整块同步';
+ $('configuration-pd-status').textContent=deployment.pd?v.title+' · '+v.connector:'单实例执行；保留已选 PD 方案';
+ $('configuration-pool-status').textContent=deployment.pool?NAMES[state.backend]+' · '+transferMode:'共享池关闭；保留后端与搬运偏好';
+ const side=!deployment.pool?'关闭':!deployment.pd?'单实例':{p:'P 端',d:'D 端',both:'两端'}[deployment.poolSide];
+ const chips=[['PD',deployment.pd?v.title:'关闭'],['池化',side],...(deployment.pool?[['Store',NAMES[state.backend]+' / '+transferMode]]:[]),...(m.dPool?[['D 来源',e.id==='stage_query'?'等待查询完成':p.winner+' · '+p.selected+' token']]:[])];
+ $('reading-effective').innerHTML=chips.map(([label,value])=>`<span><small>${esc(label)}</small><b>${esc(value)}</b></span>`).join('')+(m.hazard?'<span class="reading-warning">当前快照需核验</span>':'');
+ $('configuration-summary').textContent=deployment.pd?v.title+' · D 读 '+(dLoadEnabled()?'开':'关')+' / 写 '+(dPutEnabled()?'开':'关'):'后端、搬运粒度、阅读侧重与异步加载';
+ $('timeline-choice-details').hidden=!m.dPool;
+ $('timeline-selected-label').innerHTML=`<span>选中事件</span><strong>${esc(e.title)}</strong><code>${esc(e.entry)}</code>`;
+ const eventKey=deploymentKey()+'/'+e.id+'/'+state.step;if(readingSelectedKey!==eventKey){document.querySelector('.timeline-details').scrollTop=0;readingSelectedKey=eventKey;if(workbench.view==='timeline')requestAnimationFrame(()=>focusTimelineEvent(false));}
+ for(const id of ['operation','metadata','memory']){const active=workbench.inspector===id;$('inspector-'+id).hidden=!active;const button=$('inspector-tab-'+id);button.setAttribute('aria-selected',String(active));button.tabIndex=active?0:-1;}
+ $('timeline-locate').disabled=Boolean(e.service);
+ $('timeline-fit').setAttribute('aria-pressed',String(workbench.fitTimeline));$('timeline-zoom').disabled=workbench.fitTimeline;
+ $('timeline-zoom').textContent=workbench.zoom?'标准标签':'更大标签';
+}
+updateWorkbenchLayout=function(){
+ if(!currentTimeline)return;
+ const container=$('timeline-scroll'),m=currentTimeline.model,laneWidth=parseFloat(getComputedStyle(container).getPropertyValue('--lane-width'))||145;
+ const timed=m.events.filter(e=>!e.service&&e.end>e.start),unit=Math.min(...timed.map(e=>e.end-e.start));
+ const cardWidth=workbench.zoom?180:128;
+ const width=workbench.fitTimeline?container.clientWidth-2:Math.max(container.clientWidth-2,laneWidth+m.total/unit*cardWidth+10);
+ $('timeline-content').style.width=Math.ceil(width)+'px';
+ $('timeline-zoom').setAttribute('aria-pressed',String(workbench.zoom));$('timeline-active-lanes').setAttribute('aria-pressed',String(workbench.activeLanes));
+ document.querySelectorAll('[data-lane]').forEach(row=>{row.hidden=workbench.activeLanes&&!m.events.some(e=>e.lane===row.dataset.lane&&!e.service);});
+ const order=timelineOrderedEvents(m),selected=currentTimeline.selected;
+ document.querySelectorAll('[data-timeline-event]').forEach(button=>{const e=m.events.find(e=>e.id===button.dataset.timelineEvent),n=order.indexOf(e)+1;button.classList.toggle('is-dependency',selected.depends.some(dep=>dep.id===e.id));button.classList.toggle('tl-compact',workbench.fitTimeline);button.dataset.eventNumber=n;button.setAttribute('aria-label',`事件 ${n}：${e.title}；入口 ${e.entry}`);button.title=e.title+'\n入口：'+e.entry;});
+ document.querySelectorAll('.tl-phase').forEach(phase=>phase.title=phase.textContent);
+ requestAnimationFrame(drawTimelineDependencies);
+};
+// Keep the selected event in its scroll container; clicking a desktop event does
+// not move the document away from the chart and its adjacent inspector.
+focusTimelineEvent=function(focus){
+ const button=document.querySelector(`[data-timeline-event="${currentTimeline.selected.id}"]`);if(!button)return;
+ const container=$('timeline-scroll'),rect=button.getBoundingClientRect(),box=container.getBoundingClientRect();
+ const lane=parseFloat(getComputedStyle(container).getPropertyValue('--lane-width'))||145;
+ if(rect.left<box.left+lane||rect.right>box.right)container.scrollLeft+=rect.left-box.left-(container.clientWidth+lane)/2+rect.width/2;
+ const axis=$('timeline-phases').getBoundingClientRect().height;
+ if(rect.top<box.top+axis||rect.bottom>box.bottom)container.scrollTop+=rect.top-box.top-(container.clientHeight+axis)/2+rect.height/2;
+ if(focus)button.focus({preventScroll:true});
+};
+const readingRenderBase=renderWorkbench;
+renderWorkbench=function(){readingRenderBase();updateReadingLayout();};
+const readingTimelineBase=renderTimeline;
+renderTimeline=function(){const scroll=$('timeline-scroll'),left=scroll.scrollLeft,top=scroll.scrollTop;readingTimelineBase();updateReadingLayout();updateWorkbenchLayout();scroll.scrollLeft=left;scroll.scrollTop=top;};
+const readingURLBase=workbenchURL;
+workbenchURL=function(){const url=readingURLBase();if(workbench.fitTimeline)url.searchParams.set('chart','overview');else url.searchParams.delete('chart');return url;};
+setupReadingLayout();
+document.addEventListener('click',event=>{
+ const button=event.target.closest('button');if(!button)return;
+ if(button.id==='timeline-fit'){workbench.fitTimeline=!workbench.fitTimeline;updateReadingLayout();updateWorkbenchLayout();focusTimelineEvent(false);syncWorkbenchURL();}
+ else if(button.id==='timeline-locate')focusTimelineEvent(true);
+ if(button.dataset.pdVariant&&$('configuration-details').open)$('pd-variant-details').open=true;
 });
 
 render();
