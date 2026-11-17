@@ -9,7 +9,7 @@
 
 ```text
 index.html                 可搜索的目录首页
-catalog.json               标题、摘要、标签、更新时间和源码版本
+catalog.json               主题信息、源码版本与外部参考模板
 kv-cache-pooling/index.html 当前池化讲解
 skills/code-explainers/     配套 Codex skill、发布脚本与目录模板
 <new-topic>/index.html      后续独立主题
@@ -19,7 +19,7 @@ skills/code-explainers/     配套 Codex skill、发布脚本与目录模板
 
 ## 新增和更新
 
-使用个人 Codex skill `$code-explainers`：读取源码、生成或修改主题 HTML、登记 `catalog.json`、同步重建首页，再提交发布。可以指定仅本地生成。
+仅在明确要求生成或更新 HTML / 交互式讲解网页时使用个人 Codex skill `$code-explainers`：读取源码、制作 HTML、登记 `catalog.json`、同步重建首页，再提交发布。普通代码解释、调用链问答不会触发，也不会默认生成或发布网页。可以指定仅本地生成。
 
 手动维护时，为主题创建独立目录，将最终文档放为 `index.html`，并更新目录及首页。不要提交截图、聊天附件、依赖目录或本地凭据。
 
@@ -37,9 +37,24 @@ python "$HOME/.codex/skills/.system/skill-installer/scripts/install-skill-from-g
 
 安装完成后，在下一轮对话中使用 `$code-explainers`。
 
-也可以手动将整个 `skills/code-explainers` 目录复制到个人 skills 目录，保留 `agents/`、`assets/` 和 `scripts/` 的相对结构。通常目标为 `~/.codex/skills/code-explainers`；Windows 下为 `%USERPROFILE%\.codex\skills\code-explainers`。
+也可以手动将整个 `skills/code-explainers` 目录复制到个人 skills 目录，保留 `agents/`、`assets/`、`references/` 和 `scripts/` 的相对结构。通常目标为 `~/.codex/skills/code-explainers`；Windows 下为 `%USERPROFILE%\.codex\skills\code-explainers`。
 
 这个 skill 默认面向本仓库和对应 Pages 站点。用于其它账号时，需同步调整说明和脚本中的目标仓库与站点地址。
+
+## 参考模板
+
+首页单独收录原文入口，保留作者与完整定位链接：
+
+- [bowgneo · vLLM KV Connector 调度流程](https://bowgneo.github.io/posts/vllm-kv-connector-scheduling-flow/)：学习阶段拆分、请求实例、线程与同步关系。
+- [biuapha · GLM-5.3-Flash 算子与 KV cache 分析](https://biuapha.github.io/LLM-Analysis/glm53_prefill_decode_operator_block_diagram.html?v=dede271#prompt-links)：学习总览下钻、tensor 详情、容量口径与来源索引。
+
+可复用的方法与适用范围见 [skill 参考说明](skills/code-explainers/references/templates.md)。参考以外链形式管理，原文内容归原作者；生成新讲解时重新核对目标源码和版本。
+
+维护 `catalog.json` 的 `references` 后，用以下命令重建首页；后续登记新主题也会保留这些参考：
+
+```powershell
+python skills/code-explainers/scripts/manage_explainers.py rebuild --repo-dir .
+```
 
 ## 代码来源
 

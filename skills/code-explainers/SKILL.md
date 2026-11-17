@@ -1,11 +1,13 @@
 ---
 name: code-explainers
-description: 当用户想理解软件特性、源码或执行调用链时，基于实际代码生成交互式 HTML，并发布到个人 code-explainers 仓库和 GitHub Pages 目录首页。也用于更新讲解和目录；普通代码修复与实现任务不触发。
+description: 仅在用户明确要求生成或更新 HTML 代码讲解、交互式讲解网页时使用，基于实际源码制作并发布到个人 code-explainers 仓库与 GitHub Pages。也用于明确请求维护该讲解目录与参考模板；普通代码解释、调用链问答或代码修改不触发。
 ---
 
 # 代码讲解与发布
 
-用户的个人偏好：讲解特性 / 代码时，默认交付交互式 HTML，并统一发布到以下专用仓库。若本轮只要文字、只要本地文件、禁止公开或指定别的目标，以本轮要求为准。
+只有用户明确要求 HTML / 交互式讲解网页，才进入生成与发布工作流。例如“生成 HTML 解释这个特性”“把调用链做成可交互网页”“更新已有 HTML”。仅问“解释这段代码”“调用顺序是什么”“这个特性怎么实现”时，直接按普通问答处理，不启用本 skill，也不默认创建网页或发布。
+
+触发后，默认将请求的 HTML 统一发布到以下专用仓库。若本轮只要本地文件、禁止公开或指定别的目标，以本轮要求为准。明确请求维护本仓库首页、参考模板或本 skill 时，只做相应维护，不额外生成主题。
 
 - 仓库：`https://github.com/cocobronie2333-dot/code-explainers`
 - 首页：`https://cocobronie2333-dot.github.io/code-explainers/`
@@ -20,6 +22,8 @@ description: 当用户想理解软件特性、源码或执行调用链时，基�
 
 优先单文件、无构建依赖的 HTML，支持离线和窄屏。现有 `kv-cache-pooling/index.html` 是设计参考，不是强制模板。使用固定 commit 的源码 permalink；站内链接使用相对路径。
 
+设计新讲解或调整布局时，阅读 [参考模板与适用模式](references/templates.md)，按内容选择章节导览、执行时间线或可下钻的数据流。模板中的版本、模型参数和性能数据不作为当前任务的源码证据。
+
 ## 登记和首页
 
 运行 `scripts/manage_explainers.py` 登记主题并重建静态首页。新 slug 新增，同 slug 更新；摘要和标签要便于以后检索。脚本会转换已知 `SOURCES` 中的本地路径标识，不上传附件、截图、依赖或凭据。
@@ -29,6 +33,12 @@ python <skill-dir>/scripts/manage_explainers.py add --repo-dir D:/workspace/code
 ```
 
 验证页面主交互、元数据和实际接口对应关系，以及首页目录链接。可用浏览器时检查桌面与窄屏；未做设备测试时不要声称验证了硬件行为。
+
+外部参考网页登记在 `catalog.json` 的 `references` 数组，以原文链接、作者、摘要和标签展示；保留完整 query / anchor。维护参考入口后运行以下命令重建首页，再检查并明确提交相应路径。原文入口与本仓库讲解分区，转载内容另行确认许可与来源。
+
+```powershell
+python <skill-dir>/scripts/manage_explainers.py rebuild --repo-dir D:/workspace/code-explainers
+```
 
 ## 发布
 

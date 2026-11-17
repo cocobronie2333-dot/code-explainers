@@ -38,5 +38,36 @@
         "cannbot-dsl": "b8231831450679512006a5e699811506a1465e80"
       }
     }
+  ],
+  "references": [
+    {
+      "id": "vllm-kv-connector-scheduling-flow",
+      "title": "vLLM KV Connector 调度流程",
+      "author": "bowgneo",
+      "url": "https://bowgneo.github.io/posts/vllm-kv-connector-scheduling-flow/",
+      "summary": "按 Scheduler、Model Runner V2、P/D 交接与 AscendStore 四章梳理执行路径。参考重点：贯穿请求实例、进程与线程边界、函数入口及同步点的解释。",
+      "tags": [
+        "vLLM",
+        "KV Connector",
+        "调用链",
+        "时序图"
+      ],
+      "added": "2026-11-17"
+    },
+    {
+      "id": "glm53-operator-kv-analysis",
+      "title": "GLM-5.3-Flash · 算子与 KV cache 分析",
+      "author": "biuapha",
+      "url": "https://biuapha.github.io/LLM-Analysis/glm53_prefill_decode_operator_block_diagram.html?v=dede271#prompt-links",
+      "summary": "包含算子与 tensor 数据流、KV 分组、容量计算及性能分析。参考重点：总览下钻、节点详情、shape / 公式 / 源码联动，以及来源和估算口径说明；入口定位到 prompt 来源索引。",
+      "tags": [
+        "GLM",
+        "算子",
+        "Tensor",
+        "KV cache",
+        "交互模板"
+      ],
+      "added": "2026-11-17"
+    }
   ]
 }

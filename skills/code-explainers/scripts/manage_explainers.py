@@ -68,8 +68,25 @@ def homepage(catalog):
         tags = "".join("<span>" + html.escape(tag) + "</span>" for tag in item["tags"])
         search = html.escape(" ".join([item["title"], item["summary"], *item["tags"]]).lower(), quote=True)
         cards.append(f'<article data-search="{search}"><div class="item-meta"><time>{html.escape(item["updated"])}</time><div class="tags">{tags}</div></div><h2><a href="{item["slug"]}/">{title} ↗</a></h2><p>{summary}</p><a class="read" href="{item["slug"]}/">打开交互讲解 →</a></article>')
+    references = []
+    for item in catalog.get("references", []):
+        if not item["url"].startswith("https://"):
+            raise ValueError("Reference URLs must use HTTPS")
+        title, summary = html.escape(item["title"]), html.escape(item["summary"])
+        author, url = html.escape(item["author"]), html.escape(item["url"], quote=True)
+        tags = "".join("<span>" + html.escape(tag) + "</span>" for tag in item["tags"])
+        search = html.escape(" ".join([item["title"], item["summary"], item["author"], *item["tags"]]).lower(), quote=True)
+        references.append(f'<article class="reference" data-search="{search}"><div class="item-meta"><span>外部参考 · {author}</span><div class="tags">{tags}</div></div><h3><a href="{url}" target="_blank" rel="noopener">{title} ↗</a></h3><p>{summary}</p><a class="read" href="{url}" target="_blank" rel="noopener">阅读原文与交互 →</a></article>')
     template = (Path(__file__).resolve().parents[1] / "assets/catalog-template.html").read_text(encoding="utf-8")
-    return template.replace("__CARDS__", "\n".join(cards))
+    return template.replace("__CARDS__", "\n".join(cards)).replace("__REFERENCES__", "\n".join(references))
+
+
+def rebuild(root):
+    catalog = json.loads((root / "catalog.json").read_text(encoding="utf-8"))
+    if catalog.get("version") != 1:
+        raise ValueError("Unsupported catalog schema")
+    (root / "index.html").write_text(homepage(catalog), encoding="utf-8")
+    print(json.dumps({"rebuilt": str(root / "index.html"), "topics": len(catalog["items"]), "references": len(catalog.get("references", []))}), flush=True)
 
 
 def add(args):
@@ -157,9 +174,13 @@ def main():
     check = commands.add_parser("verify")
     check.add_argument("--repo-dir", required=True)
     check.add_argument("--slug", required=True)
+    refresh = commands.add_parser("rebuild")
+    refresh.add_argument("--repo-dir", required=True)
     args = parser.parse_args()
     if args.command == "add":
         add(args)
+    elif args.command == "rebuild":
+        rebuild(Path(args.repo_dir).resolve())
     else:
         verify(Path(args.repo_dir).resolve(), args.slug)
 
