@@ -48,13 +48,33 @@
 <p><code>candidates / candidate_lengths</code> 的内容来自 candidate-source 层的 QLI 输出；prepare 不生成候选内容。需要沿用这些行 buffer 时，adapter 根据 rows 选择；若 replay 从会重算候选输出的 cut layer 开始，相应 buffer 由该层重新填充。K 数据来自既有 index cache，Q/weights 来自后续模型投影。</p>
 <p>例如教学 batch 的 query 边界从 <code>[0,1,7,13]</code> 变为 <code>[0,1,7,9]</code>，QSLI 按 9 个保留 query 的布局工作，K 侧仍使用原序列长度派生的 cache 长度，并没有同步缩成 9 个 K。</p>
 </section>
-<section class="card"><h2>固定版本源码</h2><ul id="sources"></ul><p class="muted">来源代码采用 Apache-2.0。Copyright contributors to the vLLM project。参见站点 <a href="../NOTICE">NOTICE</a> 与 <a href="../LICENSE">LICENSE</a>。本页说明及示例为教学改编。</p></section>
+<section class="card"><h2>QSLI 专用 metadata 如何生成？</h2><p><strong>它生成计算核的任务范围和跨核 TopK 归并计划。</strong>vLLM Ascend 的 Torch dispatcher 实现只透传参数，按需导入 <code>ops.quant_sparse_lightning_indexer_metadata_dsl</code>。下面的底层说明依据官方 CANNBot-DSL 源码 <code>b8231831450679512006a5e699811506a1465e80</code> 的 PA_BBND 路径；当前 vLLM Ascend 固定的 wheel 为 cannbot-arena-net-ops 0.1.0，本机未安装该 wheel，不能据此断言两个版本的内部实现完全相同。</p>
+<ol><li><strong>校验输入：</strong>本路径要求 NPU 上 int32 序列长度与候选长度、Q/K 布局 TND/PA_BBND，32 个 Q heads、1 个 K head、逻辑 head_dim=128、quant_mode=1、candidate_block_size=8。候选长度可为 [T] 或 [T,1]。</li>
+<li><strong>分配输出并下发：</strong>输出 int32[1024]，另分配 GM scratch；优先加载预打包的 AI CPU .so，否则首次编译并缓存。把设备地址和标量参数传给 AI CPU，在当前 NPU stream 上发射；AI CPU 直接读取运行期 tensor 内容。</li>
+<li><strong>逐 query 计算任务：</strong>由 cu_seqlens_q 找请求及请求内偏移，用 seqused_k、mask 和压缩参数判断是否存在可见 K；有可见 K 时，调度长度为 candidate_length × 8，按 512 token 向上取整得到候选 tile 数。这里的 tile 是候选列表里的分段，不是 K 序列的绝对位置。逐 token causal 过滤留给主 QSLI。</li>
+<li><strong>估算工作量并分核：</strong>包含完整 tile 和尾 tile 的成本估算，依次尝试整 batch、整 query 和候选 tile 分配，平衡各 Cube worker 的工作量。不能直接把候选 tile 数当成实际耗时。</li>
+<li><strong>生成 LI/LD 记录：</strong>LI 描述各核负责的 (batch, query, candidate_tile) 起止边界。query 跨核时，LD 描述临时 TopK 的 workspace 起点、分片数及输出行，主算子随后归并；未使用区域清零。</li></ol>
+<details><summary>展开：causal 判断与 int32[1024] 布局</summary><p>对一个有效 query，令 K 为 compressed cache 长度、U 为有效 query 数、m 为请求内偏移、r 为压缩比、rem 为残差，mask=3 时：</p><pre>visible = min(K, max(0, floor((K*r + rem - U + m + 1) / r)))
+length  = candidate_length * 8   # visible > 0 时；否则为 0
+tiles   = ceil(length / 512)
+
+LI record (8 × int32):
+  enable, begin_B, begin_M, begin_tile,
+  end_B, end_M, end_tile, first_LD_workspace
+LD record (8 × int32), 从第 36 条记录开始:
+  enable, B, M, workspace_base, part_count,
+  row_start, row_count, reserved</pre><p>数组可视为 [128,8]。LI 区预留 36 条记录，LD 区预留 72 条，余下 20 条清零；实际启用条数由硬件及分核结果决定。接口是算子私有 ABI，应由配套 metadata 算子生成。</p></details>
+<p>教学例子：每个 query 有 128 个有效候选块，则有 1024 个候选 token、2 个候选 tile；2048 个块对应 16384 个候选 token、32 个 tile。是否拆核仍由全批工作量和可用核数决定。</p>
+<p>这个阶段不接收候选块号、Q/K 特征或 block_table，因此不会计算 QK 分数、筛选候选内容或访问具体 K 页。QSLI 主算子才读取这些数据。候选数量、序列长度或配置改变后，需要重新生成计划；不能只因输出 shape 固定就直接复用。</p>
+<p class="muted">官方来源：<a href="https://gitcode.com/cann/cannbot-dsl/blob/b8231831450679512006a5e699811506a1465e80/samples/attention/quant_sparse_lightning_indexer_metadata/quant_sparse_lightning_indexer_metadata.py">metadata 实现（固定 commit）</a> · <a href="https://gitcode.com/cann/cannbot-dsl/blob/b8231831450679512006a5e699811506a1465e80/samples/attention/quant_sparse_lightning_indexer_metadata/README.md">接口与 ABI 文档</a> · <a href="https://cannbot-dsl.gitcode.com/zh/guide/aicpu.html">AI CPU 与调度计划</a>。以上为源码的说明性改编；CANNBot 原仓使用 CANN Open Software License Agreement Version 2.0，本页没有复制其实现代码。未运行 AI CPU/NPU 验证。</p></section>
+<section class="card"><h2>固定版本源码</h2><ul id="sources"></ul><p class="muted">上述 vLLM 源码文件中的 Apache-2.0 标头及 Copyright contributors to the vLLM project 见各来源。packaged_attention.py 与外部 CANNBot 来源另采用 CANN Open Software License Agreement Version 2.0。参见站点 <a href="../NOTICE">NOTICE</a> 与 <a href="../LICENSE">LICENSE</a> 及外部仓库许可证。本页说明及示例为教学改编。</p></section>
 <footer>交互模型只模拟普通非 PCP 的行选择规则；复杂分布式行为按源码文字说明。未把示意数据当作实际运行记录。</footer>
 </main><script>
 const base='https://github.com/cocobronie2333-dot/vllm-ascend/blob/76ea9d24f155afe032ad9ac6c98717f1f7334f36/';
 const sources=[['prepare 与分支','vllm_ascend/models/deepseek_v41/decoder_replay_state.py',224],['构建 plan、DP 协调、紧凑布局','vllm_ascend/models/deepseek_v41/decoder_replay_state.py',270],['attention metadata 与 forward_context','vllm_ascend/models/deepseek_v41/decoder_replay_state.py',358],['调用点与 keeps_rows','vllm_ascend/models/deepseek_v41/engram/model_state.py',117],['后续 gather / run / scatter','vllm_ascend/models/deepseek_v41/decoder_replay_layers.py',45],['行映射与 replay_start kernel','vllm_ascend/ops/triton/decoder_replay.py',12],['混合 batch 单测示例','tests/ut/models/test_deepseek_v41_decoder_replay_state.py',77]];
 document.querySelector('#sources').innerHTML=sources.map(([name,path,line])=>`<li><a href="${base+path}#L${line}">${name}</a> <span class="muted">${path}:${line}</span></li>`).join('');
 document.querySelector('#sources').innerHTML += [['QSLI 字段与专用 metadata','vllm_ascend/models/deepseek_v41/mixed_quant_attention.py',106],['QSLI 路由条件','vllm_ascend/models/deepseek_v41/mixed_quant_attention.py',178],['attention 向 indexer 传递 metadata','vllm_ascend/attention/dsa_v41.py',643],['cache 长度派生','vllm_ascend/attention/dsa_v41.py',1192]].map(([name,path,line])=>`<li><a href="${base+path}#L${line}">${name}</a> <span class="muted">${path}:${line}</span></li>`).join('');
+document.querySelector('#sources').innerHTML += `<li><a href="${base}vllm_ascend/ops/packaged_attention.py#L380">Torch dispatcher metadata 透传实现</a> · <a href="${base}vllm_ascend/ops/packaged_attention.py#L254">fake shape 实现</a></li>`;
 const phases=[['1 清理','清空 layers.rows、context_factory、num_padded_rows，以及 replay PCP context、dp_tokens、metadata。默认恢复原 batch 路径，避免上一步 replay 配置泄漏到本步。'],['2 初始化与门控','首次调用创建缓存与 builder，warmup gather。for_capture、mode != NONE 或 profile 时返回；DP>1 且跳过同步/协调时也返回。'],['3 生成计划','普通路径按 idx_mapping_np 映射到请求槽。仅 is_prefilling 且 !keeps_rows 的请求取 min(query_len, window)，保留其尾部。PCP 先走全局尾窗口的专用规划。'],['4 DP 协调','记录本地有效数与执行宽度，dummy 有效数归零。汇总各 replica 的 compaction flag 和 token 数。无人压缩则返回；仅 peer 压缩则只发布 context_factory。'],['5 准备并发布','本地需要压缩时，cumsum 得到 offsets，算 dropped_before 并上传；kernel 生成 rows/positions/slots/replay_start，重建 metadata；最后设置 layers.rows、num_actual_rows 与 context_factory。']];
 function showPhase(i){document.querySelectorAll('#steps button').forEach((b,j)=>b.setAttribute('aria-pressed',String(i===j)));document.querySelector('#detail').innerHTML=`<h3>${phases[i][0]}</h3><p>${phases[i][1]}</p>`;}
 document.querySelector('#steps').innerHTML=phases.map((p,i)=>`<button type="button" data-phase="${i}" aria-pressed="false">${p[0]}</button>`).join('');document.querySelectorAll('#steps button').forEach((b,i)=>b.addEventListener('click',()=>showPhase(i)));showPhase(0);
