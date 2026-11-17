@@ -3,14 +3,18 @@
   "items": [
     {
       "slug": "kv-cache-pooling",
-      "title": "KV Cache 池化 · HBM ↔ DRAM 代码导览",
-      "summary": "通过路径总览、调用时间线、源码函数和后端对照四个联动视图，探索 Memcache / Mooncake 的整块、逐层与异步 Load / Save；支持元数据和内存快照、函数检索及当前视图分享。",
+      "title": "KV Cache 池化与 P/D 分离 · 代码导览",
+      "summary": "独立开关 PD 分离与共享池，选择 V2 / V1 Pull、逐层 Push、V2 Push 或 D2RH；通过多实例时间线、元数据、内存快照与源码函数追踪完整 KV 路径。",
       "tags": [
         "vLLM",
         "Ascend",
         "KV-Cache",
         "Memcache",
-        "Mooncake"
+        "Mooncake",
+        "PD",
+        "Pull",
+        "Push",
+        "D2RH"
       ],
       "updated": "2026-11-17",
       "source_revisions": {

@@ -3,7 +3,9 @@
 用交互式 HTML 解释真实源码中的特性、调用链、数据流与并行依赖。
 
 - [目录首页](https://cocobronie2333-dot.github.io/code-explainers/)
-- [KV Cache 池化：Memcache / Mooncake](https://cocobronie2333-dot.github.io/code-explainers/kv-cache-pooling/)
+- [KV Cache 池化与 P/D 分离：Memcache / Mooncake](https://cocobronie2333-dot.github.io/code-explainers/kv-cache-pooling/)
+
+当前 KV Cache 讲解支持独立开启 / 关闭共享池与 PD 分离，PD 可选择 V2 Pull、V1 Pull、经典逐层 Push、实验性 V2 Push 和 D2RH。组合模式演示 P 端通过 AscendStore 复用前缀，再将 KV 交接给 D；D 端 DRAM staging 与共享池分别标注。每种路径保留事件、元数据、配置片段与固定版本源码入口。
 
 ## 组织方式
 
