@@ -30,12 +30,31 @@
 <tr><td><code>layers.context_factory</code></td><td>指向 forward_context。后续执行 decoder 时才进入上下文，切换 metadata、DP 计数、padding/MC2 mask 等；退出时恢复外层上下文与共享 MC2 mask。</td></tr>
 </tbody></table></div><p>首次初始化分配 slot buffer，创建非 circular KV group 中适用的 DSA metadata builders、准备 source RoPE，并 warmup gather kernel。初始化发生在 capture/profile 等提前退出之前。</p>
 <p>若 adapter 配有 <code>write_batch_kv</code>，它会先为全部 token 写 cut layer 的共享 KV，再进入紧凑 replay 上下文。裁剪的是后续 query/状态计算布局，并不会在 prepare 中删除已有 KV cache。</p></section>
+<section class="card"><h2>这些内容会给 QSLI 使用吗？</h2><p><strong>会，后续层走 A5 packed-cache 且 uses_candidate_filter 的路径时会使用。</strong>普通非 index-source 层直接复用 shared.topk_indices，不会再次调用 QSLI。</p>
+<pre>prepare → _build_metadata → self.metadata
+  → forward_context 设置 attn_metadata
+  → AscendDSAV41Impl._get_layer_metadata
+  → _select_sparse_indices(metadata.indexer.cache)
+  → indexer.select_projected → run_a5_indexer → _qsli
+  → quant_sparse_lightning_indexer_metadata
+  → quant_sparse_lightning_indexer</pre>
+<div class="table-wrap"><table><thead><tr><th>数据来源</th><th>QSLI 如何使用</th></tr></thead><tbody>
+<tr><td>紧凑 query_start_loc（offsets）</td><td>成为 source_metadata.query_start_loc，传入 cu_seqlens_q；专用 metadata 算子和主 QSLI 算子均使用。</td></tr>
+<tr><td>原请求 seq_lens 与 block table</td><td>builder 派生 cache_seq_lens/cmp_residual，传为 seqused_k/cmp_residual_k；block_table 供 QSLI 访问分页 K。C2 时长度除以 2 取整，余数作为 residual。</td></tr>
+<tr><td>layers.rows</td><td>adapter 据此压缩 hidden states 和所需共享行 buffer，使后续 Q/weights、candidates、candidate_lengths 对齐同一 token 顺序。rows 本身不是 QSLI 参数。</td></tr>
+<tr><td>紧凑 positions 与 RoPE</td><td>间接用于 query RoPE；positions 也用于算子后 prepare_indexer_indices 的结果整理，并非直接传给原始 QSLI 算子。</td></tr>
+</tbody></table></div>
+<p><strong>区分两种 metadata：</strong>prepare 的 builder 可生成 <code>source_metadata.qli_metadata</code>。但 <code>_qsli</code> 会移除 common 中这个 metadata，再用 <code>candidate_lengths</code>、query 边界和 K 长度调用 <code>quant_sparse_lightning_indexer_metadata</code>，生成真正传给 QSLI 的专用 tensor。</p>
+<p><code>candidates / candidate_lengths</code> 的内容来自 candidate-source 层的 QLI 输出；prepare 不生成候选内容。需要沿用这些行 buffer 时，adapter 根据 rows 选择；若 replay 从会重算候选输出的 cut layer 开始，相应 buffer 由该层重新填充。K 数据来自既有 index cache，Q/weights 来自后续模型投影。</p>
+<p>例如教学 batch 的 query 边界从 <code>[0,1,7,13]</code> 变为 <code>[0,1,7,9]</code>，QSLI 按 9 个保留 query 的布局工作，K 侧仍使用原序列长度派生的 cache 长度，并没有同步缩成 9 个 K。</p>
+</section>
 <section class="card"><h2>固定版本源码</h2><ul id="sources"></ul><p class="muted">来源代码采用 Apache-2.0。Copyright contributors to the vLLM project。参见站点 <a href="../NOTICE">NOTICE</a> 与 <a href="../LICENSE">LICENSE</a>。本页说明及示例为教学改编。</p></section>
 <footer>交互模型只模拟普通非 PCP 的行选择规则；复杂分布式行为按源码文字说明。未把示意数据当作实际运行记录。</footer>
 </main><script>
 const base='https://github.com/cocobronie2333-dot/vllm-ascend/blob/76ea9d24f155afe032ad9ac6c98717f1f7334f36/';
 const sources=[['prepare 与分支','vllm_ascend/models/deepseek_v41/decoder_replay_state.py',224],['构建 plan、DP 协调、紧凑布局','vllm_ascend/models/deepseek_v41/decoder_replay_state.py',270],['attention metadata 与 forward_context','vllm_ascend/models/deepseek_v41/decoder_replay_state.py',358],['调用点与 keeps_rows','vllm_ascend/models/deepseek_v41/engram/model_state.py',117],['后续 gather / run / scatter','vllm_ascend/models/deepseek_v41/decoder_replay_layers.py',45],['行映射与 replay_start kernel','vllm_ascend/ops/triton/decoder_replay.py',12],['混合 batch 单测示例','tests/ut/models/test_deepseek_v41_decoder_replay_state.py',77]];
 document.querySelector('#sources').innerHTML=sources.map(([name,path,line])=>`<li><a href="${base+path}#L${line}">${name}</a> <span class="muted">${path}:${line}</span></li>`).join('');
+document.querySelector('#sources').innerHTML += [['QSLI 字段与专用 metadata','vllm_ascend/models/deepseek_v41/mixed_quant_attention.py',106],['QSLI 路由条件','vllm_ascend/models/deepseek_v41/mixed_quant_attention.py',178],['attention 向 indexer 传递 metadata','vllm_ascend/attention/dsa_v41.py',643],['cache 长度派生','vllm_ascend/attention/dsa_v41.py',1192]].map(([name,path,line])=>`<li><a href="${base+path}#L${line}">${name}</a> <span class="muted">${path}:${line}</span></li>`).join('');
 const phases=[['1 清理','清空 layers.rows、context_factory、num_padded_rows，以及 replay PCP context、dp_tokens、metadata。默认恢复原 batch 路径，避免上一步 replay 配置泄漏到本步。'],['2 初始化与门控','首次调用创建缓存与 builder，warmup gather。for_capture、mode != NONE 或 profile 时返回；DP>1 且跳过同步/协调时也返回。'],['3 生成计划','普通路径按 idx_mapping_np 映射到请求槽。仅 is_prefilling 且 !keeps_rows 的请求取 min(query_len, window)，保留其尾部。PCP 先走全局尾窗口的专用规划。'],['4 DP 协调','记录本地有效数与执行宽度，dummy 有效数归零。汇总各 replica 的 compaction flag 和 token 数。无人压缩则返回；仅 peer 压缩则只发布 context_factory。'],['5 准备并发布','本地需要压缩时，cumsum 得到 offsets，算 dropped_before 并上传；kernel 生成 rows/positions/slots/replay_start，重建 metadata；最后设置 layers.rows、num_actual_rows 与 context_factory。']];
 function showPhase(i){document.querySelectorAll('#steps button').forEach((b,j)=>b.setAttribute('aria-pressed',String(i===j)));document.querySelector('#detail').innerHTML=`<h3>${phases[i][0]}</h3><p>${phases[i][1]}</p>`;}
 document.querySelector('#steps').innerHTML=phases.map((p,i)=>`<button type="button" data-phase="${i}" aria-pressed="false">${p[0]}</button>`).join('');document.querySelectorAll('#steps button').forEach((b,i)=>b.addEventListener('click',()=>showPhase(i)));showPhase(0);

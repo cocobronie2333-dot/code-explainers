@@ -21,14 +21,15 @@
     {
       "slug": "decoder-replay-prepare",
       "title": "DecoderReplayState.prepare：子批次准备",
-      "summary": "逐步追踪 prefill 尾窗口裁剪、行映射、attention 元数据与 DP/PCP 协调，区分 prepare 和后续 decoder 执行。",
+      "summary": "追踪 prefill 尾窗口裁剪、attention 元数据与 DP/PCP 协调，以及重建字段如何进入 QSLI。",
       "tags": [
         "vllm-ascend",
         "DeepSeek",
         "decoder",
         "replay",
         "DP",
-        "PCP"
+        "PCP",
+        "QSLI"
       ],
       "updated": "2026-11-17",
       "source_revisions": {
