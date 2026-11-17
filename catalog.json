@@ -17,6 +17,23 @@
         "vllm": "24420b7a341af37a9bc3186e6fc6062512e0aa58",
         "vllm-ascend": "76ea9d24f155afe032ad9ac6c98717f1f7334f36"
       }
+    },
+    {
+      "slug": "decoder-replay-prepare",
+      "title": "DecoderReplayState.prepare：子批次准备",
+      "summary": "逐步追踪 prefill 尾窗口裁剪、行映射、attention 元数据与 DP/PCP 协调，区分 prepare 和后续 decoder 执行。",
+      "tags": [
+        "vllm-ascend",
+        "DeepSeek",
+        "decoder",
+        "replay",
+        "DP",
+        "PCP"
+      ],
+      "updated": "2026-11-17",
+      "source_revisions": {
+        "vllm-ascend": "76ea9d24f155afe032ad9ac6c98717f1f7334f36"
+      }
     }
   ]
 }
