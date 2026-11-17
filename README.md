@@ -11,6 +11,7 @@
 index.html                 可搜索的目录首页
 catalog.json               标题、摘要、标签、更新时间和源码版本
 kv-cache-pooling/index.html 当前池化讲解
+skills/code-explainers/     配套 Codex skill、发布脚本与目录模板
 <new-topic>/index.html      后续独立主题
 ```
 
@@ -23,6 +24,14 @@ kv-cache-pooling/index.html 当前池化讲解
 手动维护时，为主题创建独立目录，将最终文档放为 `index.html`，并更新目录及首页。不要提交截图、聊天附件、依赖目录或本地凭据。
 
 GitHub Pages 从 `main` 分支根目录发布；推送后自动构建。`.nojekyll` 保留纯静态 HTML，不依赖 Jekyll。
+
+## 配套 skill
+
+完整源码见 [skills/code-explainers](skills/code-explainers)，使用说明见 [SKILL.md](skills/code-explainers/SKILL.md)。目录包含界面配置、主题登记 / 发布脚本，以及首页模板。
+
+将整个 `skills/code-explainers` 目录复制到个人 skills 目录，保留 `agents/`、`assets/` 和 `scripts/` 的相对结构。通常目标为 `~/.codex/skills/code-explainers`；Windows 下为 `%USERPROFILE%\.codex\skills\code-explainers`。
+
+这个 skill 默认面向本仓库和对应 Pages 站点。用于其它账号时，需同步调整说明和脚本中的目标仓库与站点地址。
 
 ## 代码来源
 
