@@ -29,7 +29,15 @@ GitHub Pages 从 `main` 分支根目录发布；推送后自动构建。`.nojeky
 
 完整源码见 [skills/code-explainers](skills/code-explainers)，使用说明见 [SKILL.md](skills/code-explainers/SKILL.md)。目录包含界面配置、主题登记 / 发布脚本，以及首页模板。
 
-将整个 `skills/code-explainers` 目录复制到个人 skills 目录，保留 `agents/`、`assets/` 和 `scripts/` 的相对结构。通常目标为 `~/.codex/skills/code-explainers`；Windows 下为 `%USERPROFILE%\.codex\skills\code-explainers`。
+在已安装 Codex 和 Python 的机器上，运行以下命令从 GitHub 安装：
+
+```powershell
+python "$HOME/.codex/skills/.system/skill-installer/scripts/install-skill-from-github.py" --repo cocobronie2333-dot/code-explainers --path skills/code-explainers
+```
+
+安装完成后，在下一轮对话中使用 `$code-explainers`。
+
+也可以手动将整个 `skills/code-explainers` 目录复制到个人 skills 目录，保留 `agents/`、`assets/` 和 `scripts/` 的相对结构。通常目标为 `~/.codex/skills/code-explainers`；Windows 下为 `%USERPROFILE%\.codex\skills\code-explainers`。
 
 这个 skill 默认面向本仓库和对应 Pages 站点。用于其它账号时，需同步调整说明和脚本中的目标仓库与站点地址。
 
