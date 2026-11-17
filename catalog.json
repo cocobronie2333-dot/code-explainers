@@ -4,7 +4,7 @@
     {
       "slug": "kv-cache-pooling",
       "title": "KV Cache 池化 · HBM ↔ DRAM 代码导览",
-      "summary": "沿具体请求对照 vLLM 与 AscendStore 的前缀查询、块分配和元数据绑定，通过多泳道时间线解释 Memcache / Mooncake 的整块、逐层与异步 Load / Save。",
+      "summary": "通过路径总览、调用时间线、源码函数和后端对照四个联动视图，探索 Memcache / Mooncake 的整块、逐层与异步 Load / Save；支持元数据和内存快照、函数检索及当前视图分享。",
       "tags": [
         "vLLM",
         "Ascend",

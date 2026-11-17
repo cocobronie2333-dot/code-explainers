@@ -26,6 +26,104 @@
 @media print{.timeline-scroll{overflow:visible}.timeline-inspector{display:block}.memory-snapshot{display:block}}
 .tl-boundaries{position:absolute;left:var(--lane-width,132px);right:0;top:0;bottom:0;pointer-events:none;z-index:1}.tl-boundaries i{position:absolute;top:0;bottom:0;border-left:1px dashed color-mix(in srgb,var(--muted) 45%,transparent)}#timeline-entry-sources{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}#timeline-entry-sources button{background:transparent;border:0;padding:0;text-align:left;color:var(--pool);font:10px/1.6 Consolas,monospace;overflow-wrap:anywhere;max-width:100%}
 
+
+/* Reading workbench: shared state, progressive detail, and source navigation. */
+:root{--radius:12px;--focus:var(--pool)}
+html{scroll-behavior:smooth;scroll-padding-top:78px}
+[hidden]{display:none!important}
+header,main,footer{max-width:1480px;padding-left:40px;padding-right:40px}
+[data-explainer-home]{display:none}
+header{padding-top:30px;padding-bottom:20px}
+header h1{font-size:clamp(27px,3.2vw,42px);letter-spacing:-.035em;margin:10px 0 12px}
+header .intro{font-size:14px;max-width:880px}
+.version{font-size:11px;margin-top:12px}
+.wb-breadcrumb{max-width:1480px;margin:0 auto;padding:18px 40px 0;display:flex;justify-content:space-between;gap:15px;align-items:center;font-size:12px;color:var(--muted)}
+.wb-breadcrumb a{text-decoration:none}
+.wb-breadcrumb>div{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.wb-button{border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:6px;padding:7px 12px;font-size:12px;min-height:36px}
+.wb-button:hover{border-color:var(--pool);color:var(--pool)}
+.view-tabs{display:flex;gap:6px;position:sticky;top:0;z-index:20;padding:10px 0;background:var(--bg);border-bottom:1px solid var(--line);margin-bottom:20px;overflow-x:auto}
+.view-tabs button{font:inherit;font-size:13px;white-space:nowrap;min-height:43px;padding:9px 19px;border:1px solid transparent;background:transparent;color:var(--muted);border-radius:7px;display:flex;gap:10px;align-items:center}
+.view-tabs button span{font:10px Consolas,monospace;opacity:.75}
+.view-tabs button[aria-selected=true]{background:var(--active);color:var(--bg)}
+.view-tabs button:hover{border-color:var(--line)}
+.control-bar{border-radius:10px;box-shadow:none;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));padding:16px 18px;gap:15px}
+.control-group{display:block;min-width:0}
+.control-label{display:block;font-size:11px;margin-bottom:7px}
+.segmented{display:flex;gap:3px;padding:3px;background:var(--bg);border-radius:6px;width:fit-content;max-width:100%}
+.segmented button{min-height:34px;padding:5px 12px;font-size:12px}
+.async-status{margin:12px 0 0;font-size:12px;max-width:1080px}
+.wb-context{display:flex;gap:12px;justify-content:space-between;align-items:center;margin:14px 0 22px;min-width:0}
+.wb-presets{display:flex;align-items:center;gap:6px;flex-wrap:wrap;min-width:0}
+.wb-presets>span{font-size:11px;color:var(--muted);margin-right:5px}
+.wb-presets button{font-size:11px;padding:5px 10px;min-height:31px;background:transparent;border:1px solid var(--line);border-radius:20px;color:var(--muted)}
+.wb-presets button[aria-pressed=true]{color:var(--pool);border-color:var(--pool);background:color-mix(in srgb,var(--pool) 6%,var(--paper))}
+#current-event{max-width:45%;text-align:right;border:0;background:transparent;color:var(--pool);font-size:12px;overflow-wrap:anywhere}
+.scenario{margin:0 0 22px;gap:18px}.scenario h2{font-size:19px;margin:0 0 4px}.scenario p{font-size:12px;max-width:960px}.scenario .pill{font-size:10px;border-radius:5px;flex-shrink:0;max-width:290px}
+.wb-panel{min-width:0;animation:panel-in .16s ease-out}
+@keyframes panel-in{from{opacity:.4;transform:translateY(4px)}to{opacity:1;transform:none}}
+.section-kicker{font:11px/1.5 Consolas,monospace;letter-spacing:.13em;color:var(--pool);margin:0 0 10px}
+.section-head{display:flex;gap:16px;justify-content:space-between;align-items:start;margin:0 0 16px}
+.section-head h2{font-size:25px;line-height:1.4;margin:0 0 8px;letter-spacing:-.025em}
+.section-head p{font-size:13px;color:var(--muted);max-width:850px;margin:0}
+.overview-architecture{display:grid;grid-template-columns:1fr 64px 1.25fr;align-items:stretch;border:1px solid var(--line);border-radius:var(--radius);background:var(--paper);overflow:hidden;margin:20px 0}
+.overview-actor{padding:22px 25px;min-width:0}.overview-actor h3{font-size:17px}.overview-actor p{font-size:12px;color:var(--muted);margin:8px 0 10px}.overview-actor code{font-size:11px;color:var(--pool);display:block}
+.architecture-arrow{display:flex;flex-direction:column;justify-content:center;align-items:center;font-size:26px;color:var(--muted);background:color-mix(in srgb,var(--pool) 4%,var(--paper))}.architecture-arrow small{font-size:10px;writing-mode:vertical-rl;letter-spacing:2px}
+.stage-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:20px 0 24px}
+.stage-card{border:1px solid var(--line);border-top:3px solid var(--pool);border-radius:9px;background:var(--paper);color:var(--ink);text-align:left;min-width:0;padding:19px 18px;display:flex;flex-direction:column;gap:8px;transition:transform .12s,border-color .12s}
+.stage-card:hover{transform:translateY(-3px);border-color:var(--pool)}
+.stage-card[aria-pressed=true]{outline:2px solid var(--active);outline-offset:2px}
+.stage-number{color:var(--pool);font:11px Consolas,monospace;display:flex;justify-content:space-between}
+.stage-card strong{font-size:16px;line-height:1.5}.stage-card p{font-size:12px;color:var(--muted);margin:0;flex:1}.stage-card code{font-size:10px;color:var(--pool);line-height:1.6}.stage-card .stage-link{font-size:11px;color:var(--pool);margin-top:8px}
+.request-example{padding:24px;border:1px solid var(--line);border-radius:var(--radius);background:var(--paper);margin:22px 0}
+.request-head{display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap;font-size:12px;margin-bottom:14px}.request-head strong{font-size:15px}.request-head span{color:var(--muted)}
+.token-strip{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:6px}
+.token-block{border:1px solid transparent;border-radius:6px;padding:12px 5px;color:var(--ink);min-width:0;background:var(--bg)}
+.token-block.local{background:var(--hbm-soft);color:var(--hbm)}.token-block.pool{background:var(--pool-soft);color:var(--pool)}.token-block.new{background:color-mix(in srgb,#688cb3 14%,var(--paper))}
+.token-block[aria-pressed=true]{outline:2px solid var(--active);outline-offset:1px}.token-block strong,.token-block small{display:block;font:12px/1.6 Consolas,monospace}.token-block small{font-size:10px}
+.token-legend{display:flex;gap:12px 24px;flex-wrap:wrap;font-size:11px;color:var(--muted);margin:13px 0}
+.token-legend b{font-weight:500}.token-legend .local{color:var(--hbm)}.token-legend .pool{color:var(--pool)}
+.block-explanation{padding:14px 16px;background:var(--bg);border-radius:7px;font-size:12px;color:var(--muted);display:grid;grid-template-columns:1fr auto;gap:15px;align-items:center}.block-explanation strong{color:var(--ink)}.block-explanation p{margin:4px 0 0}
+.overview-bottom{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:22px 0 30px}
+.overview-bottom>section{padding:23px;border:1px solid var(--line);border-radius:var(--radius);background:var(--paper);min-width:0}.overview-bottom h3{font-size:16px}.overview-bottom p,.overview-bottom li{font-size:12px;color:var(--muted)}.overview-bottom ul{padding-left:18px}.overview-bottom code{font-size:11px;display:block;color:var(--pool);padding:9px 0}.overview-bottom a{font-size:12px}
+.overview-cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.diagram{box-shadow:none;padding:22px;border-radius:var(--radius)}
+.example-strip{font-size:12px;gap:18px;margin-bottom:18px;padding-bottom:16px;grid-template-columns:1fr .8fr 1.5fr}.example-block-table code{font-size:12px;overflow-wrap:anywhere}
+.timeline-title h3{font-size:19px}.timeline-title button{font-size:11px}.timeline-reading{font-size:11px;margin-bottom:12px}
+.chart-tools{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:12px 0}
+.chart-tools>div{display:flex;gap:6px;align-items:center;flex-wrap:wrap}.chart-tools button{min-height:32px;padding:5px 9px;font-size:11px;background:transparent;color:var(--muted);border:1px solid var(--line);border-radius:5px}.chart-tools button[aria-pressed=true]{color:var(--pool);border-color:var(--pool)}.chart-tools small{font-size:10px;color:var(--muted)}
+.timeline-scroll{--lane-width:130px;background:var(--paper)}
+#timeline-phases{height:68px}.tl-phase{padding:8px 10px}.tl-phase span{font-size:11px}.tl-axis-label{font-size:11px}.tl-row{height:91px}.tl-lane{padding:12px 10px;font-size:11px}.tl-lane small{font-size:10px;margin-top:4px}
+.tl-event{top:11px;height:68px;padding:8px 7px;border-radius:6px}.tl-event strong{font-size:11px;line-height:1.5}.tl-event code{font-size:9px;line-height:1.45;margin-top:4px;-webkit-line-clamp:2}.tl-event[aria-pressed=true]{outline-width:2px;box-shadow:0 3px 9px #183d311a}.tl-event.is-dependency{border-style:dashed;border-color:var(--pool)}
+.tl-idle{font-size:11px;top:31px}.timeline-legend{font-size:10px;gap:7px 15px;margin:12px 0}.timeline-note{font-size:11px;margin-bottom:0}
+.playback{padding:14px 0 20px;gap:7px}.playback button{font-size:12px;padding:6px 12px;min-height:36px}.speed-note{font-size:11px}.step-count{font-size:11px}
+.timeline-inspector{margin-top:4px;padding-top:22px;gap:28px;grid-template-columns:minmax(0,1fr) minmax(0,1fr);scroll-margin-top:85px}
+.timeline-operation h3{font-size:23px;line-height:1.4}.timeline-operation>p{font-size:13px}.timeline-operation>code{font-size:12px}#timeline-entry-sources button{font-size:11px}
+.inspector-data{min-width:0}.inspector-tabs{display:flex;gap:5px;border-bottom:1px solid var(--line);padding-bottom:10px;margin-bottom:12px}.inspector-tabs button{background:transparent;color:var(--muted);font-size:12px;border:1px solid transparent;border-radius:5px;padding:6px 12px;min-height:35px}.inspector-tabs button[aria-selected=true]{background:var(--pool-soft);color:var(--pool);border-color:var(--line)}
+.timeline-meta pre{font-size:11px;max-height:460px;tab-size:2}.timeline-meta>p{font-size:10px}.metadata-toolbar{display:flex;gap:10px;align-items:center;justify-content:space-between;margin:10px 0 8px}.metadata-toolbar span{font-size:10px;color:var(--muted)}
+.memory-snapshot{margin:0!important;padding:0!important;border:0}.memory-snapshot>summary{display:none}.memory-snapshot .memory-flow{grid-template-columns:minmax(0,1fr);gap:16px}.memory-snapshot .transport{display:grid;grid-template-columns:1fr auto;gap:5px;text-align:left;background:var(--bg);border-radius:6px;padding:12px}.memory-snapshot .transport .direction{display:none}.memory-snapshot .transport code{min-height:0}.memory-snapshot .memory-head{margin-bottom:8px}.memory-snapshot .memory-head h3{font-size:16px}.memory-snapshot .memory-head small{font-size:10px}.memory-snapshot .function-tag{font-size:9px}.memory-snapshot .memory-functions{min-height:0}.memory-snapshot .layer-row{grid-template-columns:25px minmax(0,1fr);gap:5px}.memory-snapshot .block-grid{grid-template-columns:repeat(8,minmax(0,1fr));gap:4px}.memory-snapshot .block-cell{padding:5px 2px;min-height:40px;font-size:9px}.memory-snapshot .block-cell small{font-size:9px}.memory-snapshot .layer-label{font-size:10px}.memory-snapshot .memory-foot{min-height:0;font-size:10px}.memory-snapshot .route-note{font-size:10px;gap:8px}.memory-snapshot .legend{gap:8px}
+.source-workspace{display:grid;grid-template-columns:280px minmax(0,1fr);gap:22px;align-items:start}
+.source-sidebar{position:sticky;top:78px;min-width:0;border:1px solid var(--line);background:var(--paper);border-radius:10px;padding:15px;max-height:calc(100vh - 100px);overflow-y:auto;overscroll-behavior:contain}
+.source-sidebar label{display:block;font-size:11px;color:var(--muted)}.source-sidebar input{display:block;width:100%;min-width:0;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink);font:12px/1.6 "Segoe UI","Microsoft YaHei",sans-serif;padding:9px;margin:6px 0 12px}.source-sidebar input:focus-visible{outline:2px solid var(--pool);outline-offset:2px}
+.source-nav-tabs{display:flex;gap:5px;margin-bottom:10px}.source-nav-tabs button{flex:1;background:transparent;border:1px solid var(--line);border-radius:5px;color:var(--muted);font-size:11px;padding:6px}.source-nav-tabs button[aria-pressed=true]{color:var(--pool);background:var(--pool-soft)}
+.steps{gap:3px}.step-button{padding:9px 6px;gap:7px}.step-button strong{font-size:12px;line-height:1.6}.step-button small{font-size:10px}.step-button[aria-current=step]{background:var(--bg);box-shadow:none}.step-num{font-size:10px;width:20px;line-height:21px}.steps .step-button:hover{background:var(--bg)}
+#function-index{display:grid;gap:5px}#function-index button{min-width:0;border:1px solid transparent;border-radius:6px;text-align:left;padding:9px 8px;background:transparent;color:var(--ink)}#function-index button:hover,#function-index button[aria-current=true]{border-color:var(--line);background:var(--bg)}#function-index code{font-size:10px;display:block;line-height:1.6}#function-index small{font-size:9px;color:var(--muted);display:block;overflow-wrap:anywhere}#source-search-count{font-size:10px;color:var(--muted);margin:8px 0 0}
+.source-workspace .detail{padding:27px}.detail h3{font-size:25px;overflow-wrap:anywhere}.detail-description{min-height:0;font-size:14px}.lesson-box{margin:18px 0}.source-workspace .lesson-box h4{font-size:13px}.lesson-box pre{font-size:11px}.callchain{font-size:12px}.code-panel{position:relative}.code-panel pre{font-size:12px;line-height:1.9;max-height:740px;overflow:auto}.code-top{flex-wrap:wrap;align-items:center;font-size:11px}.code-top a{font-size:11px}#copy-source{background:transparent;color:#c4dfd6;border-color:#ffffff40;min-height:29px;padding:4px 9px;font-size:11px}.code-tabs button{font-size:11px}.source-path{font-size:10px}
+.source-context{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px;padding-bottom:15px;border-bottom:1px solid var(--line)}.source-context p{font-size:12px;color:var(--muted);margin:0}
+.reading{margin:0 0 28px}.reading h2{font-size:25px}.reading p{font-size:13px}.compare{font-size:12px}.compare td code{font-size:11px}.notes{margin:24px 0}.notes ul{font-size:12px}
+.wb-source-note{font-size:11px;color:var(--muted);padding:14px 0 26px;display:flex;gap:9px 20px;flex-wrap:wrap}.wb-source-note a{color:inherit}.wb-source-note span{max-width:100%}
+#wb-toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:40;background:var(--active);color:var(--bg);padding:10px 18px;border-radius:7px;font-size:12px;max-width:calc(100% - 32px);box-shadow:var(--shadow)}
+.copy-fallback{width:100%;height:70px;font:11px/1.6 Consolas,monospace;background:var(--paper);color:var(--ink);border:1px solid var(--line);padding:8px;margin-top:10px}
+footer{font-size:11px;margin-top:15px}
+button:focus-visible,a:focus-visible,summary:focus-visible{outline-color:var(--pool)}
+@media(min-width:1200px){.timeline-section{--lane-width:145px}.source-workspace{grid-template-columns:300px minmax(0,1fr)}}
+@media(max-width:1050px){header,main,footer{padding-left:24px;padding-right:24px}.wb-breadcrumb{padding-left:24px;padding-right:24px}.control-bar{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 22px}.control-group{display:flex;align-items:center;gap:12px}.control-label{margin:0;min-width:58px}.stage-card{padding:16px 13px}.stage-card strong{font-size:14px}.source-workspace{grid-template-columns:240px minmax(0,1fr)}.source-sidebar{padding:11px}.source-workspace .detail{padding:21px}.scenario{flex-wrap:wrap}.scenario .pill{max-width:100%}}
+@media(max-width:760px){header,main,footer{padding-left:17px;padding-right:17px}.wb-breadcrumb{padding:14px 17px 0}.wb-breadcrumb>div{gap:7px}.wb-breadcrumb .crumb-secondary{display:none}header{padding-top:24px;padding-bottom:18px}header .intro{font-size:12px}.version{gap:6px 13px;font-size:10px}.eyebrow{font-size:10px}.view-tabs{margin-bottom:15px;padding:8px 0;gap:3px}.view-tabs button{padding:8px 12px;min-height:39px;font-size:12px;gap:7px}.view-tabs button span{font-size:9px}.control-bar{padding:13px;gap:12px}.control-group{display:block}.control-label{margin-bottom:5px;font-size:10px}.segmented button{padding:6px 10px;font-size:11px;min-height:33px}.async-status{font-size:11px}.wb-context{flex-wrap:wrap;gap:9px;margin-bottom:20px}#current-event{max-width:100%;text-align:left;padding:0}.wb-presets{gap:5px}.wb-presets>span{font-size:10px}.wb-presets button{font-size:10px;padding:4px 8px}.scenario{margin-bottom:18px}.scenario h2{font-size:17px}.scenario p{font-size:11px}.scenario .pill{font-size:9px}.section-head h2{font-size:22px}.section-head p{font-size:12px}.stage-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.stage-card strong{font-size:15px}.stage-card p{font-size:11px}.overview-architecture{grid-template-columns:1fr 38px 1fr}.overview-actor{padding:17px 13px}.overview-actor h3{font-size:14px}.overview-actor p{font-size:11px}.overview-actor code{font-size:10px}.request-example{padding:17px}.request-head{font-size:11px}.token-strip{gap:4px}.token-block{padding:10px 1px}.token-block strong{font-size:10px}.token-block small{font-size:8px}.token-legend{font-size:10px;gap:8px 15px}.block-explanation{grid-template-columns:1fr;font-size:11px;gap:9px}.block-explanation .wb-button{width:fit-content}.overview-bottom{grid-template-columns:1fr}.overview-bottom>section{padding:20px}.diagram{padding:15px}.example-strip{grid-template-columns:1fr 1fr;gap:12px;font-size:11px}.example-block-table{grid-column:1/-1}.example-block-table code{font-size:11px}.timeline-title h3{font-size:17px}.timeline-title{gap:10px}.timeline-title button{font-size:10px}.timeline-reading,.timeline-note{font-size:10px}.timeline-inspector{grid-template-columns:1fr;gap:22px}.timeline-operation h3{font-size:21px}.timeline-operation>p{font-size:12px}.timeline-operation>code{font-size:11px}.timeline-scroll{--lane-width:108px}.tl-lane{padding:12px 8px;font-size:10px}.tl-lane small{font-size:9px}.timeline-legend{gap:6px 12px;font-size:9px}.playback{gap:6px}.playback button{padding:6px 9px;font-size:11px}.playback .speed-note{width:100%;font-size:10px}.source-workspace{display:block}.source-sidebar{position:static;max-height:none;padding:13px;margin-bottom:16px}.source-sidebar .steps{display:flex;overflow-x:auto;max-width:100%;padding-bottom:7px;gap:5px}.source-sidebar .step-button{flex:0 0 185px}.source-sidebar #function-index{max-height:270px;overflow-y:auto}.source-sidebar label{font-size:10px}.source-sidebar input{font-size:12px}.source-workspace .detail{padding:18px}.detail h3{font-size:21px}.detail-description{font-size:12px}.source-context{flex-wrap:wrap}.source-context p{font-size:11px}.code-top{padding:11px}.code-panel pre{padding:12px;font-size:10px;max-height:580px}.code-tabs button{font-size:10px}.callchain{font-size:10px;padding:12px}.notes{grid-template-columns:1fr;gap:20px}.reading h2{font-size:22px}.compare{font-size:11px}.wb-source-note{font-size:10px;gap:7px 15px}footer{font-size:10px}}
+@media(max-width:600px){.view-tabs button{flex:1;justify-content:center;font-size:11px;padding:8px 6px}.view-tabs button span{display:none}.overview-architecture{grid-template-columns:1fr}.overview-actor{padding:18px}.architecture-arrow{font-size:0;flex-direction:row;gap:12px;padding:5px}.architecture-arrow small{writing-mode:horizontal-tb;font-size:10px;letter-spacing:1px}.architecture-arrow:after{content:'↓';font-size:22px;line-height:1.3}.token-strip{grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}.token-block strong{font-size:11px}.token-block small{font-size:9px}}
+@media(max-width:370px){.view-tabs button{font-size:10px;padding:7px 4px}.segmented button{padding:5px 7px;font-size:10px}.control-bar{gap:11px 8px}.stage-card{padding:14px 12px}.stage-card strong{font-size:13px}.stage-card code{font-size:9px}.stage-card p{font-size:10px}.wb-breadcrumb .wb-button{font-size:10px;padding:5px 8px}.memory-snapshot .block-cell{font-size:8px}.memory-snapshot .block-cell small{font-size:8px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.wb-panel{animation:none}.stage-card{transition:none}}
+@media print{.wb-breadcrumb,.view-tabs,.wb-context,.chart-tools,.inspector-tabs,.source-sidebar,.overview-cta,.wb-button,#current-event{display:none!important}.wb-panel[hidden],.inspector-pane[hidden]{display:block!important}.source-workspace{display:block}.source-workspace .detail{break-inside:auto}.timeline-scroll{overflow:hidden}.wb-panel{margin-bottom:30px}}
+
 </style>
 </head>
 <body>
@@ -33,7 +131,7 @@
 <header>
  <div class="eyebrow">VLLM ASCEND / CODE WALKTHROUGH</div>
  <h1>KV Cache 池化，<span>从 HBM 到 DRAM</span></h1>
- <p class="intro">沿一次 Save 或 Load，观察调度元数据如何变成内存搬运。对照 Memcache 的 GVA 路径与 Mooncake 的对象 / session 路径，每一步都有固定版本代码摘录和固定版本源码链接。</p>
+ <p class="intro">一条请求，四个阅读视图。沿前缀查询、块分配与 Attention 依赖，追踪 Memcache / Mooncake 的 HBM ↔ DRAM 路径；点击事件查看元数据、接口和固定版本源码。</p>
  <div class="version"><span>vLLM <a href="https://github.com/vllm-project/vllm/tree/24420b7a341af37a9bc3186e6fc6062512e0aa58" target="_blank" rel="noopener">24420b7a34</a></span><span>vLLM Ascend <a href="https://github.com/vllm-project/vllm-ascend/tree/76ea9d24f155afe032ad9ac6c98717f1f7334f36" target="_blank" rel="noopener">76ea9d24f1</a></span><span>代码快照说明 · 非性能仿真</span></div>
 </header>
 <main>
@@ -149,7 +247,7 @@ function render(){
 }
 document.addEventListener('click',event=>{const button=event.target.closest('button');if(!button)return;for(const key of ['backend','mode','direction'])if(button.dataset[key]){choose(key,button.dataset[key]);return;}if(button.dataset.step!==undefined){stop();go(Number(button.dataset.step));}if(button.dataset.source!==undefined){state.source=Number(button.dataset.source);renderCode(scenarios()[state.step]);}});
 $('previous').addEventListener('click',()=>{stop();go(state.step-1);});$('next').addEventListener('click',()=>{stop();go(state.step+1);});$('play').addEventListener('click',()=>{if(timer!==null){stop();return;}if(state.step===scenarios().length-1)go(0);$('play').textContent='暂停';timer=setInterval(()=>{if(state.step>=scenarios().length-1){stop();return;}go(state.step+1);},2200);});
-document.addEventListener('keydown',event=>{if(event.altKey||event.ctrlKey||event.metaKey||['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName))return;if(event.key==='ArrowRight'||event.key==='ArrowLeft'){event.preventDefault();stop();go(state.step+(event.key==='ArrowRight'?1:-1));}});
+document.addEventListener('keydown',event=>{if(event.altKey||event.ctrlKey||event.metaKey||['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName)||document.activeElement.closest('[role=tablist]'))return;if(event.key==='ArrowRight'||event.key==='ArrowLeft'){event.preventDefault();stop();go(state.step+(event.key==='ArrowRight'?1:-1));}});
 document.addEventListener('visibilitychange',()=>{if(document.hidden)stop();});
 window.addEventListener('pagehide',stop);
 // This source is embedded into the offline HTML by enhance_explainer.py.
@@ -614,9 +712,185 @@ document.addEventListener('click',event=>{
  $('play').textContent='暂停';timer=setInterval(()=>{const order=timelineOrderedEvents(timelineModel());if(timelineSelection?.id===order.at(-1).id){stop();return;}advanceTimeline(1);},2200);
 },true);
 document.addEventListener('keydown',event=>{
- if(event.altKey||event.ctrlKey||event.metaKey||['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName))return;
+ if(event.altKey||event.ctrlKey||event.metaKey||['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName)||document.activeElement.closest('[role=tablist]'))return;
  if(event.key==='ArrowLeft'||event.key==='ArrowRight'){event.preventDefault();event.stopImmediatePropagation();stop();advanceTimeline(event.key==='ArrowRight'?1:-1);}
 },true);
+
+// Presentation state is separate from the original code / transfer model.
+const workbench={view:'overview',inspector:'metadata',sourceNav:'steps',zoom:false,activeLanes:false,block:2,sourceKey:null,sourceStep:null};
+let toastTimer=null;
+function panelNode(tag,className,markup){const node=document.createElement(tag);node.className=className;if(markup)node.innerHTML=markup;return node;}
+function setupWorkbench(){
+ const main=document.querySelector('main');
+ const controls=main.querySelector('.control-bar'),status=$('async-status'),scenario=main.querySelector('.scenario');
+ const diagram=main.querySelector('.diagram'),playback=main.querySelector('.playback'),workspace=main.querySelector('.workspace');
+ const reading=main.querySelector('.reading'),notes=main.querySelector('.notes'),initialization=[...main.children].find(n=>n.tagName==='DETAILS');
+ const crumb=panelNode('nav','wb-breadcrumb','<div><a href="../">← 代码讲解集</a><span class="crumb-secondary">/</span><span class="crumb-secondary">AscendStore · KV Pool</span></div><button id="share-view" class="wb-button">复制当前视图链接 ↗</button>');
+ crumb.setAttribute('aria-label','站点导航');document.querySelector('header').before(crumb);
+ const tabs=panelNode('nav','view-tabs');tabs.setAttribute('role','tablist');tabs.setAttribute('aria-label','讲解章节');
+ const views=[['overview','01','路径总览'],['timeline','02','调用时间线'],['source','03','源码函数'],['compare','04','后端对照']];
+ tabs.innerHTML=views.map(([id,n,label])=>`<button id="tab-${id}" role="tab" aria-controls="panel-${id}" data-view="${id}"><span>${n}</span>${label}</button>`).join('');
+ const context=panelNode('div','wb-context','<div class="wb-presets"><span>快速场景</span><button data-preset="sync">同步整块</button><button data-preset="layer">逐层流水</button><button data-preset="async">异步回填</button></div><button id="current-event" title="回到选中事件的时间线"></button>');
+ const panels={};for(const [id] of views){const node=panelNode('section','wb-panel');node.id='panel-'+id;node.setAttribute('role','tabpanel');node.setAttribute('aria-labelledby','tab-'+id);panels[id]=node;main.append(node);}
+ panels.overview.innerHTML='<div class="section-kicker">READ THE PATH / 再进入每一步</div><div class="section-head"><div><h2>先看整体，沿同一条请求下钻。</h2><p>先定位控制面和数据面，再看线程依赖与具体接口。四个视图共享配置和事件选择。</p></div></div><div id="overview-architecture" class="overview-architecture"></div><div id="overview-stages" class="stage-grid"></div><section class="request-example" aria-label="贯穿请求与块映射"><div class="request-head"><strong>req-A · 1024 tokens / 8 个逻辑块</strong><span>每块 128 tokens · 点击块查看物理落点</span></div><div id="overview-tokens" class="token-strip"></div><div class="token-legend"><b class="local">B0–B1 · 本地复用 256</b><b class="pool">B2–B5 · 池内加载 512</b><b>B6–B7 · 新计算 256</b></div><div id="overview-block" class="block-explanation" aria-live="polite"></div></section><div class="overview-bottom"><section><div class="section-kicker">DATA PLANE</div><h3 id="overview-backend-title"></h3><div id="overview-backend"></div><button class="wb-button" data-open-view="compare">对照四种后端路径 →</button></section><section><div class="section-kicker">READING GUIDE</div><h3>从依赖进入代码</h3><p>点击事件后查看：谁调用、消费什么元数据、使用哪个存储接口、等待什么完成条件。元数据与内存快照随所选完成边界联动。</p><ul><li>同层 Attention 必须等自己的前缀 KV 就绪。</li><li>CPU 提交完成与 NPU 计算完成是不同边界。</li><li>保存完成和对象可读发布是不同条件。</li></ul><div class="overview-cta"><button class="wb-button" data-open-view="timeline">探索调用时间线 →</button><button class="wb-button" data-open-view="source">查找源码函数 →</button></div></section></div>';
+ const tools=panelNode('div','chart-tools','<div><button id="timeline-zoom" aria-pressed="false">放大函数标签</button><button id="timeline-active-lanes" aria-pressed="false">仅看活跃泳道</button></div><small>横向滚动查看完整依赖 · 不表示实测耗时</small>');
+ $('timeline-scroll').before(tools);$('timeline-scroll').tabIndex=0;
+ $('timeline-inspector').before(playback);
+ const data=panelNode('div','inspector-data','<div class="inspector-tabs" role="tablist" aria-label="事件数据"><button id="inspector-tab-metadata" role="tab" data-inspector="metadata" aria-controls="inspector-metadata">元数据</button><button id="inspector-tab-memory" role="tab" data-inspector="memory" aria-controls="inspector-memory">HBM / DRAM</button></div>');
+ const metadata=panelNode('div','inspector-pane');metadata.id='inspector-metadata';metadata.setAttribute('role','tabpanel');metadata.setAttribute('aria-labelledby','inspector-tab-metadata');
+ const memory=panelNode('div','inspector-pane');memory.id='inspector-memory';memory.setAttribute('role','tabpanel');memory.setAttribute('aria-labelledby','inspector-tab-memory');
+ data.append(metadata,memory);$('timeline-inspector').append(data);
+ const metaNode=document.querySelector('.timeline-meta');metadata.append(metaNode);memory.append($('memory-snapshot'));$('memory-snapshot').open=true;
+ const copy=panelNode('div','metadata-toolbar','<span>当前事件完成边界 · 教学字段示例</span><button class="wb-button" id="copy-metadata">复制 JSON</button>');$('timeline-metadata').before(copy);
+ $('timeline-more').textContent='阅读本步处理与源码 →';
+ panels.timeline.append(diagram);
+ workspace.className='source-workspace';
+ const sidebar=panelNode('aside','source-sidebar','<label for="function-search">查找本路径中的步骤或函数</label><input id="function-search" type="search" placeholder="如 allocate_slots / batch_copy" autocomplete="off"><div class="source-nav-tabs" role="group" aria-label="源码导航方式"><button data-source-nav="steps" aria-pressed="true">按调用步骤</button><button data-source-nav="functions" aria-pressed="false">按函数索引</button></div>');
+ workspace.prepend(sidebar);sidebar.append($('steps'));sidebar.append(panelNode('nav','', '<div id="function-index" aria-label="本路径源码函数"></div>'));sidebar.append(panelNode('p',''));sidebar.lastChild.id='source-search-count';
+ const sourceContext=panelNode('div','source-context','<p>与时间线共享当前事件。步骤导航按源码调用展开；可独立切换函数摘录。</p><button class="wb-button" data-open-view="timeline">返回调用时间线 →</button>');
+ const sourceHead=panelNode('div','section-head','<div><div class="section-kicker">SOURCE READER</div><h2>带着状态与输入读函数。</h2></div>');panels.source.append(sourceHead,sourceContext,workspace);
+ const copySource=panelNode('button','wb-button','复制源码');copySource.id='copy-source';document.querySelector('.code-top').append(copySource);
+ panels.compare.append(reading,notes);if(initialization)panels.compare.append(initialization);
+ const provenance=panelNode('div','wb-source-note','<span>布局参考</span><a href="https://bowgneo.github.io/posts/vllm-kv-connector-scheduling-flow/" target="_blank" rel="noopener">bowgneo · 调度分章与时序 ↗</a><a href="https://biuapha.github.io/LLM-Analysis/glm53_prefill_decode_operator_block_diagram.html?v=dede271#prompt-links" target="_blank" rel="noopener">biuapha · 总览下钻与数据详情 ↗</a><span>代码与结论仍依据本页标注的固定版本。</span>');
+ main.replaceChildren(tabs,controls,status,context,scenario,...Object.values(panels),provenance);
+ const toast=panelNode('div','','');toast.id='wb-toast';toast.hidden=true;toast.setAttribute('role','status');document.body.append(toast);
+ $('function-search').addEventListener('input',filterSourceNavigation);
+ readWorkbenchURL();
+}
+function readWorkbenchURL(){
+ const q=new URL(location.href).searchParams;
+ for(const [key,values] of Object.entries({backend:['memcache','mooncake'],mode:['bulk','layer'],direction:['save','load']}))if(values.includes(q.get(key)))state[key]=q.get(key);
+ if(['true','false'].includes(q.get('load_async')))state.asyncLoad=q.get('load_async');
+ if(['overview','timeline','source','compare'].includes(q.get('view')))workbench.view=q.get('view');
+ if(['metadata','memory'].includes(q.get('inspector')))workbench.inspector=q.get('inspector');
+ if(['scheduler','worker','transfer'].includes(q.get('metadata')))timelineMetaTab=q.get('metadata');
+ const model=timelineModel(),event=model.events.find(e=>e.id===q.get('event'))||model.events.find(e=>e.id==='query');
+ timelineSelection={key:timelineKey(),id:event.id};state.step=event.steps.find(i=>model.list[i].id===q.get('step'))??event.steps[0];
+ const source=q.get('source');if(source&&SOURCES[source]&&model.list.some(s=>s.refs.includes(source))){workbench.sourceKey=source;workbench.sourceStep=state.step;}
+}
+function renderOverview(){
+ const m=currentTimeline.model,selected=currentTimeline.selected;
+ $('overview-architecture').innerHTML=`<div class="overview-actor"><div class="section-kicker">CONTROL / CPU</div><h3>EngineCore · Scheduler</h3><p>查本地与池内前缀，分配 HBM 逻辑块，组装本轮执行计划。</p><code>schedule() → allocate_slots() → metadata</code></div><div class="architecture-arrow"><small>执行计划</small>→</div><div class="overview-actor"><div class="section-kicker">EXECUTION / WORKER + NPU</div><h3>Model Runner · AscendStore</h3><p>${m.async?'后台加载后回报完成，后续 step 再为 req-A 计算。':m.layer?'绑定逐层任务，按层等待 Load、执行 Attention，并按需保存。':'绑定元数据，同步 Load 完成后计算，按需提交整块保存。'}</p><code>pre_forward() → Attention → post_forward()</code></div>`;
+ const stages=[['query','Step 初始化','先查前缀，再分配落点','本地命中与池内命中不是同一个边界。先准备块号，再下发元数据。','get_computed_blocks() / allocate_slots()'],['bind','forward 初始化','绑定本轮的传输计划',m.layer?'准备 GVA / session 与层级任务。':m.async?'提交后台接收；当前请求等待远端 KV。':'按目标 HBM 块号执行同步 GET。','pre_forward() / bind_connector_metadata()'],['compute0','Attention 计算','等待前缀，就绪后计算',m.layer?'本层等待加载完成；后续层可预取，同层保存等待计算事件。':m.async?'接收完成且重新 admission 后，才计算 req-A。':'读取已就绪的前缀，计算新后缀 B6、B7。',m.layer?'wait_for_layer_load() / Attention.forward()':'GET 完成 → Attention.forward()'],[m.layer?'drain':'post','Attention 完成','保存、发布与必要收尾',m.save?'等待源 KV 写入完成后保存新后缀，满足必要的保存屏障。':'汇总完成状态；池内原有副本保留。','post_forward() / get_finished()']];
+ $('overview-stages').innerHTML=stages.map(([id,label,title,desc,entry],i)=>`<button class="stage-card" data-stage-event="${id}" aria-pressed="${selected.id===id}"><span class="stage-number">0${i+1} / ${label}<span>↗</span></span><strong>${title}</strong><p>${desc}</p><code>${entry}</code><span class="stage-link">进入对应时间线 →</span></button>`).join('');
+ $('overview-tokens').innerHTML=Array.from({length:8},(_,i)=>`<button class="token-block ${i<2?'local':i<6?'pool':'new'}" data-block="${i}" aria-pressed="${workbench.block===i}" aria-label="B${i}，token ${i*128} 到 ${(i+1)*128-1}"><strong>B${i}</strong><small>${i*128}–${(i+1)*128-1}</small></button>`).join('');
+ const b=workbench.block,physical=[7,12,21,22,23,24,25,26][b],kind=b<2?'本地命中':b<6?'池内加载':'新后缀计算';
+ $('overview-block').innerHTML=`<div><strong>B${b} · ${kind} · 示例落点 HBM #${physical} ↔ key(h${b})</strong><p>${b<2?'已驻留 HBM。调度采用命中块时增加引用，不重复复制这段 KV。':b<6?`池内已提交；allocate_slots 先保留 #${physical} 作为落点。Load 根据 key 与块表将各层 KV 写入 HBM。`:`池内初始没有该块；Attention 将新 KV 写到 #${physical}。${m.save?'本 Save 路线随后保存并发布它。':'本 Load 路线只追踪计算，不展开后续保存。'}`} h${b} 与物理块号均为教学代号；实际是否已分配、就绪请查看所选事件的内存快照。</p></div><button class="wb-button" data-stage-event="${b<2?'query':b<6?'allocate':'compute0'}">查看相关处理 →</button>`;
+ $('overview-backend-title').textContent=NAMES[state.backend]+' · '+(m.layer?(m.mem?'GVA + lease':'对象 key + session'):'多段缓存地址');
+ const get=m.layer?(m.mem?'batch_copy(…, direction=1)':'batch_get_into_multi_buffer_ranges'):(m.mem?'batch_get_into_layers':'batch_get_into_multi_buffers');
+ const put=m.layer?(m.mem?'batch_copy(…, direction=0) → batch_write_finish':'range PUT → batch_put_session_end'):(m.mem?'batch_put_from_layers':'batch_put_from_multi_buffers');
+ $('overview-backend').innerHTML=`<p>Load：DRAM → HBM；Save：HBM → DRAM。后端定位方式不同，共享同一套调度与块分配骨架。</p><code>GET · ${get}</code><code>PUT · ${put}</code><p>${m.layer?(m.mem?'读 lease 保护池内对象；写入全部成功后发布。':'GET / PUT 会话保护对象；按范围复制后提交或结束会话。'):'每个对象对应多段层缓存地址，接口封装整块复制。'} Save 不自动释放 HBM；Load 不删除池内副本。</p>`;
+}
+function filterSourceNavigation(){
+ const q=$('function-search').value.trim().toLowerCase();
+ const list=scenarios();let shown=0;
+ $('steps').querySelectorAll('[data-step]').forEach(button=>{const s=list[Number(button.dataset.step)];const text=[s.title,s.actor,s.chain,...s.refs.map(k=>SOURCES[k]?.fn||SOURCES[k]?.label||k)].join(' ').toLowerCase();button.hidden=!text.includes(q);if(!button.hidden&&workbench.sourceNav==='steps')shown++;});
+ $('function-index').querySelectorAll('button').forEach(button=>{button.hidden=!button.dataset.search.includes(q);if(!button.hidden&&workbench.sourceNav==='functions')shown++;});
+ $('steps').hidden=workbench.sourceNav!=='steps';$('function-index').hidden=workbench.sourceNav!=='functions';
+ $('source-search-count').textContent=shown?`${shown} 个${workbench.sourceNav==='steps'?'步骤':'函数入口'} · 仅当前配置路径`:'没有匹配项，试试函数名或步骤关键字。';
+ document.querySelectorAll('[data-source-nav]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.sourceNav===workbench.sourceNav)));
+}
+function renderFunctionIndex(){
+ const seen=new Set(),records=[];
+ scenarios().forEach((s,index)=>s.refs.forEach(key=>{if(seen.has(key)||!SOURCES[key])return;seen.add(key);records.push({key,index,source:SOURCES[key]});}));
+ $('function-index').innerHTML=records.map(({key,index,source})=>`<button data-open-source="${key}" data-source-step="${index}" data-search="${esc([source.fn,source.label,source.path].join(' ').toLowerCase())}" aria-current="${workbench.sourceKey===key}"><code>${esc(source.fn||source.label)}</code><small>${esc(source.path.split('/').slice(-2).join('/'))}:${source.line}</small></button>`).join('');
+ filterSourceNavigation();
+}
+function paintWorkbenchSource(key){
+ const source=SOURCES[key];if(!source)return;
+ $('code-location').textContent=source.path.split('/').slice(-2).join('/')+':'+source.line;$('source-link').href=source.url;
+ $('code-content').innerHTML=source.code.split('\n').map((line,i)=>`<span class="line-no">${String(source.line+i).padStart(4)} </span> ${esc(line)}`).join('\n');
+ $('local-path').textContent=source.local;$('selected-function').textContent='当前函数：'+(source.fn||source.label)+' · '+source.line;
+ const refs=scenarios()[state.step].refs.filter(key=>SOURCES[key]);$('code-tabs').querySelectorAll('button').forEach(button=>button.setAttribute('aria-pressed',String(refs[Number(button.dataset.source)]===key)));
+}
+function workbenchURL(){
+ const url=new URL(location.href),event=currentTimeline.selected;
+ for(const [key,value] of Object.entries({backend:state.backend,mode:state.mode,direction:state.direction,load_async:state.asyncLoad,view:workbench.view,event:event.id,step:scenarios()[state.step].id,metadata:timelineMetaTab,inspector:workbench.inspector}))url.searchParams.set(key,value);
+ if(workbench.sourceKey)url.searchParams.set('source',workbench.sourceKey);else url.searchParams.delete('source');
+ return url;
+}
+function syncWorkbenchURL(){try{history.replaceState(null,'',workbenchURL());}catch{/* file:// keeps the page fully usable. */}}
+function updateWorkbenchLayout(){
+ if(!currentTimeline)return;
+ const container=$('timeline-scroll'),m=currentTimeline.model;
+ const minimum=m.async?1540:1050;
+ $('timeline-content').style.width=Math.max(container.clientWidth-2,workbench.zoom?(m.async?2200:1640):minimum)+'px';
+ $('timeline-zoom').setAttribute('aria-pressed',String(workbench.zoom));$('timeline-active-lanes').setAttribute('aria-pressed',String(workbench.activeLanes));
+ document.querySelectorAll('[data-lane]').forEach(row=>{row.hidden=workbench.activeLanes&&!m.events.some(e=>e.lane===row.dataset.lane&&!e.service);});
+ const selected=currentTimeline.selected;
+ document.querySelectorAll('[data-timeline-event]').forEach(button=>button.classList.toggle('is-dependency',selected.depends.some(dep=>dep.id===button.dataset.timelineEvent)));
+ requestAnimationFrame(drawTimelineDependencies);
+}
+function renderWorkbench(){
+ const selected=currentTimeline.selected;
+ document.querySelectorAll('[data-view]').forEach(button=>{const active=button.dataset.view===workbench.view;button.setAttribute('aria-selected',String(active));button.tabIndex=active?0:-1;});
+ for(const id of ['overview','timeline','source','compare'])$('panel-'+id).hidden=id!==workbench.view;
+ for(const id of ['metadata','memory']){$('inspector-'+id).hidden=id!==workbench.inspector;const button=$('inspector-tab-'+id);button.setAttribute('aria-selected',String(id===workbench.inspector));button.tabIndex=id===workbench.inspector?0:-1;}
+ document.querySelectorAll('[data-preset]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.preset===(state.mode==='layer'?'layer':effectiveAsync()?'async':'sync'))));
+ $('current-event').textContent='当前事件 · '+selected.title+' ↗';
+ if(workbench.sourceStep!==state.step){workbench.sourceKey=null;workbench.sourceStep=state.step;}
+ renderOverview();renderFunctionIndex();if(workbench.sourceKey)paintWorkbenchSource(workbench.sourceKey);
+ updateWorkbenchLayout();syncWorkbenchURL();
+}
+function openWorkbenchView(view,scroll=true){
+ workbench.view=view;renderWorkbench();
+ if(scroll)document.querySelector('.view-tabs').scrollIntoView({behavior:'auto',block:'start'});
+ if(view==='timeline')requestAnimationFrame(()=>{updateWorkbenchLayout();focusTimelineEvent(false);});
+}
+function focusTimelineEvent(focus){
+ const button=document.querySelector(`[data-timeline-event="${currentTimeline.selected.id}"]`);if(!button)return;
+ const container=$('timeline-scroll');const rect=button.getBoundingClientRect(),box=container.getBoundingClientRect();
+ if(rect.left<box.left+145||rect.right>box.right)container.scrollLeft+=rect.left-box.left-container.clientWidth/2+rect.width/2;
+ if(focus)button.focus({preventScroll:true});
+}
+function openWorkbenchSource(key,index){
+ if(index!==undefined&&Number(index)!==state.step){state.step=Number(index);state.source=0;render();}
+ workbench.sourceKey=key;workbench.sourceStep=state.step;openWorkbenchView('source');paintWorkbenchSource(key);renderFunctionIndex();syncWorkbenchURL();
+ $('code-location').scrollIntoView({behavior:'auto',block:'center'});
+}
+function notifyWorkbench(message){$('wb-toast').textContent=message;$('wb-toast').hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('wb-toast').hidden=true,3000);}
+async function copyWorkbench(text,label){
+ try{if(!navigator.clipboard)throw Error('Clipboard unavailable');await navigator.clipboard.writeText(text);notifyWorkbench(label+'已复制');}
+ catch{const input=panelNode('textarea','copy-fallback');input.value=text;input.setAttribute('aria-label',label+'，可手动复制');document.querySelector('#panel-'+workbench.view).prepend(input);input.focus();input.select();if(document.execCommand('copy')){input.remove();notifyWorkbench(label+'已复制');}else notifyWorkbench('已选中内容，可手动复制');}
+}
+choose=function(type,value){
+ const eventId=currentTimeline?.selected.id,stepId=scenarios()[state.step].id;stop();state[type]=value;state.source=0;workbench.sourceKey=null;
+ const m=timelineModel(),event=m.events.find(e=>e.id===eventId)||m.events.find(e=>e.id==='query');timelineSelection={key:timelineKey(),id:event.id};state.step=event.steps.find(i=>m.list[i].id===stepId)??event.steps[0];render();
+};
+const renderBeforeWorkbench=render;
+render=function(){renderBeforeWorkbench();renderWorkbench();};
+setupWorkbench();
+document.addEventListener('click',event=>{
+ const button=event.target.closest('button');if(!button)return;
+ // Own source routing so old long-page scrolling cannot jump to a hidden panel.
+ if(button.dataset.diagramSource){event.preventDefault();event.stopImmediatePropagation();openWorkbenchSource(button.dataset.diagramSource);}
+ else if(button.dataset.openSource){event.preventDefault();event.stopImmediatePropagation();openWorkbenchSource(button.dataset.openSource,button.dataset.sourceStep);}
+ else if(button.dataset.source!==undefined){event.preventDefault();event.stopImmediatePropagation();const refs=scenarios()[state.step].refs.filter(key=>SOURCES[key]);state.source=Number(button.dataset.source);workbench.sourceKey=refs[state.source];workbench.sourceStep=state.step;paintWorkbenchSource(workbench.sourceKey);renderFunctionIndex();syncWorkbenchURL();}
+ else if(button.id==='timeline-more'){event.preventDefault();event.stopImmediatePropagation();openWorkbenchView('source');}
+},true);
+document.addEventListener('click',event=>{
+ const button=event.target.closest('button');if(!button)return;
+ if(button.dataset.view)openWorkbenchView(button.dataset.view,false);
+ else if(button.dataset.openView)openWorkbenchView(button.dataset.openView);
+ else if(button.dataset.inspector){workbench.inspector=button.dataset.inspector;renderWorkbench();if(workbench.inspector==='memory')alignMemoryFunctions();}
+ else if(button.dataset.preset){stop();const m=button.dataset.preset;state.mode=m==='layer'?'layer':'bulk';state.asyncLoad=m==='async'?'true':'false';state.source=0;workbench.sourceKey=null;const model=timelineModel();state.step=model.events.find(e=>e.id==='query').steps[0];timelineSelection={key:timelineKey(),id:'query'};render();}
+ else if(button.dataset.stageEvent){const e=timelineModel().events.find(e=>e.id===button.dataset.stageEvent);if(e){workbench.sourceKey=null;selectTimelineEvent(e);openWorkbenchView('timeline');}}
+ else if(button.dataset.block!==undefined){workbench.block=Number(button.dataset.block);renderOverview();document.querySelector(`[data-block="${workbench.block}"]`).focus({preventScroll:true});}
+ else if(button.dataset.sourceNav){workbench.sourceNav=button.dataset.sourceNav;filterSourceNavigation();}
+ else if(button.id==='timeline-zoom'){workbench.zoom=!workbench.zoom;updateWorkbenchLayout();focusTimelineEvent(false);}
+ else if(button.id==='timeline-active-lanes'){workbench.activeLanes=!workbench.activeLanes;updateWorkbenchLayout();}
+ else if(button.id==='current-event')openWorkbenchView('timeline');
+ else if(button.id==='share-view')copyWorkbench(workbenchURL().href,'当前视图链接');
+ else if(button.id==='copy-metadata')copyWorkbench($('timeline-metadata').textContent,'元数据 JSON');
+ else if(button.id==='copy-source')copyWorkbench($('code-content').textContent.replace(/^\s*\d+ /gm,''),'源码');
+ if(button.dataset.timelineEvent)focusTimelineEvent(true);
+ if(button.dataset.timelineTab){renderWorkbench();document.querySelector(`[data-timeline-tab="${timelineMetaTab}"]`).focus({preventScroll:true});}
+});
+document.addEventListener('keydown',event=>{
+ const tab=event.target.closest('[role="tab"]');if(!tab||!['ArrowLeft','ArrowRight','Home','End'].includes(event.key))return;
+ event.preventDefault();const tabs=[...tab.closest('[role="tablist"]').querySelectorAll('[role="tab"]')],current=tabs.indexOf(tab);const index=event.key==='Home'?0:event.key==='End'?tabs.length-1:(current+(event.key==='ArrowRight'?1:-1)+tabs.length)%tabs.length;tabs[index].click();tabs[index].focus();
+});
+window.addEventListener('resize',updateWorkbenchLayout);
 
 render();
 </script>
