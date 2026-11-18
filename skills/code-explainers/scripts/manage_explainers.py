@@ -1,4 +1,4 @@
-"""Register source-grounded HTML explainers and publish the dedicated Pages site."""
+"""Register code walkthroughs or performance HTML and publish the Pages site."""
 import argparse
 from datetime import datetime, timedelta, timezone
 import html
@@ -13,6 +13,7 @@ import urllib.request
 
 REPO = "cocobronie2333-dot/code-explainers"
 SITE = "https://cocobronie2333-dot.github.io/code-explainers/"
+CATEGORIES = {"code": "代码讲解", "performance": "性能优化"}
 
 
 def run(args, root):
@@ -45,7 +46,7 @@ def clean_checkout(root):
     run(["git", "merge", "--ff-only", "origin/main"], root)
 
 
-def portable(content):
+def portable(content, category="code"):
     if not re.search(r"<!doctype\s+html", content, re.I):
         raise ValueError("A standalone HTML document is required")
     match = re.search(r"const SOURCES = (.*);\nconst NAMES", content)
@@ -56,18 +57,23 @@ def portable(content):
         content = content[:match.start(1)] + json.dumps(sources, ensure_ascii=False).replace("</", "<\\/") + content[match.end(1):]
     content = content.replace("本地代码摘录", "固定版本代码摘录")
     if "data-explainer-home" not in content:
-        nav = '<nav data-explainer-home style="max-width:1320px;margin:16px auto 0;padding:0 36px;font:13px/1.6 system-ui"><a href="../" style="color:inherit">← 代码讲解目录</a></nav>'
+        label = CATEGORIES[category]
+        nav = f'<nav data-explainer-home aria-label="返回目录" style="max-width:1556px;margin:16px auto;padding:0 28px;font:13px/1.6 system-ui"><a href="../?category={category}" style="color:inherit">← {label}目录</a></nav>'
         content = re.sub(r"(<body\b[^>]*>)", lambda m: m.group(1) + "\n" + nav, content, count=1, flags=re.I)
     return content
 
 
 def homepage(catalog):
-    cards = []
+    cards = {category: [] for category in CATEGORIES}
     for item in sorted(catalog["items"], key=lambda item: item["updated"], reverse=True):
+        category = item.get("category", "code")
+        if category not in CATEGORIES:
+            raise ValueError("Unknown page category: " + category)
+        label = CATEGORIES[category]
         title, summary = html.escape(item["title"]), html.escape(item["summary"])
         tags = "".join("<span>" + html.escape(tag) + "</span>" for tag in item["tags"])
-        search = html.escape(" ".join([item["title"], item["summary"], *item["tags"]]).lower(), quote=True)
-        cards.append(f'<article data-search="{search}"><div class="item-meta"><time>{html.escape(item["updated"])}</time><div class="tags">{tags}</div></div><h2><a href="{item["slug"]}/">{title} ↗</a></h2><p>{summary}</p><a class="read" href="{item["slug"]}/">打开交互讲解 →</a></article>')
+        search = html.escape(" ".join([label, item["title"], item["summary"], *item["tags"]]).lower(), quote=True)
+        cards[category].append(f'<article data-category="{category}" data-search="{search}"><div class="item-meta"><span class="category-label">{label} · <time>{html.escape(item["updated"])}</time></span><div class="tags">{tags}</div></div><h3><a href="{item["slug"]}/">{title} ↗</a></h3><p>{summary}</p><a class="read" href="{item["slug"]}/">打开{"性能分析" if category == "performance" else "代码讲解"} →</a></article>')
     references = []
     for item in catalog.get("references", []):
         if not item["url"].startswith("https://"):
@@ -78,7 +84,7 @@ def homepage(catalog):
         search = html.escape(" ".join([item["title"], item["summary"], item["author"], *item["tags"]]).lower(), quote=True)
         references.append(f'<article class="reference" data-search="{search}"><div class="item-meta"><span>外部参考 · {author}</span><div class="tags">{tags}</div></div><h3><a href="{url}" target="_blank" rel="noopener">{title} ↗</a></h3><p>{summary}</p><a class="read" href="{url}" target="_blank" rel="noopener">阅读原文与交互 →</a></article>')
     template = (Path(__file__).resolve().parents[1] / "assets/catalog-template.html").read_text(encoding="utf-8")
-    return template.replace("__CARDS__", "\n".join(cards)).replace("__REFERENCES__", "\n".join(references))
+    return template.replace("__CODE_CARDS__", "\n".join(cards["code"])).replace("__PERFORMANCE_CARDS__", "\n".join(cards["performance"])).replace("__REFERENCES__", "\n".join(references))
 
 
 def rebuild(root):
@@ -97,19 +103,20 @@ def add(args):
         raise ValueError("slug must be lowercase ASCII words separated by hyphens")
     if args.slug in {"assets", "scripts", "skills"}:
         raise ValueError("Reserved slug")
-    content = portable(Path(args.html).read_text(encoding="utf-8"))
     root.mkdir(parents=True, exist_ok=True)
     path = root / "catalog.json"
     catalog = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {"version": 1, "items": []}
     if catalog.get("version") != 1:
         raise ValueError("Unsupported catalog schema")
     old = next((item for item in catalog["items"] if item["slug"] == args.slug), {})
+    category = args.category or old.get("category", "code")
+    content = portable(Path(args.html).read_text(encoding="utf-8"), category)
     revisions = dict(old.get("source_revisions", {}))
     for spec in args.source_revision:
         name, revision = spec.split("=", 1)
         revisions[name] = revision
     updated = args.updated or datetime.now(timezone(timedelta(hours=8))).date().isoformat()
-    entry = dict(slug=args.slug, title=args.title, summary=args.summary, tags=[tag.strip() for tag in args.tags.split(",") if tag.strip()], updated=updated, source_revisions=revisions)
+    entry = dict(slug=args.slug, category=category, title=args.title, summary=args.summary, tags=[tag.strip() for tag in args.tags.split(",") if tag.strip()], updated=updated, source_revisions=revisions)
     catalog["items"] = [item for item in catalog["items"] if item["slug"] != args.slug] + [entry]
     destination = root / args.slug / "index.html"
     destination.parent.mkdir(parents=True, exist_ok=True)
@@ -120,7 +127,7 @@ def add(args):
     if args.publish:
         run(["git", "add", "--", args.slug + "/index.html", "catalog.json", "index.html"], root)
         if run(["git", "diff", "--cached", "--name-only"], root):
-            run(["git", "commit", "-s", "-m", "docs: update " + args.slug + " explainer"], root)
+            run(["git", "commit", "-s", "-m", "docs: update " + args.slug + " page"], root)
             run(["git", "push", "origin", "main"], root)
         verify(root, args.slug)
 
@@ -143,7 +150,7 @@ def verify(root, slug):
         raise RuntimeError("Pages remains unverified after ten minutes; inspect the existing build")
     catalog = json.loads((root / "catalog.json").read_text(encoding="utf-8"))
     item = next(item for item in catalog["items"] if item["slug"] == slug)
-    for suffix, marker in [("", "代码讲解集"), (slug + "/", item["title"])]:
+    for suffix, marker in [("", "代码讲解与性能优化"), (slug + "/", item["title"])]:
         url = SITE + suffix
         error = None
         for _ in range(12):
@@ -168,6 +175,7 @@ def main():
     for name in ["repo-dir", "html", "slug", "title", "summary"]:
         register.add_argument("--" + name, required=True)
     register.add_argument("--tags", default="")
+    register.add_argument("--category", choices=CATEGORIES, help="Page category; defaults to the existing category or code")
     register.add_argument("--updated")
     register.add_argument("--source-revision", action="append", default=[])
     register.add_argument("--publish", action="store_true")

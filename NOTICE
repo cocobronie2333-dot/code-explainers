@@ -13,5 +13,7 @@ Source excerpts retain their upstream provenance through pinned commit URLs,
 file paths and line numbers. The upstream projects distribute this code under
 the Apache License, Version 2.0. A copy is included in LICENSE.
 
-The explanations, illustrative identifiers, addresses and timeline layouts
-are educational adaptations, not captured traces or upstream source changes.
+In code walkthroughs, the explanations, illustrative identifiers, addresses
+and timeline layouts are educational adaptations, not captured traces or
+upstream source changes. Performance pages are listed separately and retain
+their own captured-data provenance, timing boundaries and statistical rules.

@@ -21,7 +21,8 @@
       "source_revisions": {
         "vllm": "24420b7a341af37a9bc3186e6fc6062512e0aa58",
         "vllm-ascend": "76ea9d24f155afe032ad9ac6c98717f1f7334f36"
-      }
+      },
+      "category": "code"
     },
     {
       "slug": "decoder-replay-prepare",
@@ -41,7 +42,26 @@
       "source_revisions": {
         "vllm-ascend": "76ea9d24f155afe032ad9ac6c98717f1f7334f36",
         "cannbot-dsl": "b8231831450679512006a5e699811506a1465e80"
-      }
+      },
+      "category": "code"
+    },
+    {
+      "slug": "chunk-observatory",
+      "category": "performance",
+      "title": "Chunk Observatory · 128K / TP8",
+      "summary": "对比 48buffer 与 2-buffer 在 128K / TP8 场景中的 chunk 执行、逐层等待与数据搬运；支持轻量 / 完整 profiling、单 chunk、累计和平均视图，并区分主机调用时间与 NPU kernel 时间。",
+      "tags": [
+        "Ascend",
+        "Profiling",
+        "Chunk",
+        "128K",
+        "TP8",
+        "KV-Cache",
+        "48buffer",
+        "2-buffer"
+      ],
+      "updated": "2026-11-18",
+      "source_revisions": {}
     }
   ],
   "references": [
