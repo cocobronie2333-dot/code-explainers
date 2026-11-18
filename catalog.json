@@ -49,7 +49,7 @@
       "slug": "chunk-observatory",
       "category": "performance",
       "title": "Chunk Observatory · 128K / TP8",
-      "summary": "独立切换 86-chunk 采集与 2026-11-16 head trace，对照 48buffer / 2-buffer 的 CPU、设备 stream 和计算 / 拷贝重叠；支持 Step 1–4、同步缩放、泳道高亮、独立折叠及源事件详情。",
+      "summary": "独立切换 86-chunk 采集与 2026-11-16 head trace，对照 48buffer / 2-buffer 的 CPU、设备 stream 和计算 / 拷贝重叠；支持 Step 1–4、同步缩放、泳道高亮、独立折叠、块聚焦切换与一键重置及源事件详情。",
       "tags": [
         "Ascend",
         "Profiling",

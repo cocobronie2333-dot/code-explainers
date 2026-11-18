@@ -14,6 +14,8 @@
 
 Chunk Observatory 的执行时间轴支持两组独立采集：原来的 86-chunk 数据，以及 [2026-11-16 head trace 对照](https://cocobronie2333-dot.github.io/code-explainers/chunk-observatory/?capture=head)。新采集包含 `b48-head.trace.json` 与 `b2-head.trace.json` 的 Step 1–4，可查看主机标记、Computing、通信和实际设备 stream；两组时间轴可独立折叠，共享缩放、数值视窗与悬停竖线。点击任意泳道名称可切换整行边框高亮，支持两组分别多选；高亮在缩放、切换 step 和折叠后保留，也支持键盘 Enter / 空格。点击“放大一段 COPY 重叠”可直接进入实际的计算 / 拷贝交集窗口。
 
+每组标题旁的重置图标可清除本组泳道高亮与块聚焦，并恢复两组共用的时间缩放。原始采集再次点击同一层块会恢复点击前的层筛选和时间窗；head trace 点击块后只显示同泳道的该块，再点同一块恢复其它块。head 的块聚焦仅影响显示，统计仍基于完整视窗。
+
 两次运行只按各自 step 起点对齐；同一 trace 内不移动单条轨道。Step 视图按各组自己的边界裁剪，不混入下一 step；完整 head 保留间隙与设备尾部。重叠时长按区间并集的交集计算，不相加嵌套事件；这些设备 `MEMCPY_ASYNC` 未提供拷贝方向，不能直接全部标为池化 Load / Save。采集切换时，旧数据的统计与控制会收起，避免混用采集来源。
 
 新采集保留 219,438 个实测区间，包括全部正时长 Ascend Hardware / Overlap Analysis 事件、主机 lw 标记、选定 CPU 热点及 CANN memcpy / 等待调用；不嵌入原始约 100 MB 的 trace 文件，不重建未保留的 flow / counter。每份原始数据的 SHA256、源事件索引与提取规则可在页面核对。原有 86-chunk 内嵌数据保持不变。
