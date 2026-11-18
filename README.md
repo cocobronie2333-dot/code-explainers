@@ -8,6 +8,8 @@
 
 首页提供“全部 / 代码讲解 / 性能优化”筛选、分类分区与统一搜索。外部代码讲解参考单独展示，不计入本站 HTML 数量。筛选与搜索可通过 URL 保留，例如 [仅查看性能优化](https://cocobronie2333-dot.github.io/code-explainers/?category=performance)。
 
+首页和各主题页面统一使用根目录的 `favicon.svg` 作为标签页图标；登记脚本会为新增或更新的 HTML 自动设置同一图标。
+
 `catalog.json` 的每个页面使用 `category: "code"` 或 `category: "performance"`；旧条目缺省为 `code`。性能页保留原始数据与计时说明，不要求附带代码讲解的源码版本。Chunk Observatory 内嵌全部数据，可离线打开；CPU 调用耗时、轻量采集与完整 profiling 的比较范围见页面中的统计规则。
 
 当前 KV Cache 讲解支持独立开启 / 关闭共享池与 PD 分离，PD 可选择 V2 Pull、V1 Pull、经典逐层 Push、实验性 V2 Push 和 D2RH。池化位置可选 P、D 或两端，D 的读写权限与外部来源顺序独立配置；D 端 DRAM staging 与共享池分别标注。每种路径保留事件、元数据、配置片段与固定版本源码入口。

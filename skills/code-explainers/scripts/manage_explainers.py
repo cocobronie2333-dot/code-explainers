@@ -46,6 +46,28 @@ def clean_checkout(root):
     run(["git", "merge", "--ff-only", "origin/main"], root)
 
 
+def with_site_icon(content, href="../favicon.svg"):
+    head = re.search(r"<head\b[^>]*>[\s\S]*?</head\s*>", content, re.I)
+    if not head:
+        raise ValueError("A head element is required for the site icon")
+    icon = f'<link rel="icon" type="image/svg+xml" href="{href}">'
+    replaced = False
+
+    def replace_link(match):
+        nonlocal replaced
+        rel = re.search(r"\brel\s*=\s*(?:\"([^\"]*)\"|'([^']*)'|([^\s>]+))", match.group(), re.I)
+        if not rel or "icon" not in next(value for value in rel.groups() if value is not None).lower().split():
+            return match.group()
+        previous = replaced
+        replaced = True
+        return "" if previous else icon
+
+    updated = re.sub(r"<link\b[^>]*>", replace_link, head.group(), flags=re.I)
+    if not replaced:
+        updated = re.sub(r"(<head\b[^>]*>)", lambda match: match.group() + "\n" + icon, updated, count=1, flags=re.I)
+    return content[:head.start()] + updated + content[head.end():]
+
+
 def portable(content, category="code"):
     if not re.search(r"<!doctype\s+html", content, re.I):
         raise ValueError("A standalone HTML document is required")
@@ -60,7 +82,7 @@ def portable(content, category="code"):
         label = CATEGORIES[category]
         nav = f'<nav data-explainer-home aria-label="返回目录" style="max-width:1556px;margin:16px auto;padding:0 28px;font:13px/1.6 system-ui"><a href="../?category={category}" style="color:inherit">← {label}目录</a></nav>'
         content = re.sub(r"(<body\b[^>]*>)", lambda m: m.group(1) + "\n" + nav, content, count=1, flags=re.I)
-    return content
+    return with_site_icon(content)
 
 
 def homepage(catalog):
