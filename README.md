@@ -12,6 +12,18 @@
 
 `catalog.json` 的每个页面使用 `category: "code"` 或 `category: "performance"`；旧条目缺省为 `code`。性能页保留原始数据与计时说明，不要求附带代码讲解的源码版本。Chunk Observatory 内嵌全部数据，可离线打开；CPU 调用耗时、轻量采集与完整 profiling 的比较范围见页面中的统计规则。
 
+Chunk Observatory 的执行时间轴支持两组独立采集：原来的 86-chunk 数据，以及 [2026-11-16 head trace 对照](https://cocobronie2333-dot.github.io/code-explainers/chunk-observatory/?capture=head)。新采集包含 `b48-head.trace.json` 与 `b2-head.trace.json` 的 Step 1–4，可查看主机标记、Computing、通信和实际设备 stream；两组时间轴可独立折叠，共享缩放、数值视窗与悬停竖线。点击“放大一段 COPY 重叠”可直接进入实际的计算 / 拷贝交集窗口。
+
+两次运行只按各自 step 起点对齐；同一 trace 内不移动单条轨道。Step 视图按各组自己的边界裁剪，不混入下一 step；完整 head 保留间隙与设备尾部。重叠时长按区间并集的交集计算，不相加嵌套事件；这些设备 `MEMCPY_ASYNC` 未提供拷贝方向，不能直接全部标为池化 Load / Save。采集切换时，旧数据的统计与控制会收起，避免混用采集来源。
+
+新采集保留 219,438 个实测区间，包括全部正时长 Ascend Hardware / Overlap Analysis 事件、主机 lw 标记、选定 CPU 热点及 CANN memcpy / 等待调用；不嵌入原始约 100 MB 的 trace 文件，不重建未保留的 flow / counter。每份原始数据的 SHA256、源事件索引与提取规则可在页面核对。原有 86-chunk 内嵌数据保持不变。
+
+可用 [提取脚本](scripts/build_head_trace_data.py) 从同一对原始文件重建这次采集的内嵌数据（页面布局与交互不变）：
+
+```powershell
+python scripts/build_head_trace_data.py --b48 <b48-head.trace.json> --b2 <b2-head.trace.json> --out <temporary-directory>/head-data.json --html chunk-observatory/index.html
+```
+
 当前 KV Cache 讲解支持独立开启 / 关闭共享池与 PD 分离，PD 可选择 V2 Pull、V1 Pull、经典逐层 Push、实验性 V2 Push 和 D2RH。池化位置可选 P、D 或两端，D 的读写权限与外部来源顺序独立配置；D 端 DRAM staging 与共享池分别标注。每种路径保留事件、元数据、配置片段与固定版本源码入口。
 
 默认只展开 PD、共享池与池化位置，传输方案、D 读写权限和示例输入收纳在“详细配置”。吸顶摘要显示实际生效值。桌面时间线与事件详情并排，支持“处理与接口 / 元数据 / HBM·DRAM”切换；事件标签默认保持可读宽度，也可切到带事件编号的全图概览。泳道与详情各自滚动，源码阅读、分享链接和离线使用保持联动。窄屏自动改为上下布局。

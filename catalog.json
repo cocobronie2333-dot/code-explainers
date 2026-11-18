@@ -49,7 +49,7 @@
       "slug": "chunk-observatory",
       "category": "performance",
       "title": "Chunk Observatory · 128K / TP8",
-      "summary": "对比 48buffer 与 2-buffer 在 128K / TP8 场景中的 chunk 执行、逐层等待与数据搬运；支持轻量 / 完整 profiling、单 chunk、累计和平均视图，并区分主机调用时间与 NPU kernel 时间。",
+      "summary": "独立切换 86-chunk 采集与 2026-11-16 head trace，对照 48buffer / 2-buffer 的 CPU、设备 stream 和计算 / 拷贝重叠；支持 Step 1–4、同步缩放、独立折叠及源事件详情。",
       "tags": [
         "Ascend",
         "Profiling",
@@ -58,7 +58,10 @@
         "TP8",
         "KV-Cache",
         "48buffer",
-        "2-buffer"
+        "2-buffer",
+        "Overlap",
+        "Head-Trace",
+        "NPU-Stream"
       ],
       "updated": "2026-11-18",
       "source_revisions": {}
