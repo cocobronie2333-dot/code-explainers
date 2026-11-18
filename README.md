@@ -12,7 +12,7 @@
 
 `catalog.json` 的每个页面使用 `category: "code"` 或 `category: "performance"`；旧条目缺省为 `code`。性能页保留原始数据与计时说明，不要求附带代码讲解的源码版本。Chunk Observatory 内嵌全部数据，可离线打开；CPU 调用耗时、轻量采集与完整 profiling 的比较范围见页面中的统计规则。
 
-Chunk Observatory 的执行时间轴支持两组独立采集：原来的 86-chunk 数据，以及 [2026-11-16 head trace 对照](https://cocobronie2333-dot.github.io/code-explainers/chunk-observatory/?capture=head)。新采集包含 `b48-head.trace.json` 与 `b2-head.trace.json` 的 Step 1–4，可查看主机标记、Computing、通信和实际设备 stream；两组时间轴可独立折叠，共享缩放、数值视窗与悬停竖线。点击“放大一段 COPY 重叠”可直接进入实际的计算 / 拷贝交集窗口。
+Chunk Observatory 的执行时间轴支持两组独立采集：原来的 86-chunk 数据，以及 [2026-11-16 head trace 对照](https://cocobronie2333-dot.github.io/code-explainers/chunk-observatory/?capture=head)。新采集包含 `b48-head.trace.json` 与 `b2-head.trace.json` 的 Step 1–4，可查看主机标记、Computing、通信和实际设备 stream；两组时间轴可独立折叠，共享缩放、数值视窗与悬停竖线。点击任意泳道名称可切换整行边框高亮，支持两组分别多选；高亮在缩放、切换 step 和折叠后保留，也支持键盘 Enter / 空格。点击“放大一段 COPY 重叠”可直接进入实际的计算 / 拷贝交集窗口。
 
 两次运行只按各自 step 起点对齐；同一 trace 内不移动单条轨道。Step 视图按各组自己的边界裁剪，不混入下一 step；完整 head 保留间隙与设备尾部。重叠时长按区间并集的交集计算，不相加嵌套事件；这些设备 `MEMCPY_ASYNC` 未提供拷贝方向，不能直接全部标为池化 Load / Save。采集切换时，旧数据的统计与控制会收起，避免混用采集来源。
 
