@@ -65,6 +65,23 @@
       ],
       "updated": "2026-11-18",
       "source_revisions": {}
+    },
+    {
+      "slug": "prefill-queue-timeline",
+      "category": "code",
+      "title": "Prefill KV 卸载泳道图",
+      "summary": "以第 4–7 层为例，展示 Attention 前后的预取和回写入队、收发线程的搬运，以及第 4 层回写完成后第 6 层如何复用共享缓冲区。",
+      "tags": [
+        "vLLM",
+        "Ascend",
+        "Prefill",
+        "KV-Cache",
+        "Memcache",
+        "Mooncake",
+        "泳道图"
+      ],
+      "updated": "2026-11-19",
+      "source_revisions": {}
     }
   ],
   "references": [
