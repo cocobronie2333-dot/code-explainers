@@ -1,0 +1,5 @@
+# Preserve the supplied evidence bytes and their recorded SHA-256 checksums.
+*.csv -text
+*.py -text
+execute-model-phases.json -text
+offload-by-cycle.json -text
