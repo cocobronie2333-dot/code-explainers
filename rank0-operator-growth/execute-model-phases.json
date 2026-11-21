@@ -1,0 +1,34 @@
+{
+  "target: 其他通信": {
+    "count": 54,
+    "delta_ms": -106.26816
+  },
+  "target: attention输入AllGather": {
+    "count": 864,
+    "delta_ms": 243.97689999999966
+  },
+  "target: attention输出ReduceScatter": {
+    "count": 864,
+    "delta_ms": 789.8273600000005
+  },
+  "target: MoE内部 hcom_allGather_": {
+    "count": 1728,
+    "delta_ms": 137.66118
+  },
+  "target: MoE内部 hcom_alltoallv_": {
+    "count": 2592,
+    "delta_ms": 148.35832000000008
+  },
+  "target: MoE内部 hcom_reduceScatter_": {
+    "count": 864,
+    "delta_ms": 74.90394
+  },
+  "target末端HC汇合/输出准备": {
+    "count": 36,
+    "delta_ms": 5.197240000000001
+  },
+  "sample_tokens: MTP及尾部": {
+    "count": 198,
+    "delta_ms": 23.938939999999995
+  }
+}

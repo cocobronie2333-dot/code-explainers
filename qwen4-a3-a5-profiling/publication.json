@@ -6,7 +6,8 @@
     "shared directory navigation and favicon",
     "explicit missing-attachment notices",
     "cross-report link",
-    "responsive document wrappers"
+    "responsive document wrappers",
+    "restored A3 per-communication-event cross-report download"
   ],
   "extracted_assets": [
     {
@@ -52,7 +53,6 @@
     "rank-arrival-conclusions.json",
     "rank0-function-scope-analysis.json",
     "rank0-idle-submission-analysis.json",
-    "b2-communication-events.csv",
     "cache_planner.py",
     "kv_transfer.py",
     "gdn.py",
@@ -62,5 +62,12 @@
     "report.md",
     "request-summary.csv",
     "supplement_b4_report.py"
+  ],
+  "updated": "2026-11-21",
+  "linked_assets": [
+    {
+      "path": "../rank0-operator-growth/b2-communication-events.csv",
+      "sha256": "fbee01ba8afca7e6964ca50b5811e8ae26fe4f4110ad568d70772c64c347d9f5"
+    }
   ]
 }

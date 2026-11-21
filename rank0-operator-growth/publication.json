@@ -4,18 +4,108 @@
   "published": "2026-11-21",
   "changes": [
     "shared directory navigation and favicon",
-    "explicit missing-attachment notices",
     "cross-report link",
-    "responsive document wrappers"
+    "responsive document wrappers",
+    "restored all original report attachment links and comparison figure",
+    "added 15 supplied attachments and download table",
+    "lossless gzip packaging of full analysis JSON"
   ],
   "extracted_assets": [],
-  "unavailable_attachments": [
-    "analysis.json",
-    "b2-communication-events.csv",
-    "communication_by_phase.csv",
-    "communication_by_type.csv",
-    "comparison.png",
-    "offload-by-cycle.json",
-    "operators.csv"
+  "unavailable_attachments": [],
+  "updated": "2026-11-21",
+  "provided_assets": [
+    {
+      "path": "analysis.json.gz",
+      "source_file": "analysis--6a0483aa2bf147dc98ebd53c0742e0ef.json",
+      "sha256": "2a8cb47b418200e6b09ee9a7b7c6227dc5bbad813c9331374b368e8f279a7436",
+      "bytes": 9778970,
+      "uncompressed_filename": "analysis.json",
+      "uncompressed_sha256": "4be04370c5324ad8a872928714439da6f0a0767b0d1d896e1568b97ad736ff86",
+      "uncompressed_bytes": 175508146
+    },
+    {
+      "path": "b2-communication-events.csv",
+      "source_file": "b2-communication-events--8d78bbf9ed4649e4aab7f3798930462c.csv",
+      "sha256": "fbee01ba8afca7e6964ca50b5811e8ae26fe4f4110ad568d70772c64c347d9f5",
+      "bytes": 2079836
+    },
+    {
+      "path": "b4-communication-events.csv",
+      "source_file": "b4-communication-events--5810cc6e01484dcfad81f9676e6cbee4.csv",
+      "sha256": "2a0c57d650701241cc864e332abbe1b22be57bf7813daf1bc11616a70eec0bf6",
+      "bytes": 2097271
+    },
+    {
+      "path": "b48-communication-events.csv",
+      "source_file": "b48-communication-events--6cc3fe2f1ca24b949b6dcbb908341849.csv",
+      "sha256": "33709cf945afafb4356b8b89770db6ec9255eb39bb16453646ab38a2a04f863b",
+      "bytes": 1979333
+    },
+    {
+      "path": "communication_by_cycle.csv",
+      "source_file": "communication_by_cycle--3444cbdaf78a47b2b29bd231439f74e7.csv",
+      "sha256": "0078fb8e866131aac3098f4de424021d05e69a649277a6bb1a62e7a215aa0626",
+      "bytes": 14973
+    },
+    {
+      "path": "communication_by_location.csv",
+      "source_file": "communication_by_location--99051fb1521e4bf699a9364a72c5c85f.csv",
+      "sha256": "4ee74ba2c6716b7308fc19811da1519767c9b43016840ae2b8fd00a18647e60d",
+      "bytes": 5748
+    },
+    {
+      "path": "communication_by_neighbors.csv",
+      "source_file": "communication_by_neighbors--6341b2c3129c475c9cc13624f63a29de.csv",
+      "sha256": "dc7dc624ab1855769ba25c32b0f41068fdff08a69903bf3f08d71943024736bf",
+      "bytes": 14754
+    },
+    {
+      "path": "communication_by_phase.csv",
+      "source_file": "communication_by_phase--d36a0ce19aea482996a762d0c8e1dce9.csv",
+      "sha256": "95cbd3c183d986885c2c1d8c666216324c9540adf6b92788a8aa8e6efc38d3d1",
+      "bytes": 8594
+    },
+    {
+      "path": "communication_by_type.csv",
+      "source_file": "communication_by_type--95114894939043da96afc9f1e4e6d6a5.csv",
+      "sha256": "690dfbf1b5e7ba794205b0bdca13dd0e13b18e1a094709cb93ca9016bbb8154b",
+      "bytes": 4222
+    },
+    {
+      "path": "comparison.png",
+      "source_file": "comparison--6f9d6d61c7c14229ade1686864e2bb1f.png",
+      "sha256": "3b00910d4378c702ed51b99ba6ff906458bcb3aea074fdcab4465b71c4c3a92b",
+      "bytes": 156215
+    },
+    {
+      "path": "execute-model-phases.json",
+      "source_file": "execute-model-phases--21d4532f685a437cbae6797de80bfc55.json",
+      "sha256": "e91a5711341edfbbc7c5fb7fcb6ceaabe6807d50af144e28f4bd6a1bc4f4f976",
+      "bytes": 785
+    },
+    {
+      "path": "offload-by-cycle.json",
+      "source_file": "offload-by-cycle--5817f2e6b3e44f919e94cb8df8fe8ecb.json",
+      "sha256": "a1caec9fc0ae3525b7268cc22247f76e4b2bf0643d34e18c845a72ffa9ad9ce1",
+      "bytes": 14417
+    },
+    {
+      "path": "operators.csv",
+      "source_file": "operators--c8d62a87afb546cb9f8c17205742f6c3.csv",
+      "sha256": "7c5f9477cc61ac2de45ae9419c412f3bb1cc054d6242a278c29d92917c145ba9",
+      "bytes": 26962
+    },
+    {
+      "path": "runtime-model.py",
+      "source_file": "runtime-model--b0406413cee341d2ba0e255af5b60d6d.py",
+      "sha256": "54826e0e0d76f39157ea068a7af797d752917cd4b3a42ba1964ffab14cf37936",
+      "bytes": 4765
+    },
+    {
+      "path": "runtime-qwen4-model.py",
+      "source_file": "runtime-qwen4-model--ed133d051fba4f839be3dc43507cd4a9.py",
+      "sha256": "14c4eb9bca49ba80dd30d682345aad19c77c5e975131e1a6e5bf58f97391ce55",
+      "bytes": 3122
+    }
   ]
 }

@@ -87,7 +87,7 @@
       "slug": "rank0-operator-growth",
       "category": "performance",
       "title": "rank0 算子增长与通信定位",
-      "summary": "对照 A3 b48 / b2 / b4 的 rank0 profiling，定位通信 Wait、FIA attention 与 load/save 依赖的变化；保留原报告表格与算子搜索，并明确附件缺失范围。",
+      "summary": "对照 A3 b48 / b2 / b4 的 rank0 profiling，定位通信 Wait、FIA attention 与 load/save 依赖；含原始对照图、算子搜索、15 项配套附件及完整分析 JSON 的 gzip 下载。",
       "tags": [
         "Ascend",
         "A3",

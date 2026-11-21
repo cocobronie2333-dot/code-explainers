@@ -43,7 +43,7 @@
 .publication-table{max-width:100%;overflow-x:auto}main{min-width:0}input{box-sizing:border-box;max-width:100%}
 @media(max-width:680px){.publication-note{margin:14px 12px 0;padding:12px 14px}main{padding-left:14px;padding-right:14px}h1{overflow-wrap:anywhere}}
 </style></head><body>
-<nav data-explainer-home aria-label="返回目录" style="max-width:1556px;margin:16px auto;padding:0 28px;font:13px/1.6 system-ui"><a href="../?category=performance" style="color:inherit">← 性能优化目录</a></nav><aside class="publication-note" id="publication-note" aria-label="发布说明"><p><strong>发布说明</strong> · 本页保留所提供报告的分析内容、采集口径与原始数据表。报告内嵌的 6 张图完整保留，PNG 下载可用。部分附件未随 HTML 提供；相关入口已标记“附件未提供”，不再指向本地文件。</p><p>关联报告：<a href="../rank0-operator-growth/">rank0：b2 通信增长与算子对比</a>。本页发布于 2026-11-21，分析日期以原报告为准。</p></aside><main>
+<nav data-explainer-home aria-label="返回目录" style="max-width:1556px;margin:16px auto;padding:0 28px;font:13px/1.6 system-ui"><a href="../?category=performance" style="color:inherit">← 性能优化目录</a></nav><aside class="publication-note" id="publication-note" aria-label="发布说明"><p><strong>发布说明</strong> · 本页保留所提供报告的分析内容、采集口径与原始数据表。报告内嵌的 6 张图完整保留，PNG 下载可用。A3 逐通信事件已补齐，可从证据入口下载。其余部分附件未随 HTML 提供；相关入口已标记“附件未提供”，不再指向本地文件。</p><p>关联报告：<a href="../rank0-operator-growth/">rank0：b2 通信增长与算子对比</a>。本页发布于 2026-11-21，分析日期以原报告为准。</p></aside><main>
 
 <header><div class="meta">Qwen4Exp · B48 / B2 / B4 · 128K 单请求</div><h1>A3 / A5 单请求 Profiling 对比</h1>
 
@@ -261,6 +261,6 @@ FIA 在 rank0 与已识别 SDMA 的直接重叠仅 0 → 0.020 ms，不能据此
 
 <p class="note">两边可定位各自耗时增加的位置。设备、MTP、传输、内存和采集配置均有差异，现有数据无法单独量化硬件贡献。局部泳道展示实际重叠，嵌套和并行区间不可直接加到 TTFT 上。</p>
 
-<p><span class="publication-unavailable" title="附件未提供：validation-report.md">A3 原始报告 <small>（附件未提供）</small></span> · <a href="../rank0-operator-growth/">A3 rank0 原分析</a> · <span class="publication-unavailable" title="附件未提供：b2-communication-events.csv">A3 逐通信事件 <small>（附件未提供）</small></span> · <span class="publication-unavailable" title="附件未提供：rank-arrival-conclusions.json">A3 八 rank 到达时序 <small>（附件未提供）</small></span> · <span class="publication-unavailable" title="附件未提供：report.md">A5 R7 原报告 <small>（附件未提供）</small></span> · <span class="publication-unavailable" title="附件未提供：bubble-analysis.md">A5 间隙归因 <small>（附件未提供）</small></span> · <span class="publication-unavailable" title="附件未提供：bubble-specific-overlaps.csv">A5 marker 交集 <small>（附件未提供）</small></span> · <span class="publication-unavailable" title="附件未提供：request-summary.csv">A5 逐请求结果 <small>（附件未提供）</small></span></p></section>
+<p><span class="publication-unavailable" title="附件未提供：validation-report.md">A3 原始报告 <small>（附件未提供）</small></span> · <a href="../rank0-operator-growth/">A3 rank0 原分析</a> · <a href="../rank0-operator-growth/b2-communication-events.csv" download>A3 逐通信事件</a> · <span class="publication-unavailable" title="附件未提供：rank-arrival-conclusions.json">A3 八 rank 到达时序 <small>（附件未提供）</small></span> · <span class="publication-unavailable" title="附件未提供：report.md">A5 R7 原报告 <small>（附件未提供）</small></span> · <span class="publication-unavailable" title="附件未提供：bubble-analysis.md">A5 间隙归因 <small>（附件未提供）</small></span> · <span class="publication-unavailable" title="附件未提供：bubble-specific-overlaps.csv">A5 marker 交集 <small>（附件未提供）</small></span> · <span class="publication-unavailable" title="附件未提供：request-summary.csv">A5 逐请求结果 <small>（附件未提供）</small></span></p></section>
 
 </main></body></html>
