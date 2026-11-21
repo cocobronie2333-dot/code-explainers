@@ -5,6 +5,10 @@
 - [目录首页](https://cocobronie2333-dot.github.io/code-explainers/)
 - [KV Cache 池化与 P/D 分离：Memcache / Mooncake](https://cocobronie2333-dot.github.io/code-explainers/kv-cache-pooling/)
 - [Chunk Observatory · 128K / TP8](https://cocobronie2333-dot.github.io/code-explainers/chunk-observatory/)：性能优化，比较 48buffer 与 2-buffer 的 chunk 执行、等待和搬运。
+- [rank0 算子增长与通信定位](https://cocobronie2333-dot.github.io/code-explainers/rank0-operator-growth/)：A3 b48 / b2 / b4 的通信等待、算子变化与 load/save 依赖。
+- [Qwen4Exp · A3/A5 单请求 Profiling 对比](https://cocobronie2333-dot.github.io/code-explainers/qwen4-a3-a5-profiling/)：阶段耗时、通信、host 准备及 GDN 间隙，含 6 张原报告图表与 PNG 下载。
+
+这两份报告保留所提供 HTML 的正文、数据表和分析口径；页面顶部说明附件可用范围。原 HTML 中未随附的图表、CSV、JSON 和本地证据文件标记为“附件未提供”，不使用其它采集的数据替代。各页的 `publication.json` 记录原文件 SHA-256、提取图片校验值和缺失附件名称。
 
 首页提供“全部 / 代码讲解 / 性能优化”筛选、分类分区与统一搜索。外部代码讲解参考单独展示，不计入本站 HTML 数量。筛选与搜索可通过 URL 保留，例如 [仅查看性能优化](https://cocobronie2333-dot.github.io/code-explainers/?category=performance)。
 

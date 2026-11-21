@@ -1,0 +1,21 @@
+{
+  "source_file": "report--37abd763927641889429735a4987b3cb.html",
+  "source_sha256": "7d381f16d16f935a92aa1bf0a498743ac6c765478d8528f2e8e7d38eacc587cc",
+  "published": "2026-11-21",
+  "changes": [
+    "shared directory navigation and favicon",
+    "explicit missing-attachment notices",
+    "cross-report link",
+    "responsive document wrappers"
+  ],
+  "extracted_assets": [],
+  "unavailable_attachments": [
+    "analysis.json",
+    "b2-communication-events.csv",
+    "communication_by_phase.csv",
+    "communication_by_type.csv",
+    "comparison.png",
+    "offload-by-cycle.json",
+    "operators.csv"
+  ]
+}

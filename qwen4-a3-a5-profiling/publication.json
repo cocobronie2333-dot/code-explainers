@@ -1,0 +1,66 @@
+{
+  "source_file": "report--38dd624dc9d5425496c1ee98f940ed1a.html",
+  "source_sha256": "178f537d068da83ca1cff0f9ecb7cbb7134f6aeb73f5ec955a5e743303896ca5",
+  "published": "2026-11-21",
+  "changes": [
+    "shared directory navigation and favicon",
+    "explicit missing-attachment notices",
+    "cross-report link",
+    "responsive document wrappers"
+  ],
+  "extracted_assets": [
+    {
+      "path": "overview.png",
+      "sha256": "27345ce79e79e54a615d90cf4234d0f96de2acac942cccadc421719993fdd1a0",
+      "source": "embedded image in supplied HTML"
+    },
+    {
+      "path": "a3-timeline.png",
+      "sha256": "a3ecb171d3f795c35c457731269ab27d3ad89835b1da00813bbc2580935317b9",
+      "source": "embedded image in supplied HTML"
+    },
+    {
+      "path": "a5-timeline.png",
+      "sha256": "327ca6b0d274098b644e9888034815dfc743a4463a4b4920e968554b2e741756",
+      "source": "embedded image in supplied HTML"
+    },
+    {
+      "path": "b4-comparison.png",
+      "sha256": "ea7a87ab49edfc1e1339bc81725412956ace6ee3d309595e98083bbeb9d3564c",
+      "source": "embedded image in supplied HTML"
+    },
+    {
+      "path": "b4-causal-breakdown.png",
+      "sha256": "a812f1ed533cfb1810a2f05246f1bbdb149dac2c113847f6b19e1f1c50c64027",
+      "source": "embedded image in supplied HTML"
+    },
+    {
+      "path": "b4-gdn-timeline.png",
+      "sha256": "e52c56432d7381563374697f0e489926368a175663b93867cef207c95d1be654",
+      "source": "embedded image in supplied HTML"
+    }
+  ],
+  "unavailable_attachments": [
+    "analyze_b4_causes.py",
+    "b4-causal-evidence.json",
+    "b4-host-gap-findings.json",
+    "command.json",
+    "command.json",
+    "offload-debug-cpu-benchmark.json",
+    "offload-debug-serialization.patch",
+    "offload-function-scopes.patch",
+    "rank-arrival-conclusions.json",
+    "rank0-function-scope-analysis.json",
+    "rank0-idle-submission-analysis.json",
+    "b2-communication-events.csv",
+    "cache_planner.py",
+    "kv_transfer.py",
+    "gdn.py",
+    "validation-report.md",
+    "bubble-analysis.md",
+    "bubble-specific-overlaps.csv",
+    "report.md",
+    "request-summary.csv",
+    "supplement_b4_report.py"
+  ]
+}
