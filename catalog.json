@@ -124,6 +124,21 @@
       ],
       "updated": "2026-11-21",
       "source_revisions": {}
+    },
+    {
+      "slug": "ai-ko1-mock-exams",
+      "category": "code",
+      "title": "AI 科一 · 五套模拟上机考试",
+      "summary": "五套 Python 上机模拟卷。每套含一道通用编程题和一道 AI 题，覆盖 NumPy、Attention、采样、训练和推理解码。支持倒计时、草稿保存与交卷后自评。",
+      "tags": [
+        "AI科一",
+        "Python",
+        "NumPy",
+        "Attention",
+        "模拟考试"
+      ],
+      "updated": "2026-11-24",
+      "source_revisions": {}
     }
   ],
   "references": [

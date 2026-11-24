@@ -1,0 +1,757 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI 科一 · 五套模拟上机考试</title>
+<style>
+  :root {
+    --ink: #192923;
+    --muted: #53625a;
+    --paper: #fffef9;
+    --ground: #f0f0e7;
+    --line: #d9ded1;
+    --green: #173c2e;
+    --accent: #d8ef9d;
+    --alert: #a03722;
+    --mono: "Cascadia Code", Consolas, "Microsoft YaHei", monospace;
+    --sans: "HarmonyOS Sans SC", "Microsoft YaHei UI", "PingFang SC", sans-serif;
+    --serif: "Noto Serif SC", "Source Han Serif SC", "Songti SC", SimSun, serif;
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  body { margin: 0; background: var(--ground); color: var(--ink); font: 15px/1.7 var(--sans); }
+  button, textarea { font: inherit; }
+  button { cursor: pointer; }
+  button:disabled { cursor: default; opacity: .55; }
+  a { color: var(--green); text-underline-offset: .2em; }
+  a:focus-visible, button:focus-visible, textarea:focus-visible, summary:focus-visible {
+    outline: 3px solid #57856b; outline-offset: 3px;
+  }
+  h1, h2, h3, p { margin: 0; }
+  h1, h2, h3 { line-height: 1.3; }
+  [hidden] { display: none !important; }
+  .masthead { background: var(--green); color: #fffef5; border-bottom: 5px solid var(--accent); }
+  .masthead-inner, .workspace { width: min(1250px, calc(100% - 72px)); margin: 0 auto; }
+  .masthead-inner { display: flex; align-items: end; justify-content: space-between; gap: 24px; padding: 31px 0 29px; }
+  .masthead h1 { font-family: var(--serif); font-size: clamp(30px, 4.9vw, 54px); font-weight: 800; }
+  .masthead p { margin-top: 8px; color: #dceadd; }
+  .language { flex: none; border: 1px solid #799887; color: var(--accent); padding: 4px 11px; font-family: var(--mono); }
+  .workspace { display: grid; grid-template-columns: 223px minmax(0, 1fr); gap: 24px; padding: 25px 0 48px; }
+  .rail { position: sticky; top: 18px; align-self: start; }
+  .rail h2 { font-size: 15px; margin-bottom: 12px; }
+  #exam-list { display: grid; gap: 8px; }
+  .exam-tab { width: 100%; text-align: left; color: var(--ink); border: 1px solid var(--line); background: #f8f8f0; padding: 10px 12px 11px; }
+  .exam-tab:hover { border-color: #63806e; }
+  .exam-tab[aria-current="true"] { background: var(--green); color: white; border-color: var(--green); }
+  .exam-tab small { display: block; margin-top: 4px; color: var(--muted); font-size: 12px; }
+  .exam-tab[aria-current="true"] small { color: var(--accent); }
+  .tab-title { display: block; font-weight: 740; }
+  #persistence-note { margin-top: 13px; font-size: 12px; color: var(--muted); }
+  .paper, .question { background: var(--paper); border: 1px solid var(--line); }
+  .paper { display: grid; gap: 14px; padding: 19px 23px 15px; border-top: 3px solid var(--green); }
+  .paper-top { display: flex; justify-content: space-between; align-items: start; gap: 20px; }
+  #paper-title { font-family: var(--serif); font-size: clamp(24px, 3.15vw, 35px); }
+  #paper-info { color: var(--muted); margin-top: 6px; }
+  .clock-box { text-align: right; flex: none; }
+  #timer { font: 720 clamp(27px, 4.1vw, 41px)/1.1 var(--mono); color: var(--green); font-variant-numeric: tabular-nums; }
+  #timer.expired { color: var(--alert); }
+  #timer-caption { color: var(--muted); font-size: 12px; }
+  .paper-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; border-top: 1px solid var(--line); padding-top: 12px; }
+  .button { padding: 6px 12px; border: 1px solid var(--green); color: var(--green); background: transparent; font-weight: 680; }
+  .button:hover:not(:disabled) { background: #e4eddd; }
+  .button.primary { color: #fff; background: var(--green); }
+  .button.primary:hover:not(:disabled) { background: #26543f; }
+  .paper-actions nav { display: flex; flex-wrap: wrap; gap: 12px; margin-left: auto; font-size: 13px; }
+  #questions { display: grid; gap: 17px; margin-top: 17px; }
+  .question { padding: 23px; scroll-margin-top: 16px; min-width: 0; }
+  .question-head { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 14px; margin-bottom: 12px; }
+  .question-kind { font-weight: 750; color: var(--green); font-size: 12px; padding: 3px 8px; background: #e2eadb; }
+  .question h3 { font: 800 clamp(19px, 3vw, 26px)/1.28 var(--serif); }
+  .specification { margin: 14px 0 16px; }
+  .specification div { display: grid; grid-template-columns: 72px minmax(0, 1fr); gap: 8px; padding: 7px 0; border-bottom: 1px solid var(--line); }
+  .specification dt { font-weight: 720; }
+  .specification dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
+  .specification dd p + p { margin-top: 3px; }
+  .sample { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .sample figure { margin: 0; min-width: 0; background: #172b24; color: #f4f7ec; }
+  .sample figcaption { background: #244337; color: #e9f6d7; padding: 4px 11px; font-size: 12px; font-weight: 660; }
+  pre { margin: 0; font: 13px/1.55 var(--mono); overflow: auto; tab-size: 4; white-space: pre; }
+  .sample pre { padding: 9px 11px; max-height: 12rem; }
+  .sample-note { font-size: 13px; color: var(--muted); margin: 7px 0 13px; }
+  .editor-head { display: flex; justify-content: space-between; gap: 12px; align-items: center; margin-top: 14px; margin-bottom: 6px; }
+  .editor-label { font-weight: 730; }
+  .download { border: 0; background: transparent; color: var(--green); text-decoration: underline; text-underline-offset: .18em; padding: 3px; font-size: 13px; }
+  textarea { display: block; width: 100%; min-height: 178px; resize: vertical; padding: 12px; border: 1px solid #a5b4a7; background: #f9faf3; color: var(--ink); font: 14px/1.55 var(--mono); tab-size: 4; }
+  textarea:read-only { background: #f1f3e9; }
+  .solution { margin-top: 15px; border: 1px solid #b7cba9; padding: 11px 13px; background: #f1f6e9; min-width: 0; }
+  .solution > summary { font-weight: 740; cursor: pointer; }
+  .solution ul { margin: 8px 0 12px; padding-left: 23px; }
+  .solution > pre { padding: 12px; background: #1b3027; color: #f4f7ec; }
+  .test-case { margin-top: 10px; }
+  .test-case > summary { cursor: pointer; font-weight: 600; }
+  .test-case[open] > summary { margin-bottom: 5px; }
+  #submission-note { border-left: 3px solid var(--green); padding: 9px 12px; background: #e7efde; color: var(--green); }
+  dialog { width: min(420px, calc(100% - 32px)); padding: 20px; border: 1px solid var(--green); background: var(--paper); color: var(--ink); }
+  dialog::backdrop { background: #10261acc; }
+  dialog p { margin: 8px 0 15px; }
+  dialog form { display: flex; justify-content: end; gap: 8px; }
+  @media (max-width: 820px) {
+    .masthead-inner, .workspace { width: calc(100% - 34px); }
+    .workspace { grid-template-columns: minmax(0, 1fr); gap: 15px; padding-top: 16px; }
+    .rail { position: static; }
+    #exam-list { grid-template-columns: repeat(auto-fit, minmax(124px, 1fr)); }
+    .masthead-inner { padding: 23px 0 19px; }
+  }
+  @media (max-width: 480px) {
+    .masthead-inner { flex-direction: column; align-items: start; gap: 10px; }
+    .question, .paper { padding: 13px; }
+    .paper-top { gap: 10px; }
+    .paper-actions nav { margin-left: 0; }
+    .sample { gap: 6px; }
+  }
+</style>
+</head>
+<body>
+<nav data-explainer-home aria-label="返回目录" style="max-width:1556px;margin:16px auto;padding:0 28px;font:13px/1.6 system-ui"><a href="../?category=code" style="color:inherit">← 代码讲解目录</a></nav>
+<header class="masthead">
+  <div class="masthead-inner">
+    <div>
+      <h1>AI 科一 · 模拟上机</h1>
+      <p>5 套试卷，每套 1 道通用题和 1 道 AI 题</p>
+    </div>
+    <div class="language">Python / NumPy</div>
+  </div>
+</header>
+<div class="workspace">
+  <aside class="rail">
+    <h2 id="exam-list-title">选择试卷</h2>
+    <nav id="exam-list" aria-labelledby="exam-list-title"></nav>
+    <p id="persistence-note">答题代码和进度保存在当前浏览器。</p>
+  </aside>
+  <main>
+    <section class="paper" aria-labelledby="paper-title">
+      <div class="paper-top">
+        <div>
+          <h2 id="paper-title"></h2>
+          <p id="paper-info"></p>
+        </div>
+        <div class="clock-box">
+          <div id="timer" role="timer" aria-label="剩余时间"></div>
+          <div id="timer-caption"></div>
+        </div>
+      </div>
+      <div class="paper-actions">
+        <button class="button" id="start-timer" type="button">开始计时</button>
+        <button class="button primary" id="submit-paper" type="button">交卷并查看解析</button>
+        <nav aria-label="跳转题目"><a href="#question-1">第 1 题</a><a href="#question-2">第 2 题</a></nav>
+      </div>
+      <p id="submission-note" hidden>本套已交卷。展开题目下方的参考实现和额外用例，在本地运行代码对照自评。</p>
+    </section>
+    <div id="questions"></div>
+  </main>
+</div>
+<dialog id="submit-dialog" aria-labelledby="submit-dialog-title">
+  <h2 id="submit-dialog-title">确认交卷</h2>
+  <p id="submit-message"></p>
+  <form method="dialog">
+    <button class="button" value="cancel" autofocus>继续作答</button>
+    <button class="button primary" value="submit">确认交卷</button>
+  </form>
+</dialog>
+<noscript><p>请在启用 JavaScript 的浏览器中打开试卷。</p></noscript>
+<script id="exam-data" type="application/json">
+[
+  {
+    "name": "排序与因果 Attention",
+    "minutes": 60,
+    "questions": [
+      {
+        "title": "积分榜",
+        "task": "比赛记录由选手编号和本次得分组成。同一选手可以出现多次。统计每位选手的总分和记录条数，按总分降序排名。总分相同时，记录条数多的在前。仍相同时，编号小的在前。",
+        "input": [
+          "第一行是 n 和 k，分别表示记录条数和要输出的人数。",
+          "随后 n 行，每行是选手编号 id 和本次得分 score。"
+        ],
+        "output": "按排名输出前 min(k, 参赛人数) 名。每行依次输出编号、总分、记录条数，用一个空格分隔。k=0 时输出为空。",
+        "limits": "1 ≤ n ≤ 2×10⁵，0 ≤ k ≤ n，1 ≤ id ≤ 10⁹，−10⁹ ≤ score ≤ 10⁹。",
+        "sampleIn": "7 4\n3 10\n1 5\n2 10\n1 5\n3 -2\n4 8\n5 7",
+        "sampleOut": "1 10 2\n2 10 1\n3 8 2\n4 8 1",
+        "note": "选手 1 和 2 同为 10 分，选手 1 有两条记录，因此排在选手 2 前。",
+        "rubric": [
+          "统计每个选手的总分和条数。",
+          "两层并列规则都正确，并能处理负分。",
+          "输出人数和格式符合题意，排序复杂度满足数据规模。"
+        ],
+        "solution": "import sys\n\ndef main():\n    read = sys.stdin.buffer.readline\n    n, k = map(int, read().split())\n    stats = {}\n    for _ in range(n):\n        player, score = map(int, read().split())\n        total, count = stats.get(player, (0, 0))\n        stats[player] = (total + score, count + 1)\n\n    ranking = sorted(stats, key=lambda player: (\n        -stats[player][0], -stats[player][1], player\n    ))\n    for player in ranking[:k]:\n        print(player, *stats[player])\n\nif __name__ == \"__main__\":\n    main()",
+        "checks": [
+          [
+            "4 4\n5 -5\n2 -5\n5 0\n7 -9",
+            "5 -5 2\n2 -5 1\n7 -9 1"
+          ],
+          [
+            "1 0\n9 20",
+            ""
+          ]
+        ],
+        "numeric": false
+      },
+      {
+        "title": "单头因果 Attention",
+        "task": "给定 Q、K 和 V。对位置 i，只允许关注下标 j ≤ i 的位置。允许位置的分数为 Q[i] 与 K[j] 的点积除以 √d，沿 j 做 Softmax 得到权重，再用权重加权求和 V[j]。",
+        "input": [
+          "第一行是 t、d 和 dv。",
+          "接下来 t 行是 Q，每行 d 个数。再接下来 t 行是 K，每行 d 个数。最后 t 行是 V，每行 dv 个数。"
+        ],
+        "output": "输出 t 行，每行 dv 个数，保留 6 位小数。实现应能处理较大的正负分数。",
+        "limits": "1 ≤ t ≤ 300，1 ≤ d, dv ≤ 64。矩阵元素为有限实数，绝对值不超过 10³。",
+        "sampleIn": "3 1 2\n1\n1\n0\n0\n1\n2\n2 0\n6 4\n10 8",
+        "sampleOut": "2.000000 0.000000\n4.924234 2.924234\n6.000000 4.000000",
+        "note": "最后一行 Q 为 0，三个允许位置的分数相等，因此输出三个 V 向量的平均值。",
+        "rubric": [
+          "矩阵乘法、缩放和输出 shape 正确。",
+          "因果遮罩正确，Softmax 按 key 轴计算且数值稳定。",
+          "加权求和和输出精度正确。"
+        ],
+        "solution": "import sys\nimport numpy as np\n\ndef main():\n    read = sys.stdin.buffer.readline\n    t, d, dv = map(int, read().split())\n    q = np.array([list(map(float, read().split())) for _ in range(t)])\n    k = np.array([list(map(float, read().split())) for _ in range(t)])\n    v = np.array([list(map(float, read().split())) for _ in range(t)])\n\n    scores = (q @ k.T) / np.sqrt(d)\n    pos = np.arange(t)\n    allowed = pos[:, None] >= pos[None, :]\n    scores = np.where(allowed, scores, -np.inf)\n\n    weights = np.exp(scores - scores.max(axis=-1, keepdims=True))\n    weights /= weights.sum(axis=-1, keepdims=True)\n    for row in weights @ v:\n        print(\" \".join(f\"{x:.6f}\" for x in row))\n\nif __name__ == \"__main__\":\n    main()",
+        "checks": [
+          [
+            "2 1 1\n1000\n1000\n1000\n-1000\n7\n9",
+            "7.000000\n7.000000"
+          ],
+          [
+            "1 2 2\n1 2\n3 4\n5 6",
+            "5.000000 6.000000"
+          ]
+        ],
+        "numeric": true
+      }
+    ]
+  },
+  {
+    "name": "前缀和与候选采样",
+    "minutes": 65,
+    "questions": [
+      {
+        "title": "最长目标和区间",
+        "task": "给定整数数组，找出和恰好为 k 的最长非空连续区间。若有多个最长区间，选择左端点最小的一个。",
+        "input": [
+          "第一行是 n 和 k。",
+          "随后是 n 个整数，可分布在一行或多行。"
+        ],
+        "output": "输出三个整数，依次为最大长度、左端点、右端点。端点从 1 开始且都包含。无解时输出 0 -1 -1。",
+        "limits": "1 ≤ n ≤ 2×10⁵，数组元素和 k 的绝对值不超过 10⁹。",
+        "sampleIn": "8 3\n1 -1 3 2 -2 3 -3 1",
+        "sampleOut": "7 1 7",
+        "note": "区间 [1,7] 和 [2,8] 的和都为 3，长度同为 7，选左端点较小者。",
+        "rubric": [
+          "正确处理负数和从第一个元素开始的区间。",
+          "返回最长区间及最小左端点，无解输出正确。",
+          "时间复杂度 O(n)，支持跨行输入。"
+        ],
+        "solution": "import sys\n\ndef main():\n    values = iter(map(int, sys.stdin.buffer.read().split()))\n    n, target = next(values), next(values)\n    first = {0: 0}\n    prefix = 0\n    best_length, best_left, best_right = 0, -1, -1\n\n    for right in range(1, n + 1):\n        prefix += next(values)\n        previous = first.get(prefix - target)\n        if previous is not None:\n            length = right - previous\n            left = previous + 1\n            if length > best_length or (\n                length == best_length and left \u003c best_left\n            ):\n                best_length, best_left, best_right = length, left, right\n        first.setdefault(prefix, right)\n\n    print(best_length, best_left, best_right)\n\nif __name__ == \"__main__\":\n    main()",
+        "checks": [
+          [
+            "3 0\n0\n0 0",
+            "3 1 3"
+          ],
+          [
+            "2 3\n1 1",
+            "0 -1 -1"
+          ],
+          [
+            "1 -2\n-2",
+            "1 1 1"
+          ]
+        ],
+        "numeric": false
+      },
+      {
+        "title": "Temperature、Top-k 与 Top-p",
+        "task": "给定按 token ID 排列的一维 logits，以及一个模拟随机数 u。先按 logits 从高到低选前 k 个候选，同分时 ID 小的在前。仅对这 k 项按 Softmax(logit / T) 求概率，再按候选顺序保留累计概率首次达到或超过 p 的最短前缀。p=1 时保留全部 k 项。将保留项概率重新归一化，选择累计概率第一次严格大于 u 的候选作为抽样结果。",
+        "input": [
+          "第一行是 n、k、T、p、u。",
+          "第二行是 n 个 logits，对应编号 0 到 n−1。"
+        ],
+        "output": "第一行输出保留候选数。第二行按候选顺序输出保留的 token ID。第三行输出抽到的原 token ID。",
+        "limits": "1 ≤ k ≤ n ≤ 10⁵，0.01 ≤ T ≤ 100，0 \u003c p ≤ 1，0 ≤ u \u003c 1，logits 为绝对值不超过 10⁴ 的有限实数。",
+        "sampleIn": "5 3 1 0.7 0.5\n0 2 1 -1 2",
+        "sampleOut": "2\n1 4\n4",
+        "note": "候选顺序为 1、4、2。Top-p 只保留前两个，重新归一化后均为 0.5。u=0.5，因为要求累计概率严格大于 u，选 ID 4。",
+        "rubric": [
+          "正确处理同分、温度和 Top-k 内归一化。",
+          "Top-p 保留跨过阈值的项，正确处理 p=1。",
+          "截断后重归一化，严格大于 u 并返回原 ID。"
+        ],
+        "solution": "import sys\nimport numpy as np\n\ndef main():\n    read = sys.stdin.buffer.readline\n    n_text, k_text, t_text, p_text, u_text = read().split()\n    n, k = int(n_text), int(k_text)\n    temperature, p, u = map(float, (t_text, p_text, u_text))\n    logits = np.fromiter(map(float, read().split()), dtype=float, count=n)\n\n    ids = np.argsort(-logits, kind=\"stable\")[:k]\n    scores = (logits[ids] - logits[ids[0]]) / temperature\n    weights = np.exp(scores)\n    probs = weights / weights.sum()\n\n    end = k\n    if p \u003c 1.0:\n        end = min(k, np.searchsorted(np.cumsum(probs), p, side=\"left\") + 1)\n    ids, weights = ids[:end], weights[:end]\n    cdf = np.cumsum(weights)\n    cdf /= cdf[-1]\n    selected = np.searchsorted(cdf, u, side=\"right\")\n\n    print(end)\n    print(*ids)\n    print(ids[selected])\n\nif __name__ == \"__main__\":\n    main()",
+        "checks": [
+          [
+            "4 4 1 0.5 0\n9 9 9 9",
+            "2\n0 1\n0"
+          ],
+          [
+            "3 2 2 1 0.8\n3 1 0",
+            "2\n0 1\n1"
+          ],
+          [
+            "1 1 0.01 1 0.999\n-10000",
+            "1\n0\n0"
+          ]
+        ],
+        "numeric": false
+      }
+    ]
+  },
+  {
+    "name": "最短路与训练更新",
+    "minutes": 75,
+    "questions": [
+      {
+        "title": "最短路线计数",
+        "task": "网格中有唯一的起点 S 和终点 E。可向上、下、左、右移动一步，不能越界或进入障碍 #。求最少步数和达到该步数的不同路线数。路线以经过的格子序列区分。",
+        "input": [
+          "第一行是 r 和 c，表示网格行数和列数。",
+          "随后 r 行，每行恰有 c 个字符，字符为 S、E、. 或 #。"
+        ],
+        "output": "输出最少步数和最短路线数，路线数对 1 000 000 007 取模。不可达时输出 -1 0。",
+        "limits": "1 ≤ r, c ≤ 600，2 ≤ r×c ≤ 2×10⁵。",
+        "sampleIn": "3 4\nS...\n.#..\n...E",
+        "sampleOut": "5 4",
+        "note": "任一最短路线都走 5 步，避开障碍后共有 4 条。",
+        "rubric": [
+          "用 BFS 得到最短距离，正确处理不可达。",
+          "首次到达记录方案数，同一最短距离的后续到达累加方案数。",
+          "结果取模，时间和空间复杂度 O(r×c)。"
+        ],
+        "solution": "import sys\nfrom collections import deque\n\nMOD = 1_000_000_007\n\ndef main():\n    read = sys.stdin.buffer.readline\n    rows, cols = map(int, read().split())\n    grid = [read().strip() for _ in range(rows)]\n    dist = [[-1] * cols for _ in range(rows)]\n    ways = [[0] * cols for _ in range(rows)]\n\n    for r, line in enumerate(grid):\n        if b\"S\" in line:\n            sr, sc = r, line.index(b\"S\")\n        if b\"E\" in line:\n            er, ec = r, line.index(b\"E\")\n\n    queue = deque([(sr, sc)])\n    dist[sr][sc], ways[sr][sc] = 0, 1\n    while queue:\n        r, c = queue.popleft()\n        if (r, c) == (er, ec):\n            break\n        next_dist = dist[r][c] + 1\n        for dr, dc in ((-1, 0), (1, 0), (0, -1), (0, 1)):\n            nr, nc = r + dr, c + dc\n            if not (0 \u003c= nr \u003c rows and 0 \u003c= nc \u003c cols):\n                continue\n            if grid[nr][nc] == ord(\"#\"):\n                continue\n            if dist[nr][nc] == -1:\n                dist[nr][nc] = next_dist\n                ways[nr][nc] = ways[r][c]\n                queue.append((nr, nc))\n            elif dist[nr][nc] == next_dist:\n                ways[nr][nc] = (ways[nr][nc] + ways[r][c]) % MOD\n\n    print(dist[er][ec], ways[er][ec])\n\nif __name__ == \"__main__\":\n    main()",
+        "checks": [
+          [
+            "1 3\nS#E",
+            "-1 0"
+          ],
+          [
+            "1 2\nSE",
+            "1 1"
+          ],
+          [
+            "3 3\nS..\n...\n..E",
+            "4 6"
+          ]
+        ],
+        "numeric": false
+      },
+      {
+        "title": "Softmax 分类器的一步 SGD",
+        "task": "给定一个 batch、线性分类器参数 W 与 b，以及学习率 lr。前向 logits = X @ W + b。按样本行做 Softmax，求平均交叉熵 L = mean(−log(P[i, y[i]]))。用整个 batch 的平均梯度执行一次 SGD 更新，输出更新前的 L 与更新后的 W、b。对 logits 的梯度可用 (P − one_hot(y)) / n。",
+        "input": [
+          "第一行是 n、d、c 和 lr。",
+          "接下来 n 行是 X，每行 d 个数。随后 d 行是 W，每行 c 个数。",
+          "下一行是 b 的 c 个值，最后一行是 n 个类别标签 y[i]，标签从 0 开始。"
+        ],
+        "output": "第一行输出 L，接着 d 行输出 W 的新值，最后一行输出 b 的新值。浮点数均保留 6 位小数。",
+        "limits": "1 ≤ n ≤ 1000，1 ≤ d ≤ 100，2 ≤ c ≤ 50，0 \u003c lr ≤ 1。X、W、b 均为绝对值不超过 100 的有限实数。",
+        "sampleIn": "3 2 2 0.6\n1 0\n0 1\n2 1\n0 0\n0 0\n0 0\n0 1 1",
+        "sampleOut": "0.693147\n-0.100000 0.100000\n-0.200000 0.200000\n-0.100000 0.100000",
+        "note": "初始 logits 全为 0，每个类别概率均为 0.5。损失使用更新前的参数。",
+        "rubric": [
+          "稳定计算更新前的平均交叉熵。",
+          "正确取目标类别并按 batch 大小归一化梯度。",
+          "W 与 b 都使用同一次前向的梯度更新，输出顺序正确。"
+        ],
+        "solution": "import sys\nimport numpy as np\n\ndef main():\n    read = sys.stdin.buffer.readline\n    n_text, d_text, c_text, lr_text = read().split()\n    n, d, c = map(int, (n_text, d_text, c_text))\n    lr = float(lr_text)\n    x = np.array([list(map(float, read().split())) for _ in range(n)])\n    w = np.array([list(map(float, read().split())) for _ in range(d)])\n    b = np.array(list(map(float, read().split())))\n    y = np.array(list(map(int, read().split())))\n    rows = np.arange(n)\n\n    logits = x @ w + b\n    shifted = logits - logits.max(axis=-1, keepdims=True)\n    exp = np.exp(shifted)\n    normalizer = exp.sum(axis=-1, keepdims=True)\n    loss = (np.log(normalizer[:, 0]) - shifted[rows, y]).mean()\n    grad_logits = exp / normalizer\n    grad_logits[rows, y] -= 1.0\n    grad_logits /= n\n\n    w -= lr * (x.T @ grad_logits)\n    b -= lr * grad_logits.sum(axis=0)\n\n    print(f\"{loss:.6f}\")\n    for row in w:\n        print(\" \".join(f\"{value:.6f}\" for value in row))\n    print(\" \".join(f\"{value:.6f}\" for value in b))\n\nif __name__ == \"__main__\":\n    main()",
+        "checks": [
+          [
+            "1 1 2 0.5\n1\n100 -100\n100 -100\n1",
+            "400.000000\n99.500000 -99.500000\n99.500000 -99.500000"
+          ],
+          [
+            "1 1 3 0.3\n0\n0 0 0\n0 0 0\n2",
+            "1.098612\n0.000000 0.000000 0.000000\n-0.100000 -0.100000 0.200000"
+          ]
+        ],
+        "numeric": true
+      }
+    ]
+  },
+  {
+    "name": "多路归并与批量解码",
+    "minutes": 75,
+    "questions": [
+      {
+        "title": "合并多路有序日志",
+        "task": "有 s 个日志来源，编号 1 到 s，每个来源的记录已按时间戳升序排列。将所有记录按时间戳升序合并。同一时间戳，来源编号较小的先输出。同来源同时间戳保持原顺序。",
+        "input": [
+          "第一行是 s。",
+          "随后依次给出每个来源。每个来源先有一行记录数 m，随后 m 行，每行是整数时间戳 time 和不含空格的事件名 event。"
+        ],
+        "output": "每条记录输出一行 time source event。归并阶段使用 O(N log(s+1)) 时间，并将输入记录之外、用于归并的额外空间控制在 O(s)，N 为总记录数。没有记录时输出为空。",
+        "limits": "1 ≤ s ≤ 10⁴，0 ≤ N ≤ 2×10⁵，0 ≤ time ≤ 10⁹，事件名长度 1 至 20。",
+        "sampleIn": "3\n3\n1 a\n4 b\n4 c\n2\n1 d\n3 e\n2\n2 f\n4 g",
+        "sampleOut": "1 1 a\n1 2 d\n2 3 f\n3 2 e\n4 1 b\n4 1 c\n4 3 g",
+        "note": "时间 4 时，1 号来源的两条按原顺序先输出。",
+        "rubric": [
+          "正确归并所有来源，支持空来源。",
+          "同时间戳的来源优先级及原顺序正确。",
+          "用堆或等价结构满足归并复杂度。"
+        ],
+        "solution": "import sys\nimport heapq\n\ndef main():\n    read = sys.stdin.buffer.readline\n    write = sys.stdout.buffer.write\n    sources = int(read())\n    logs = []\n    heap = []\n\n    for source in range(sources):\n        count = int(read())\n        records = []\n        for _ in range(count):\n            time, event = read().split()\n            records.append((int(time), event))\n        logs.append(records)\n        if records:\n            heap.append((records[0][0], source, 0))\n    heapq.heapify(heap)\n\n    while heap:\n        time, source, offset = heapq.heappop(heap)\n        event = logs[source][offset][1]\n        write(f\"{time} {source + 1} \".encode() + event + b\"\\n\")\n        offset += 1\n        if offset \u003c len(logs[source]):\n            heapq.heappush(heap, (logs[source][offset][0], source, offset))\n\nif __name__ == \"__main__\":\n    main()",
+        "checks": [
+          [
+            "3\n0\n2\n0 q\n0 r\n1\n0 p",
+            "0 2 q\n0 2 r\n0 3 p"
+          ],
+          [
+            "2\n0\n0",
+            ""
+          ]
+        ],
+        "numeric": false
+      },
+      {
+        "title": "固定批槽的自回归解码",
+        "task": "有 n 个请求按输入顺序排队，解码器最多同时运行 b 个。轮次从 1 开始。每轮开始时按排队顺序填满空位（队列为空时可以留空），然后每个在运行的请求生成一个 token。表 L 给出在上一个 token 为 a 时下一步的 logits L[a]。用贪心取最大值，同分选编号较小的 token。生成 EOS 或达到该请求的生成上限后，它在本轮结束，并在下一轮释放的空位中补入新请求。初始 prompt 只给最后一个 token，它不计入生成长度，也不触发停止。",
+        "input": [
+          "第一行是 n、b、v、eos，v 是词表大小，token ID 为 0 至 v−1。",
+          "接下来 v 行是 L，每行 v 个整数。",
+          "随后 n 行，每行给请求的 prompt 最后 token ID 和生成上限 limit。"
+        ],
+        "output": "按请求输入顺序输出 n 行。每行先输出完成轮次，再输出生成 token 的数量，然后输出按生成顺序排列的 token ID。生成的 EOS 计入 token 数和序列。",
+        "limits": "1 ≤ b ≤ n ≤ 2×10⁵，1 ≤ v ≤ 100，0 ≤ eos \u003c v，1 ≤ limit ≤ 2×10⁵，所有 limit 之和不超过 2×10⁵。logits 为绝对值不超过 10⁹ 的整数。",
+        "sampleIn": "4 2 4 3\n0 5 0 0\n0 0 5 0\n0 0 0 5\n5 0 0 0\n0 4\n2 5\n0 1\n1 2",
+        "sampleOut": "3 3 1 2 3\n1 1 3\n2 1 1\n4 2 2 3",
+        "note": "第 2 个请求在第 1 轮生成 EOS，第 3 个请求在第 2 轮补位。",
+        "rubric": [
+          "贪心取 token 的同分规则正确。",
+          "每轮先补位后增长，完成的请求下一轮才释放可用容量。",
+          "正确处理 EOS、生成上限、完成轮次和输出顺序。"
+        ],
+        "solution": "import sys\n\ndef main():\n    read = sys.stdin.buffer.readline\n    n, capacity, vocab, eos = map(int, read().split())\n    best_next = []\n    for _ in range(vocab):\n        row = list(map(int, read().split()))\n        best_next.append(max(range(vocab), key=row.__getitem__))\n\n    requests = [tuple(map(int, read().split())) for _ in range(n)]\n    finished = [0] * n\n    generated = [[] for _ in range(n)]\n    active = []\n    waiting = 0\n    round_number = 0\n\n    while waiting \u003c n or active:\n        round_number += 1\n        while waiting \u003c n and len(active) \u003c capacity:\n            active.append(waiting)\n            waiting += 1\n\n        still_active = []\n        for request in active:\n            sequence = generated[request]\n            first, limit = requests[request]\n            last = sequence[-1] if sequence else first\n            token = best_next[last]\n            sequence.append(token)\n            if token == eos or len(sequence) == limit:\n                finished[request] = round_number\n            else:\n                still_active.append(request)\n        active = still_active\n\n    for index, sequence in enumerate(generated):\n        print(finished[index], len(sequence), *sequence)\n\nif __name__ == \"__main__\":\n    main()",
+        "checks": [
+          [
+            "3 1 2 1\n5 5\n0 8\n0 2\n1 3\n0 1",
+            "2 2 0 0\n3 1 1\n4 1 0"
+          ],
+          [
+            "2 2 1 0\n7\n0 10\n0 1",
+            "1 1 0\n1 1 0"
+          ]
+        ],
+        "numeric": false
+      }
+    ]
+  },
+  {
+    "name": "滑动窗口与多头遮罩",
+    "minutes": 85,
+    "questions": [
+      {
+        "title": "最短覆盖区间",
+        "task": "给定字符串 s 和目标字符串 t，找出 s 中最短的连续区间，使该区间对 t 中每种字符都至少包含所需的次数。若有多个等长区间，选择左端点最小者。",
+        "input": [
+          "第一行是字符串 s。",
+          "第二行是字符串 t。两个字符串均由大写英文字母构成。"
+        ],
+        "output": "输出最优区间的左、右端点，从 1 开始且都包含。不存在时输出 -1 -1。",
+        "limits": "1 ≤ |s|, |t| ≤ 2×10⁵。",
+        "sampleIn": "ADOBECODEBANC\nABC",
+        "sampleOut": "10 13",
+        "note": "字符位置 10 至 13 对应 BANC，已覆盖 A、B、C。",
+        "rubric": [
+          "窗口能处理目标中重复字符及多余字符。",
+          "正确找出最短、并列取最左、无解的结果。",
+          "窗口左右端点总移动次数为线性级。"
+        ],
+        "solution": "import sys\nfrom collections import Counter\n\ndef main():\n    read = sys.stdin.buffer.readline\n    text, target = read().strip(), read().strip()\n    need = Counter(target)\n    missing = len(target)\n    left = 0\n    best_size = len(text) + 1\n    answer = (-1, -1)\n\n    for right, char in enumerate(text):\n        if need[char] > 0:\n            missing -= 1\n        need[char] -= 1\n\n        while missing == 0:\n            size = right - left + 1\n            if size \u003c best_size:\n                best_size = size\n                answer = (left + 1, right + 1)\n            first = text[left]\n            need[first] += 1\n            if need[first] > 0:\n                missing += 1\n            left += 1\n\n    print(*answer)\n\nif __name__ == \"__main__\":\n    main()",
+        "checks": [
+          [
+            "ABBAAC\nAAB",
+            "3 5"
+          ],
+          [
+            "ABC\nAA",
+            "-1 -1"
+          ],
+          [
+            "ABAB\nAB",
+            "1 2"
+          ]
+        ],
+        "numeric": false
+      },
+      {
+        "title": "批量多头因果 Attention",
+        "task": "Q 和 K 的形状为 (B,H,T,D)，V 的形状为 (B,H,T,Dv)。每个 batch 项 b 只有开头 len[b] 个位置有效。对每个头、每个有效 query i，只关注同一个 batch 同一个头的有效位置 j ≤ i。按缩放点积 Attention 求加权 V。无效 query 的输出全部为 0。最后将同一个 query 的 H 个头按 head ID 从小到大拼接。",
+        "input": [
+          "第一行是 B、H、T、D、Dv，第二行是 B 个有效长度。",
+          "接下来 B×H×T 行是 Q，每行 D 个数。再接下来同样行数是 K，每行 D 个数。最后同样行数是 V，每行 Dv 个数。",
+          "Q、K、V 各自按 batch → head → 位置的顺序给出，其中位置变化最快。"
+        ],
+        "output": "按 batch → 位置输出 B×T 行。每行 H×Dv 个数，先输出 head 0 的 Dv 个结果，再输出 head 1，依此类推。保留 6 位小数。",
+        "limits": "1 ≤ B ≤ 8，1 ≤ H ≤ 8，1 ≤ T ≤ 128，1 ≤ D, Dv ≤ 32，0 ≤ len[b] ≤ T。所有矩阵元素为绝对值不超过 10³ 的有限实数。",
+        "sampleIn": "2 2 2 1 1\n2 1\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n2\n6\n10\n14\n3\n7\n20\n24",
+        "sampleOut": "2.000000 10.000000\n4.000000 12.000000\n3.000000 20.000000\n0.000000 0.000000",
+        "note": "第二个 batch 项只有第一个位置有效，第二个位置的两个头都输出 0。",
+        "rubric": [
+          "每个 batch、每个 head 独立计算，缩放和 Softmax 轴正确。",
+          "同时处理因果、padding 和 len=0，输出保持有限。",
+          "按正确顺序拼 head 并输出 shape (B,T,H×Dv)。"
+        ],
+        "solution": "import sys\nimport numpy as np\n\ndef main():\n    read = sys.stdin.buffer.readline\n    batch, heads, steps, d, dv = map(int, read().split())\n    lengths = np.array(list(map(int, read().split())))\n    values = np.fromstring(sys.stdin.buffer.read(), sep=\" \")\n    qk_count = batch * heads * steps * d\n    q = values[:qk_count].reshape(batch, heads, steps, d)\n    k = values[qk_count:2*qk_count].reshape(batch, heads, steps, d)\n    v = values[2*qk_count:].reshape(batch, heads, steps, dv)\n\n    scores = q @ k.swapaxes(-1, -2) / np.sqrt(d)\n    pos = np.arange(steps)\n    valid = pos[None, :] \u003c lengths[:, None]\n    causal = pos[:, None] >= pos[None, :]\n    allowed = valid[:, None, :, None] & valid[:, None, None, :] & causal\n    scores = np.where(allowed, scores, -np.inf)\n    maximum = scores.max(axis=-1, keepdims=True)\n    maximum = np.where(np.isneginf(maximum), 0.0, maximum)\n    weights = np.exp(scores - maximum)\n    total = weights.sum(axis=-1, keepdims=True)\n    weights = np.divide(weights, total, out=np.zeros_like(weights), where=total > 0)\n\n    joined = (weights @ v).transpose(0, 2, 1, 3).reshape(batch * steps, heads * dv)\n    for row in joined:\n        print(\" \".join(f\"{value:.6f}\" for value in row))\n\nif __name__ == \"__main__\":\n    main()",
+        "checks": [
+          [
+            "1 1 1 1 2\n0\n1000\n1000\n4 8",
+            "0.000000 0.000000"
+          ],
+          [
+            "1 1 2 1 1\n2\n1\n1\n0\n1\n2\n6",
+            "2.000000\n4.924234"
+          ],
+          [
+            "1 2 1 1 2\n1\n0\n0\n0\n0\n1 2\n3 4",
+            "1.000000 2.000000 3.000000 4.000000"
+          ]
+        ],
+        "numeric": true
+      }
+    ]
+  }
+]
+</script>
+<script>
+"use strict";
+
+const exams = JSON.parse(document.getElementById("exam-data").textContent);
+const storageKey = "ai-ko1-mock-exams-5-v1";
+const byId = id => document.getElementById(id);
+let saved;
+try {
+  saved = JSON.parse(localStorage.getItem(storageKey));
+} catch {
+  saved = null;
+}
+const state = saved && saved.papers?.length === exams.length ? saved : {
+  current: 0,
+  papers: exams.map(() => ({ startedAt: null, submittedAt: null, code: ["", ""] }))
+};
+const dialog = byId("submit-dialog");
+let pendingPaper = null;
+
+function save() {
+  try {
+    localStorage.setItem(storageKey, JSON.stringify(state));
+  } catch {
+    byId("persistence-note").textContent = "浏览器存储不可用，请下载代码保留答题记录。";
+  }
+}
+
+function item(tag, className, value) {
+  const element = document.createElement(tag);
+  if (className) element.className = className;
+  if (value !== undefined) element.textContent = value;
+  return element;
+}
+
+function remaining(index) {
+  const paper = state.papers[index];
+  const duration = exams[index].minutes * 60;
+  if (paper.startedAt === null) return duration;
+  const end = paper.submittedAt ?? Date.now();
+  return Math.max(0, duration - Math.floor((end - paper.startedAt) / 1000));
+}
+
+function paperStatus(index) {
+  const paper = state.papers[index];
+  if (paper.submittedAt !== null) return "已交卷";
+  if (paper.startedAt !== null) return remaining(index) === 0 ? "时间到" : "计时中";
+  return paper.code.some(code => code.trim()) ? "有草稿" : "未开始";
+}
+
+function renderNav() {
+  byId("exam-list").replaceChildren(...exams.map((exam, index) => {
+    const button = item("button", "exam-tab");
+    button.type = "button";
+    button.setAttribute("aria-current", String(index === state.current));
+    button.append(
+      item("span", "tab-title", "第 " + (index + 1) + " 套 · " + exam.name),
+      item("small", "", exam.minutes + " 分钟 · " + paperStatus(index))
+    );
+    button.addEventListener("click", () => {
+      if (index === state.current) return;
+      state.current = index;
+      save();
+      render();
+      byId("paper-title").focus();
+    });
+    return button;
+  }));
+}
+
+function updateClock() {
+  const index = state.current;
+  const paper = state.papers[index];
+  const left = remaining(index);
+  const mm = String(Math.floor(left / 60)).padStart(2, "0");
+  const ss = String(left % 60).padStart(2, "0");
+  byId("timer").textContent = mm + ":" + ss;
+  byId("timer").classList.toggle("expired", left === 0 && paper.submittedAt === null);
+  let caption = "建议用时";
+  if (paper.submittedAt !== null) {
+    caption = paper.startedAt === null ? "交卷时未计时" : "交卷时剩余";
+  } else if (paper.startedAt !== null) {
+    caption = left === 0 ? "时间到，可以交卷" : "剩余时间";
+  }
+  byId("timer-caption").textContent = caption;
+  const labels = byId("exam-list").querySelectorAll("small");
+  for (const [tab, label] of labels.entries()) {
+    const value = exams[tab].minutes + " 分钟 · " + paperStatus(tab);
+    if (label.textContent !== value) label.textContent = value;
+  }
+}
+
+function printSample(input, output) {
+  const row = item("div", "sample");
+  for (const [label, value] of [["输入", input], ["输出", output]]) {
+    const figure = item("figure");
+    figure.append(item("figcaption", "", label), item("pre", "", value || "（空）"));
+    row.append(figure);
+  }
+  return row;
+}
+
+function downloadCode(examIndex, questionIndex) {
+  const code = state.papers[examIndex].code[questionIndex];
+  const url = URL.createObjectURL(new Blob([code], { type: "text/x-python;charset=utf-8" }));
+  const link = item("a");
+  link.href = url;
+  link.download = "AI-ko1-" + (examIndex + 1) + "-q" + (questionIndex + 1) + ".py";
+  document.body.append(link);
+  link.click();
+  link.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+function renderSolution(question) {
+  const details = item("details", "solution");
+  const points = item("ul");
+  points.append(...question.rubric.map(point => item("li", "", point)));
+  details.append(
+    item("summary", "", "参考实现、评分要点和额外用例"),
+    points,
+    item("pre", "", question.solution)
+  );
+  for (const [index, [input, output]] of question.checks.entries()) {
+    const test = item("details", "test-case");
+    test.append(item("summary", "", "额外用例 " + (index + 1)), printSample(input, output));
+    details.append(test);
+  }
+  return details;
+}
+
+function renderQuestion(question, index, examIndex) {
+  const paper = state.papers[examIndex];
+  const article = item("article", "question");
+  article.id = "question-" + (index + 1);
+  const head = item("div", "question-head");
+  const heading = item("h3", "", question.title);
+  heading.id = "question-heading-" + (index + 1);
+  article.setAttribute("aria-labelledby", heading.id);
+  head.append(item("span", "question-kind", index === 0 ? "01 · 通用编程" : "02 · AI 编程"), heading);
+
+  const spec = item("dl", "specification");
+  for (const [label, lines] of [
+    ["输入格式", question.input],
+    ["输出格式", [question.output]],
+    ["数据范围", [question.limits]]
+  ]) {
+    const block = item("div");
+    const content = item("dd");
+    content.append(...lines.map(line => item("p", "", line)));
+    block.append(item("dt", "", label), content);
+    spec.append(block);
+  }
+
+  const editorId = "code-" + (index + 1);
+  const editorHead = item("div", "editor-head");
+  const label = item("label", "editor-label", "作答代码");
+  label.htmlFor = editorId;
+  const download = item("button", "download", "下载 .py");
+  download.type = "button";
+  download.addEventListener("click", () => downloadCode(examIndex, index));
+  editorHead.append(label, download);
+
+  const editor = item("textarea");
+  editor.id = editorId;
+  editor.spellcheck = false;
+  editor.autocapitalize = "off";
+  editor.setAttribute("autocomplete", "off");
+  editor.setAttribute("wrap", "off");
+  editor.value = paper.code[index];
+  editor.readOnly = paper.submittedAt !== null;
+  download.disabled = !editor.value.trim();
+  editor.addEventListener("input", () => {
+    paper.code[index] = editor.value;
+    download.disabled = !editor.value.trim();
+    save();
+    updateClock();
+  });
+  // Let Tab leave the editor so the whole exam remains keyboard accessible.
+
+  article.append(head, item("p", "", question.task), spec,
+    printSample(question.sampleIn, question.sampleOut),
+    item("p", "sample-note", question.note), editorHead, editor);
+  if (paper.submittedAt !== null) article.append(renderSolution(question));
+  return article;
+}
+
+function render() {
+  const index = state.current;
+  const exam = exams[index];
+  const paper = state.papers[index];
+  const submitted = paper.submittedAt !== null;
+  const title = byId("paper-title");
+  title.textContent = "第 " + (index + 1) + " 套 · " + exam.name;
+  title.tabIndex = -1;
+  byId("paper-info").textContent = "标准输入输出 · 共 2 题 · 在本地运行代码";
+  byId("start-timer").hidden = submitted || paper.startedAt !== null;
+  byId("submit-paper").hidden = submitted;
+  byId("submission-note").hidden = !submitted;
+  byId("questions").replaceChildren(...exam.questions.map((question, qIndex) =>
+    renderQuestion(question, qIndex, index)
+  ));
+  renderNav();
+  updateClock();
+}
+
+byId("start-timer").addEventListener("click", () => {
+  state.papers[state.current].startedAt = Date.now();
+  save();
+  byId("start-timer").hidden = true;
+  byId("code-1").focus({ preventScroll: true });
+  updateClock();
+});
+
+byId("submit-paper").addEventListener("click", () => {
+  pendingPaper = state.current;
+  const blanks = state.papers[pendingPaper].code.filter(code => !code.trim()).length;
+  byId("submit-message").textContent = (blanks ? "还有 " + blanks + " 道题未填写。 " : "") +
+    "交卷后本套试卷会显示参考答案，作答代码会保留。";
+  dialog.returnValue = "";
+  dialog.showModal();
+});
+
+dialog.addEventListener("close", () => {
+  if (dialog.returnValue === "submit" && pendingPaper !== null) {
+    state.papers[pendingPaper].submittedAt = Date.now();
+    save();
+    render();
+    byId("paper-title").focus();
+  }
+  pendingPaper = null;
+});
+
+save();
+render();
+setInterval(updateClock, 500);
+</script>
+</body>
+</html>
