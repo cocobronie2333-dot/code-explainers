@@ -139,6 +139,26 @@
       ],
       "updated": "2026-11-24",
       "source_revisions": {}
+    },
+    {
+      "slug": "qwen4exp-analysis",
+      "category": "code",
+      "title": "Qwen4Exp · 算子与 KV cache 分析",
+      "summary": "查看 Ascend 上的 Prefill / Decode 算子与 tensor 数据流、逐层 KV cache 分组、每 rank 显存计算、延迟仿真和实测曲线。",
+      "tags": [
+        "Qwen4Exp",
+        "Ascend",
+        "vLLM",
+        "NPU Stream",
+        "KV cache",
+        "显存",
+        "Profiling"
+      ],
+      "updated": "2026-11-24",
+      "source_revisions": {
+        "vllm": "c410543d9ffff03f5f6c4a8c0ae1d3ad082c4a15",
+        "vllm-ascend": "c64ace678d12d5a48671d929c76f723f8158876c"
+      }
     }
   ],
   "references": [

@@ -1,0 +1,1087 @@
+"use strict";
+
+window.qwenDecodeSweep = {
+  "perf": [
+    {
+      "batch": 1,
+      "input_tokens_per_request": 131072,
+      "output_tokens_per_request": 96,
+      "ttft_mean_ms": 614.9623,
+      "tpot_mean_ms": 72.92315,
+      "decoded_tokens_per_s": 13.71307,
+      "itl_mean_ms": 333.74003,
+      "itl_samples": 21,
+      "drafted": 105,
+      "accepted": 79,
+      "acceptance_rate": 0.75238
+    },
+    {
+      "batch": 2,
+      "input_tokens_per_request": 131072,
+      "output_tokens_per_request": 96,
+      "ttft_mean_ms": 4968.64045,
+      "tpot_mean_ms": 116.06394,
+      "decoded_tokens_per_s": 12.05892,
+      "itl_mean_ms": 541.7253,
+      "itl_samples": 41,
+      "drafted": 205,
+      "accepted": 156,
+      "acceptance_rate": 0.76098
+    },
+    {
+      "batch": 4,
+      "input_tokens_per_request": 131072,
+      "output_tokens_per_request": 96,
+      "ttft_mean_ms": 1030.65262,
+      "tpot_mean_ms": 71.9673,
+      "decoded_tokens_per_s": 50.01706,
+      "itl_mean_ms": 334.0289,
+      "itl_samples": 84,
+      "drafted": 420,
+      "accepted": 313,
+      "acceptance_rate": 0.74524
+    },
+    {
+      "batch": 8,
+      "input_tokens_per_request": 131072,
+      "output_tokens_per_request": 96,
+      "ttft_mean_ms": 1715.83426,
+      "tpot_mean_ms": 61.94315,
+      "decoded_tokens_per_s": 104.79932,
+      "itl_mean_ms": 316.23183,
+      "itl_samples": 164,
+      "drafted": 820,
+      "accepted": 629,
+      "acceptance_rate": 0.76707
+    },
+    {
+      "batch": 16,
+      "input_tokens_per_request": 131072,
+      "output_tokens_per_request": 96,
+      "ttft_mean_ms": 2542.98941,
+      "tpot_mean_ms": 56.338,
+      "decoded_tokens_per_s": 209.19812,
+      "itl_mean_ms": 301.65264,
+      "itl_samples": 335,
+      "drafted": 1675,
+      "accepted": 1248,
+      "acceptance_rate": 0.74507
+    },
+    {
+      "batch": 32,
+      "input_tokens_per_request": 131072,
+      "output_tokens_per_request": 96,
+      "ttft_mean_ms": 6404.82582,
+      "tpot_mean_ms": 57.10704,
+      "decoded_tokens_per_s": 212.79816,
+      "itl_mean_ms": 304.44242,
+      "itl_samples": 667,
+      "drafted": 3335,
+      "accepted": 2500,
+      "acceptance_rate": 0.74963
+    }
+  ],
+  "kernels": [
+    {
+      "name": "hcom_allReduce_",
+      "points": [
+        {
+          "batch": 1,
+          "calls": 1808,
+          "total_us": 28545.1,
+          "mean_us": 15.78822,
+          "p50_us": 15.838,
+          "p95_us": 16.896,
+          "core": "COMMUNICATION"
+        },
+        {
+          "batch": 2,
+          "calls": 1808,
+          "total_us": 42876.562,
+          "mean_us": 23.71491,
+          "p50_us": 24.4025,
+          "p95_us": 26.843,
+          "core": "COMMUNICATION"
+        },
+        {
+          "batch": 4,
+          "calls": 1808,
+          "total_us": 45313.676,
+          "mean_us": 25.06287,
+          "p50_us": 25.9475,
+          "p95_us": 28.405,
+          "core": "COMMUNICATION"
+        },
+        {
+          "batch": 8,
+          "calls": 1808,
+          "total_us": 46835.334,
+          "mean_us": 25.9045,
+          "p50_us": 26.654,
+          "p95_us": 28.889,
+          "core": "COMMUNICATION"
+        },
+        {
+          "batch": 16,
+          "calls": 1582,
+          "total_us": 51726.796,
+          "mean_us": 32.69709,
+          "p50_us": 28.922,
+          "p95_us": 61.216,
+          "core": "COMMUNICATION"
+        },
+        {
+          "batch": 17,
+          "calls": 1582,
+          "total_us": 61384.998,
+          "mean_us": 38.80215,
+          "p50_us": 29.326,
+          "p95_us": 104.17,
+          "core": "COMMUNICATION"
+        }
+      ]
+    },
+    {
+      "name": "MatMulV3",
+      "points": [
+        {
+          "batch": 1,
+          "calls": 4648,
+          "total_us": 32028.838,
+          "mean_us": 6.89089,
+          "p50_us": 5.89,
+          "p95_us": 11.164,
+          "core": "AI_CORE"
+        },
+        {
+          "batch": 2,
+          "calls": 4648,
+          "total_us": 33113.031,
+          "mean_us": 7.12415,
+          "p50_us": 5.9915,
+          "p95_us": 11.368,
+          "core": "AI_CORE"
+        },
+        {
+          "batch": 4,
+          "calls": 4648,
+          "total_us": 34887.266,
+          "mean_us": 7.50587,
+          "p50_us": 6.2075,
+          "p95_us": 12.113,
+          "core": "AI_CORE"
+        },
+        {
+          "batch": 8,
+          "calls": 4648,
+          "total_us": 37815.683,
+          "mean_us": 8.1359,
+          "p50_us": 6.752,
+          "p95_us": 13.682,
+          "core": "AI_CORE"
+        },
+        {
+          "batch": 16,
+          "calls": 4067,
+          "total_us": 41310.163,
+          "mean_us": 10.1574,
+          "p50_us": 8.354,
+          "p95_us": 20.78,
+          "core": "AI_CORE"
+        },
+        {
+          "batch": 17,
+          "calls": 4067,
+          "total_us": 45661.449,
+          "mean_us": 11.2273,
+          "p50_us": 7.71,
+          "p95_us": 28.239,
+          "core": "AI_CORE"
+        }
+      ]
+    },
+    {
+      "name": "GenericBlockSparseAttention",
+      "points": [
+        {
+          "batch": 1,
+          "calls": 136,
+          "total_us": 4532.463,
+          "mean_us": 33.32693,
+          "p50_us": 34.0455,
+          "p95_us": 35.907,
+          "core": "MIX_AIC"
+        },
+        {
+          "batch": 2,
+          "calls": 136,
+          "total_us": 7137.795,
+          "mean_us": 52.48379,
+          "p50_us": 58.3075,
+          "p95_us": 64.46,
+          "core": "MIX_AIC"
+        },
+        {
+          "batch": 4,
+          "calls": 136,
+          "total_us": 7280.333,
+          "mean_us": 53.53186,
+          "p50_us": 59.465,
+          "p95_us": 65.234,
+          "core": "MIX_AIC"
+        },
+        {
+          "batch": 8,
+          "calls": 136,
+          "total_us": 10810.69,
+          "mean_us": 79.49037,
+          "p50_us": 89.457,
+          "p95_us": 105.374,
+          "core": "MIX_AIC"
+        },
+        {
+          "batch": 16,
+          "calls": 119,
+          "total_us": 23246.103,
+          "mean_us": 195.3454,
+          "p50_us": 136.971,
+          "p95_us": 803.808,
+          "core": "MIX_AIC"
+        },
+        {
+          "batch": 17,
+          "calls": 119,
+          "total_us": 34927.584,
+          "mean_us": 293.50911,
+          "p50_us": 151.83,
+          "p95_us": 1616.175,
+          "core": "MIX_AIC"
+        }
+      ]
+    },
+    {
+      "name": "GroupedMatmulSwigluQuantV2",
+      "points": [
+        {
+          "batch": 1,
+          "calls": 384,
+          "total_us": 11112.466,
+          "mean_us": 28.93871,
+          "p50_us": 27.3055,
+          "p95_us": 39.77,
+          "core": "MIX_AIC"
+        },
+        {
+          "batch": 2,
+          "calls": 384,
+          "total_us": 15145.174,
+          "mean_us": 39.44056,
+          "p50_us": 40.8125,
+          "p95_us": 46.09,
+          "core": "MIX_AIC"
+        },
+        {
+          "batch": 4,
+          "calls": 384,
+          "total_us": 18110.284,
+          "mean_us": 47.1622,
+          "p50_us": 44.5145,
+          "p95_us": 59.834,
+          "core": "MIX_AIC"
+        },
+        {
+          "batch": 8,
+          "calls": 384,
+          "total_us": 17488.806,
+          "mean_us": 45.54377,
+          "p50_us": 44.3755,
+          "p95_us": 60.866,
+          "core": "MIX_AIC"
+        },
+        {
+          "batch": 16,
+          "calls": 336,
+          "total_us": 24094.907,
+          "mean_us": 71.71103,
+          "p50_us": 60.2155,
+          "p95_us": 162.514,
+          "core": "MIX_AIC"
+        },
+        {
+          "batch": 17,
+          "calls": 336,
+          "total_us": 25702.806,
+          "mean_us": 76.49645,
+          "p50_us": 65.942,
+          "p95_us": 167.402,
+          "core": "MIX_AIC"
+        }
+      ]
+    },
+    {
+      "name": "LightningIndexerV2",
+      "points": [
+        {
+          "batch": 1,
+          "calls": 136,
+          "total_us": 3368.197,
+          "mean_us": 24.76615,
+          "p50_us": 26.7675,
+          "p95_us": 28.199,
+          "core": "MIX_AIC"
+        },
+        {
+          "batch": 2,
+          "calls": 136,
+          "total_us": 4711.315,
+          "mean_us": 34.64202,
+          "p50_us": 39.2575,
+          "p95_us": 40.385,
+          "core": "MIX_AIC"
+        },
+        {
+          "batch": 4,
+          "calls": 136,
+          "total_us": 6710.156,
+          "mean_us": 49.33938,
+          "p50_us": 56.6655,
+          "p95_us": 58.191,
+          "core": "MIX_AIC"
+        },
+        {
+          "batch": 8,
+          "calls": 136,
+          "total_us": 10834.287,
+          "mean_us": 79.66388,
+          "p50_us": 91.5985,
+          "p95_us": 93.966,
+          "core": "MIX_AIC"
+        },
+        {
+          "batch": 16,
+          "calls": 119,
+          "total_us": 21225.68,
+          "mean_us": 178.36706,
+          "p50_us": 177.639,
+          "p95_us": 381.314,
+          "core": "MIX_AIC"
+        },
+        {
+          "batch": 17,
+          "calls": 119,
+          "total_us": 18835.084,
+          "mean_us": 158.27802,
+          "p50_us": 105.635,
+          "p95_us": 673.287,
+          "core": "MIX_AIC"
+        }
+      ]
+    },
+    {
+      "name": "GroupedMatmul",
+      "points": [
+        {
+          "batch": 1,
+          "calls": 464,
+          "total_us": 9468.531,
+          "mean_us": 20.40632,
+          "p50_us": 20.4555,
+          "p95_us": 23.524,
+          "core": "MIX_AIC"
+        },
+        {
+          "batch": 2,
+          "calls": 464,
+          "total_us": 12275.191,
+          "mean_us": 26.45515,
+          "p50_us": 26.547,
+          "p95_us": 32.418,
+          "core": "MIX_AIC"
+        },
+        {
+          "batch": 4,
+          "calls": 464,
+          "total_us": 14281.007,
+          "mean_us": 30.77803,
+          "p50_us": 30.546,
+          "p95_us": 39.373,
+          "core": "MIX_AIC"
+        },
+        {
+          "batch": 8,
+          "calls": 464,
+          "total_us": 13527.391,
+          "mean_us": 29.15386,
+          "p50_us": 28.7075,
+          "p95_us": 37.292,
+          "core": "MIX_AIC"
+        },
+        {
+          "batch": 16,
+          "calls": 406,
+          "total_us": 16919.522,
+          "mean_us": 41.6737,
+          "p50_us": 35.2035,
+          "p95_us": 96.554,
+          "core": "MIX_AIC"
+        },
+        {
+          "batch": 17,
+          "calls": 406,
+          "total_us": 18039.18,
+          "mean_us": 44.43148,
+          "p50_us": 37.619,
+          "p95_us": 101.802,
+          "core": "MIX_AIC"
+        }
+      ]
+    },
+    {
+      "name": "_hc_combine_norm_kernel",
+      "points": [
+        {
+          "batch": 1,
+          "calls": 840,
+          "total_us": 3067.484,
+          "mean_us": 3.65177,
+          "p50_us": 3.647,
+          "p95_us": 4.171,
+          "core": "AI_VECTOR_CORE"
+        },
+        {
+          "batch": 2,
+          "calls": 840,
+          "total_us": 3783.306,
+          "mean_us": 4.50394,
+          "p50_us": 4.472,
+          "p95_us": 5.32,
+          "core": "AI_VECTOR_CORE"
+        },
+        {
+          "batch": 4,
+          "calls": 840,
+          "total_us": 5177.512,
+          "mean_us": 6.1637,
+          "p50_us": 6.2045,
+          "p95_us": 7.416,
+          "core": "AI_VECTOR_CORE"
+        },
+        {
+          "batch": 8,
+          "calls": 840,
+          "total_us": 6512.487,
+          "mean_us": 7.75296,
+          "p50_us": 8.0575,
+          "p95_us": 9.024,
+          "core": "AI_VECTOR_CORE"
+        },
+        {
+          "batch": 16,
+          "calls": 735,
+          "total_us": 12788.779,
+          "mean_us": 17.3997,
+          "p50_us": 12.374,
+          "p95_us": 55.188,
+          "core": "AI_VECTOR_CORE"
+        },
+        {
+          "batch": 17,
+          "calls": 735,
+          "total_us": 17766.861,
+          "mean_us": 24.1726,
+          "p50_us": 13.7,
+          "p95_us": 98.116,
+          "core": "AI_VECTOR_CORE"
+        }
+      ]
+    },
+    {
+      "name": "hcom_allGather_",
+      "points": [
+        {
+          "batch": 1,
+          "calls": 1104,
+          "total_us": 13359.016,
+          "mean_us": 12.10056,
+          "p50_us": 11.5195,
+          "p95_us": 15.842,
+          "core": "COMMUNICATION"
+        },
+        {
+          "batch": 2,
+          "calls": 1088,
+          "total_us": 14036.644,
+          "mean_us": 12.90133,
+          "p50_us": 12.475,
+          "p95_us": 21.009,
+          "core": "COMMUNICATION"
+        },
+        {
+          "batch": 4,
+          "calls": 1088,
+          "total_us": 15656.052,
+          "mean_us": 14.38975,
+          "p50_us": 13.1345,
+          "p95_us": 33.313,
+          "core": "COMMUNICATION"
+        },
+        {
+          "batch": 8,
+          "calls": 1008,
+          "total_us": 14313.702,
+          "mean_us": 14.2001,
+          "p50_us": 14.558,
+          "p95_us": 15.728,
+          "core": "COMMUNICATION"
+        },
+        {
+          "batch": 16,
+          "calls": 782,
+          "total_us": 13253.85,
+          "mean_us": 16.94866,
+          "p50_us": 17.671,
+          "p95_us": 18.79,
+          "core": "COMMUNICATION"
+        },
+        {
+          "batch": 17,
+          "calls": 780,
+          "total_us": 13465.02,
+          "mean_us": 17.26285,
+          "p50_us": 18.029,
+          "p95_us": 19.032,
+          "core": "COMMUNICATION"
+        }
+      ]
+    },
+    {
+      "name": "RecurrentGatedDeltaRule",
+      "points": [
+        {
+          "batch": 1,
+          "calls": 288,
+          "total_us": 3207.983,
+          "mean_us": 11.13883,
+          "p50_us": 11.0995,
+          "p95_us": 11.597,
+          "core": "AI_VECTOR_CORE"
+        },
+        {
+          "batch": 2,
+          "calls": 288,
+          "total_us": 3385.197,
+          "mean_us": 11.75416,
+          "p50_us": 11.757,
+          "p95_us": 12.282,
+          "core": "AI_VECTOR_CORE"
+        },
+        {
+          "batch": 4,
+          "calls": 288,
+          "total_us": 3742.941,
+          "mean_us": 12.99632,
+          "p50_us": 12.9935,
+          "p95_us": 13.736,
+          "core": "AI_VECTOR_CORE"
+        },
+        {
+          "batch": 8,
+          "calls": 288,
+          "total_us": 6072.606,
+          "mean_us": 21.08544,
+          "p50_us": 20.978,
+          "p95_us": 22.21,
+          "core": "AI_VECTOR_CORE"
+        },
+        {
+          "batch": 16,
+          "calls": 252,
+          "total_us": 7625.757,
+          "mean_us": 30.26094,
+          "p50_us": 30.219,
+          "p95_us": 31.367,
+          "core": "AI_VECTOR_CORE"
+        },
+        {
+          "batch": 17,
+          "calls": 252,
+          "total_us": 9066.442,
+          "mean_us": 35.97794,
+          "p50_us": 36.842,
+          "p95_us": 38.059,
+          "core": "AI_VECTOR_CORE"
+        }
+      ]
+    },
+    {
+      "name": "Slice",
+      "points": [
+        {
+          "batch": 1,
+          "calls": 2600,
+          "total_us": 5912.7,
+          "mean_us": 2.27412,
+          "p50_us": 2.0825,
+          "p95_us": 3.694,
+          "core": "AI_VECTOR_CORE"
+        },
+        {
+          "batch": 2,
+          "calls": 2984,
+          "total_us": 7287.94,
+          "mean_us": 2.44234,
+          "p50_us": 2.174,
+          "p95_us": 4.546,
+          "core": "AI_VECTOR_CORE"
+        },
+        {
+          "batch": 4,
+          "calls": 2984,
+          "total_us": 7710.153,
+          "mean_us": 2.58383,
+          "p50_us": 2.324,
+          "p95_us": 4.354,
+          "core": "AI_VECTOR_CORE"
+        },
+        {
+          "batch": 8,
+          "calls": 2984,
+          "total_us": 8295.164,
+          "mean_us": 2.77988,
+          "p50_us": 2.718,
+          "p95_us": 4.095,
+          "core": "AI_VECTOR_CORE"
+        },
+        {
+          "batch": 16,
+          "calls": 2652,
+          "total_us": 7885.254,
+          "mean_us": 2.97332,
+          "p50_us": 2.916,
+          "p95_us": 4.422,
+          "core": "AI_VECTOR_CORE"
+        },
+        {
+          "batch": 17,
+          "calls": 2652,
+          "total_us": 8215.814,
+          "mean_us": 3.09797,
+          "p50_us": 2.98,
+          "p95_us": 4.875,
+          "core": "AI_VECTOR_CORE"
+        }
+      ]
+    },
+    {
+      "name": "MoeDistributeDispatchV3",
+      "points": [
+        {
+          "batch": 1,
+          "calls": 424,
+          "total_us": 7139.956,
+          "mean_us": 16.83952,
+          "p50_us": 16.825,
+          "p95_us": 18.762,
+          "core": "MIX_AIV"
+        },
+        {
+          "batch": 2,
+          "calls": 424,
+          "total_us": 7691.514,
+          "mean_us": 18.14036,
+          "p50_us": 18.3115,
+          "p95_us": 19.954,
+          "core": "MIX_AIV"
+        },
+        {
+          "batch": 4,
+          "calls": 424,
+          "total_us": 8019.653,
+          "mean_us": 18.91428,
+          "p50_us": 19.159,
+          "p95_us": 20.757,
+          "core": "MIX_AIV"
+        },
+        {
+          "batch": 8,
+          "calls": 424,
+          "total_us": 8643.764,
+          "mean_us": 20.38624,
+          "p50_us": 20.6495,
+          "p95_us": 22.49,
+          "core": "MIX_AIV"
+        },
+        {
+          "batch": 16,
+          "calls": 322,
+          "total_us": 7567.986,
+          "mean_us": 23.50306,
+          "p50_us": 24.0445,
+          "p95_us": 25.558,
+          "core": "MIX_AIV"
+        },
+        {
+          "batch": 17,
+          "calls": 322,
+          "total_us": 7783.726,
+          "mean_us": 24.17306,
+          "p50_us": 24.8315,
+          "p95_us": 26.339,
+          "core": "MIX_AIV"
+        }
+      ]
+    },
+    {
+      "name": "fused_gdn_gating_kernel",
+      "points": [
+        {
+          "batch": 1,
+          "calls": 288,
+          "total_us": 2625.598,
+          "mean_us": 9.11666,
+          "p50_us": 9.3695,
+          "p95_us": 10.461,
+          "core": "AI_VECTOR_CORE"
+        },
+        {
+          "batch": 2,
+          "calls": 288,
+          "total_us": 3168.176,
+          "mean_us": 11.00061,
+          "p50_us": 11.1375,
+          "p95_us": 12.191,
+          "core": "AI_VECTOR_CORE"
+        },
+        {
+          "batch": 4,
+          "calls": 288,
+          "total_us": 4190.462,
+          "mean_us": 14.55022,
+          "p50_us": 14.6545,
+          "p95_us": 15.726,
+          "core": "AI_VECTOR_CORE"
+        },
+        {
+          "batch": 8,
+          "calls": 288,
+          "total_us": 6303.816,
+          "mean_us": 21.88825,
+          "p50_us": 21.9095,
+          "p95_us": 23.165,
+          "core": "AI_VECTOR_CORE"
+        },
+        {
+          "batch": 16,
+          "calls": 252,
+          "total_us": 6448.073,
+          "mean_us": 25.58759,
+          "p50_us": 25.5385,
+          "p95_us": 28.394,
+          "core": "AI_VECTOR_CORE"
+        },
+        {
+          "batch": 17,
+          "calls": 252,
+          "total_us": 6779.006,
+          "mean_us": 26.90082,
+          "p50_us": 27.0365,
+          "p95_us": 28.186,
+          "core": "AI_VECTOR_CORE"
+        }
+      ]
+    },
+    {
+      "name": "hcom_allGather_AicpuKernel",
+      "points": [
+        {
+          "batch": 2,
+          "calls": 8,
+          "total_us": 1830.953,
+          "mean_us": 228.86912,
+          "p50_us": 176.086,
+          "p95_us": 594.339,
+          "core": "COMMUNICATION"
+        },
+        {
+          "batch": 4,
+          "calls": 8,
+          "total_us": 1727.162,
+          "mean_us": 215.89525,
+          "p50_us": 202.897,
+          "p95_us": 306.124,
+          "core": "COMMUNICATION"
+        },
+        {
+          "batch": 8,
+          "calls": 48,
+          "total_us": 6246.407,
+          "mean_us": 130.13348,
+          "p50_us": 107.639,
+          "p95_us": 186.17,
+          "core": "COMMUNICATION"
+        },
+        {
+          "batch": 16,
+          "calls": 43,
+          "total_us": 5933.55,
+          "mean_us": 137.98953,
+          "p50_us": 122.904,
+          "p95_us": 214.11,
+          "core": "COMMUNICATION"
+        },
+        {
+          "batch": 17,
+          "calls": 44,
+          "total_us": 6100.971,
+          "mean_us": 138.65843,
+          "p50_us": 127.696,
+          "p95_us": 215.513,
+          "core": "COMMUNICATION"
+        }
+      ]
+    },
+    {
+      "name": "Mul",
+      "points": [
+        {
+          "batch": 1,
+          "calls": 1848,
+          "total_us": 4786.235,
+          "mean_us": 2.58995,
+          "p50_us": 2.7405,
+          "p95_us": 3.712,
+          "core": "AI_VECTOR_CORE"
+        },
+        {
+          "batch": 2,
+          "calls": 1848,
+          "total_us": 5111.53,
+          "mean_us": 2.76598,
+          "p50_us": 2.831,
+          "p95_us": 3.837,
+          "core": "AI_VECTOR_CORE"
+        },
+        {
+          "batch": 4,
+          "calls": 1848,
+          "total_us": 5281.411,
+          "mean_us": 2.85791,
+          "p50_us": 2.8825,
+          "p95_us": 3.989,
+          "core": "AI_VECTOR_CORE"
+        },
+        {
+          "batch": 8,
+          "calls": 1848,
+          "total_us": 5558.932,
+          "mean_us": 3.00808,
+          "p50_us": 3.03,
+          "p95_us": 4.318,
+          "core": "AI_VECTOR_CORE"
+        },
+        {
+          "batch": 16,
+          "calls": 1666,
+          "total_us": 5784.46,
+          "mean_us": 3.47206,
+          "p50_us": 3.3375,
+          "p95_us": 5.592,
+          "core": "AI_VECTOR_CORE"
+        },
+        {
+          "batch": 17,
+          "calls": 1666,
+          "total_us": 6031.668,
+          "mean_us": 3.62045,
+          "p50_us": 3.426,
+          "p95_us": 5.732,
+          "core": "AI_VECTOR_CORE"
+        }
+      ]
+    },
+    {
+      "name": "MoeDistributeCombineV3",
+      "points": [
+        {
+          "batch": 1,
+          "calls": 424,
+          "total_us": 4640.13,
+          "mean_us": 10.9437,
+          "p50_us": 10.8205,
+          "p95_us": 12.856,
+          "core": "MIX_AIV"
+        },
+        {
+          "batch": 2,
+          "calls": 424,
+          "total_us": 4873.98,
+          "mean_us": 11.49524,
+          "p50_us": 11.55,
+          "p95_us": 13.127,
+          "core": "MIX_AIV"
+        },
+        {
+          "batch": 4,
+          "calls": 424,
+          "total_us": 5064.825,
+          "mean_us": 11.94534,
+          "p50_us": 12.072,
+          "p95_us": 13.284,
+          "core": "MIX_AIV"
+        },
+        {
+          "batch": 8,
+          "calls": 424,
+          "total_us": 5162.121,
+          "mean_us": 12.17481,
+          "p50_us": 12.2165,
+          "p95_us": 13.498,
+          "core": "MIX_AIV"
+        },
+        {
+          "batch": 16,
+          "calls": 322,
+          "total_us": 4881.259,
+          "mean_us": 15.15919,
+          "p50_us": 14.709,
+          "p95_us": 20.2,
+          "core": "MIX_AIV"
+        },
+        {
+          "batch": 17,
+          "calls": 322,
+          "total_us": 5008.611,
+          "mean_us": 15.55469,
+          "p50_us": 15.2925,
+          "p95_us": 20.147,
+          "core": "MIX_AIV"
+        }
+      ]
+    },
+    {
+      "name": "_hc_gate_mix_kernel",
+      "points": [
+        {
+          "batch": 1,
+          "calls": 896,
+          "total_us": 2656.526,
+          "mean_us": 2.96487,
+          "p50_us": 2.936,
+          "p95_us": 3.684,
+          "core": "AI_VECTOR_CORE"
+        },
+        {
+          "batch": 2,
+          "calls": 896,
+          "total_us": 3572.38,
+          "mean_us": 3.98703,
+          "p50_us": 3.8825,
+          "p95_us": 5.133,
+          "core": "AI_VECTOR_CORE"
+        },
+        {
+          "batch": 4,
+          "calls": 896,
+          "total_us": 4029.543,
+          "mean_us": 4.49726,
+          "p50_us": 4.4215,
+          "p95_us": 5.595,
+          "core": "AI_VECTOR_CORE"
+        },
+        {
+          "batch": 8,
+          "calls": 896,
+          "total_us": 4677.763,
+          "mean_us": 5.22072,
+          "p50_us": 5.4385,
+          "p95_us": 6.096,
+          "core": "AI_VECTOR_CORE"
+        },
+        {
+          "batch": 16,
+          "calls": 784,
+          "total_us": 6762.523,
+          "mean_us": 8.62567,
+          "p50_us": 7.2225,
+          "p95_us": 21.413,
+          "core": "AI_VECTOR_CORE"
+        },
+        {
+          "batch": 17,
+          "calls": 684,
+          "total_us": 4803.597,
+          "mean_us": 7.0228,
+          "p50_us": 7.3295,
+          "p95_us": 7.857,
+          "core": "AI_VECTOR_CORE"
+        }
+      ]
+    }
+  ],
+  "verified": [
+    {
+      "batch": 1,
+      "submitted_batch": 1,
+      "kernel_csv": "profiles/Batch1_Qwen4Exp_dp0_pp0_tp0_dcp0_ep0_rank0_196_20261124095754401_ascend_pt/ASCEND_PROFILER_OUTPUT/kernel_details.csv",
+      "observed": {
+        "1": 8
+      },
+      "steps": 8,
+      "kernel_calls": 34663
+    },
+    {
+      "batch": 2,
+      "submitted_batch": 2,
+      "kernel_csv": "profiles/Batch1_Qwen4Exp_dp0_pp0_tp0_dcp0_ep0_rank0_196_20261124095833837_ascend_pt/ASCEND_PROFILER_OUTPUT/kernel_details.csv",
+      "observed": {
+        "2": 8
+      },
+      "steps": 8,
+      "kernel_calls": 35223
+    },
+    {
+      "batch": 4,
+      "submitted_batch": 4,
+      "kernel_csv": "profiles/Batch1_Qwen4Exp_dp0_pp0_tp0_dcp0_ep0_rank0_196_20261124095856056_ascend_pt/ASCEND_PROFILER_OUTPUT/kernel_details.csv",
+      "observed": {
+        "4": 8
+      },
+      "steps": 8,
+      "kernel_calls": 35143
+    },
+    {
+      "batch": 8,
+      "submitted_batch": 8,
+      "kernel_csv": "profiles/Batch1_Qwen4Exp_dp0_pp0_tp0_dcp0_ep0_rank0_196_20261124095924877_ascend_pt/ASCEND_PROFILER_OUTPUT/kernel_details.csv",
+      "observed": {
+        "8": 8
+      },
+      "steps": 8,
+      "kernel_calls": 35143
+    },
+    {
+      "batch": 16,
+      "submitted_batch": 16,
+      "kernel_csv": "profiles/Batch1_Qwen4Exp_dp0_pp0_tp0_dcp0_ep0_rank0_196_20261124095949215_ascend_pt/ASCEND_PROFILER_OUTPUT/kernel_details.csv",
+      "observed": {
+        "15": 1,
+        "16": 7
+      },
+      "steps": 7,
+      "kernel_calls": 31670
+    },
+    {
+      "batch": 17,
+      "submitted_batch": 32,
+      "kernel_csv": "profiles/Batch1_Qwen4Exp_dp0_pp0_tp0_dcp0_ep0_rank0_196_20261124100022976_ascend_pt/ASCEND_PROFILER_OUTPUT/kernel_details.csv",
+      "observed": {
+        "15": 1,
+        "17": 7
+      },
+      "steps": 7,
+      "kernel_calls": 31796
+    }
+  ],
+  "failures": {},
+  "sort_batch": 17
+};
