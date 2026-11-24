@@ -1,4 +1,4 @@
-"""Register code walkthroughs or performance HTML and publish the Pages site."""
+"""Register categorized HTML pages and publish the Pages site."""
 import argparse
 from datetime import datetime, timedelta, timezone
 import html
@@ -13,7 +13,7 @@ import urllib.request
 
 REPO = "cocobronie2333-dot/code-explainers"
 SITE = "https://cocobronie2333-dot.github.io/code-explainers/"
-CATEGORIES = {"code": "代码讲解", "performance": "性能优化"}
+CATEGORIES = {"code": "代码讲解", "performance": "性能优化", "exam": "考试"}
 
 
 def run(args, root):
@@ -92,10 +92,11 @@ def homepage(catalog):
         if category not in CATEGORIES:
             raise ValueError("Unknown page category: " + category)
         label = CATEGORIES[category]
+        read_label = {"performance": "性能分析", "exam": "考试资料"}.get(category, label)
         title, summary = html.escape(item["title"]), html.escape(item["summary"])
         tags = "".join("<span>" + html.escape(tag) + "</span>" for tag in item["tags"])
         search = html.escape(" ".join([label, item["title"], item["summary"], *item["tags"]]).lower(), quote=True)
-        cards[category].append(f'<article data-category="{category}" data-search="{search}"><div class="item-meta"><span class="category-label">{label} · <time>{html.escape(item["updated"])}</time></span><div class="tags">{tags}</div></div><h3><a href="{item["slug"]}/">{title} ↗</a></h3><p>{summary}</p><a class="read" href="{item["slug"]}/">打开{"性能分析" if category == "performance" else "代码讲解"} →</a></article>')
+        cards[category].append(f'<article data-category="{category}" data-search="{search}"><div class="item-meta"><span class="category-label">{label} · <time>{html.escape(item["updated"])}</time></span><div class="tags">{tags}</div></div><h3><a href="{item["slug"]}/">{title} ↗</a></h3><p>{summary}</p><a class="read" href="{item["slug"]}/">打开{read_label} →</a></article>')
     references = []
     for item in catalog.get("references", []):
         if not item["url"].startswith("https://"):
@@ -106,7 +107,9 @@ def homepage(catalog):
         search = html.escape(" ".join([item["title"], item["summary"], item["author"], *item["tags"]]).lower(), quote=True)
         references.append(f'<article class="reference" data-search="{search}"><div class="item-meta"><span>外部参考 · {author}</span><div class="tags">{tags}</div></div><h3><a href="{url}" target="_blank" rel="noopener">{title} ↗</a></h3><p>{summary}</p><a class="read" href="{url}" target="_blank" rel="noopener">阅读原文与交互 →</a></article>')
     template = (Path(__file__).resolve().parents[1] / "assets/catalog-template.html").read_text(encoding="utf-8")
-    return template.replace("__CODE_CARDS__", "\n".join(cards["code"])).replace("__PERFORMANCE_CARDS__", "\n".join(cards["performance"])).replace("__REFERENCES__", "\n".join(references))
+    for category, articles in cards.items():
+        template = template.replace(f"__{category.upper()}_CARDS__", "\n".join(articles))
+    return template.replace("__REFERENCES__", "\n".join(references))
 
 
 def rebuild(root):

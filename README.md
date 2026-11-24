@@ -1,6 +1,6 @@
 # Code Explainers · 代码讲解与性能优化
 
-集中管理两类交互式 HTML：代码讲解用于理解源码中的特性、调用链和数据流；性能优化用于探索 profiling 数据、执行瓶颈与方案对比。
+站点收录代码讲解、性能优化和考试资料，分别用于阅读源码、分析 profiling 数据和练习上机编程。
 
 - [目录首页](https://cocobronie2333-dot.github.io/code-explainers/)
 - [KV Cache 池化与 P/D 分离：Memcache / Mooncake](https://cocobronie2333-dot.github.io/code-explainers/kv-cache-pooling/)
@@ -10,11 +10,11 @@
 
 这两份报告保留所提供 HTML 的正文、数据表和分析口径。rank0 报告的原有附件已补齐，下载区另提供逐周期统计、b48 / b4 通信事件和运行时代码；约 167 MiB 的完整 `analysis.json` 以约 9.3 MiB 的 gzip 无损压缩包提供，解压后得到原始 JSON。A3/A5 报告也恢复了 A3 逐通信事件的下载入口；其余尚未提供的证据文件继续标记“附件未提供”。各页的 `publication.json` 记录原文件 SHA-256、附件校验值和可用范围。
 
-首页提供“全部 / 代码讲解 / 性能优化”筛选、分类分区与统一搜索。外部代码讲解参考单独展示，不计入本站 HTML 数量。筛选与搜索可通过 URL 保留，例如 [仅查看性能优化](https://cocobronie2333-dot.github.io/code-explainers/?category=performance)。
+首页提供“全部 / 代码讲解 / 性能优化 / 考试”筛选、分类分区与统一搜索。外部代码讲解参考单独展示，不计入本站 HTML 数量。筛选与搜索可通过 URL 保留，例如 [查看考试资料](https://cocobronie2333-dot.github.io/code-explainers/?category=exam)。
 
 首页和各主题页面统一使用根目录的 `favicon.svg` 作为标签页图标；登记脚本会为新增或更新的 HTML 自动设置同一图标。
 
-`catalog.json` 的每个页面使用 `category: "code"` 或 `category: "performance"`；旧条目缺省为 `code`。性能页保留原始数据与计时说明，不要求附带代码讲解的源码版本。Chunk Observatory 内嵌全部数据，可离线打开；CPU 调用耗时、轻量采集与完整 profiling 的比较范围见页面中的统计规则。
+`catalog.json` 的页面分类为 `code`、`performance` 或 `exam`。旧条目缺省为 `code`。性能页保留原始数据与计时说明，不要求附带代码讲解的源码版本。Chunk Observatory 内嵌全部数据，可离线打开；CPU 调用耗时、轻量采集与完整 profiling 的比较范围见页面中的统计规则。
 
 Chunk Observatory 的执行时间轴支持两组独立采集：原来的 86-chunk 数据，以及 [2026-11-16 head trace 对照](https://cocobronie2333-dot.github.io/code-explainers/chunk-observatory/?capture=head)。新采集包含 `b48-head.trace.json` 与 `b2-head.trace.json` 的 Step 1–4，可查看主机标记、Computing、通信和实际设备 stream；两组时间轴可独立折叠，共享缩放、数值视窗与悬停竖线。点击任意泳道名称可切换整行边框高亮，支持两组分别多选；高亮在缩放、切换 step 和折叠后保留，也支持键盘 Enter / 空格。点击“放大一段 COPY 重叠”可直接进入实际的计算 / 拷贝交集窗口。
 
@@ -62,7 +62,7 @@ skills/code-explainers/     配套 Codex skill、发布脚本与目录模板
 
 手动维护时，为主题创建独立目录，将最终文档放为 `index.html`，并更新目录及首页。不要提交截图、聊天附件、依赖目录或本地凭据。
 
-登记用户明确要求发布的性能 HTML 时，给现有目录脚本添加 `--category performance`；代码讲解使用 `--category code`。更新已有页面而未指定分类时，脚本保留其原分类。登记后重建首页会保留两个分区：
+登记页面时，用 `--category performance`、`--category code` 或 `--category exam` 选择分类。更新已有页面而未指定分类时，脚本保留其原分类。以下命令登记一份性能报告。
 
 ```powershell
 python skills/code-explainers/scripts/manage_explainers.py add --repo-dir . --html <path-to-html> --slug <page-slug> --category performance --title <page-title> --summary <page-summary> --tags Profiling

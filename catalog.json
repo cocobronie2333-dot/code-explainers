@@ -126,21 +126,6 @@
       "source_revisions": {}
     },
     {
-      "slug": "ai-ko1-mock-exams",
-      "category": "code",
-      "title": "AI 科一 · 五套模拟上机考试",
-      "summary": "五套 Python 上机模拟卷。每套含一道通用编程题和一道 AI 题，覆盖 NumPy、Attention、采样、训练和推理解码。支持倒计时、草稿保存与交卷后自评。",
-      "tags": [
-        "AI科一",
-        "Python",
-        "NumPy",
-        "Attention",
-        "模拟考试"
-      ],
-      "updated": "2026-11-24",
-      "source_revisions": {}
-    },
-    {
       "slug": "qwen4exp-analysis",
       "category": "code",
       "title": "Qwen4Exp · 算子与 KV cache 分析",
@@ -180,6 +165,64 @@
         "vllm": "c410543d9ffff03f5f6c4a8c0ae1d3ad082c4a15",
         "vllm-ascend": "d699a0dfcd917138113cb79e5194418a924c019b"
       }
+    },
+    {
+      "slug": "ai-ko1-mock-exams",
+      "category": "exam",
+      "title": "AI 科一 · 五套模拟上机考试",
+      "summary": "五套 Python 上机模拟卷。每套含一道通用编程题和一道 AI 题，覆盖 NumPy、Attention、采样、训练和推理解码。支持倒计时、草稿保存与交卷后自评。",
+      "tags": [
+        "AI科一",
+        "Python",
+        "NumPy",
+        "Attention",
+        "模拟考试"
+      ],
+      "updated": "2026-11-24",
+      "source_revisions": {}
+    },
+    {
+      "slug": "ai-ko1-ai-programming",
+      "category": "exam",
+      "title": "AI 编程讲义与练习",
+      "summary": "从矩阵运算到下一个 token，带 Python 实现和自测，覆盖 Softmax、因果 Attention、采样、交叉熵与生成循环。",
+      "tags": [
+        "AI科一",
+        "Python",
+        "NumPy",
+        "Attention",
+        "采样"
+      ],
+      "updated": "2026-11-24",
+      "source_revisions": {}
+    },
+    {
+      "slug": "ai-ko1-python-practice",
+      "category": "exam",
+      "title": "通用编程限时练习",
+      "summary": "用一道前缀和限时题练习标准输入输出、边界检查和复杂度分析，附可展开的参考实现。",
+      "tags": [
+        "AI科一",
+        "Python",
+        "前缀和",
+        "限时练习"
+      ],
+      "updated": "2026-11-24",
+      "source_revisions": {}
+    },
+    {
+      "slug": "ai-ko1-quick-reference",
+      "category": "exam",
+      "title": "考前一页速查",
+      "summary": "一页复习 NumPy、Softmax、Attention、采样、训练与推理，以及通用编程的常见检查项。",
+      "tags": [
+        "AI科一",
+        "Python",
+        "NumPy",
+        "速查"
+      ],
+      "updated": "2026-11-24",
+      "source_revisions": {}
     }
   ],
   "references": [

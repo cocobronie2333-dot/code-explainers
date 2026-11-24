@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>考前一页速查</title>
+<style>
+  body { max-width: 840px; margin: auto; padding: clamp(16px, 5vw, 52px); color: #202936; background: #fafaf7; font: 16px/1.55 system-ui, sans-serif; }
+  h1, h2 { line-height: 1.25; } a { color: #175d57; }
+  table { border-collapse: collapse; width: 100%; } th, td { text-align:left; vertical-align:top; padding: .5rem; border-bottom: 1px solid #d7dfdd; }
+  code { font-family: Consolas, ui-monospace, monospace; } th { background: #eef2ef; }
+  @media print { body { padding: 0; background: white; } tr { break-inside: avoid; } }
+</style>
+</head>
+<body>
+<nav data-explainer-home aria-label="返回目录" style="max-width:1556px;margin:16px auto;padding:0 28px;font:13px/1.6 system-ui"><a href="../?category=exam" style="color:inherit">← 考试目录</a></nav>
+<main>
+<h1>AI 科一考前速查</h1>
+<p><a href="../ai-ko1-ai-programming/">AI 编程讲解和代码</a> · <a href="../ai-ko1-python-practice/">通用编程限时练习</a> · <a href="../ai-ko1-mock-exams/">五套模拟考试</a></p>
+<table>
+<thead><tr><th>知识点</th><th>写题时怎么用</th><th>用什么检查</th></tr></thead>
+<tbody>
+<tr><td>NumPy</td><td><code>*</code> 逐元素，<code>@</code> 矩阵乘。最后一轴归约用 <code>axis=-1</code>，要广播回原数组时加 <code>keepdims=True</code>。</td><td>拿 2×3 矩阵检查每步 shape。</td></tr>
+<tr><td>Softmax</td><td>同行先减最大值，取指数，再除以指数和。</td><td>相同 logits 概率相等，正常行概率和为 1。</td></tr>
+<tr><td>Attention</td><td><code>scores = Q @ K.T / sqrt(dk)</code> → 遮罩 → 按 key 轴 Softmax → <code>weights @ V</code>。</td><td>分数 <code>(Tq,Tk)</code>，输出 <code>(Tq,Dv)</code>。因果自注意力第一行输出第一个 V。</td></tr>
+<tr><td>遮罩</td><td>Softmax 前把屏蔽的分数设为 <code>-np.inf</code>。等长因果遮罩允许 <code>j ≤ i</code>。</td><td>核对 True 的含义。整行屏蔽按题面处理。</td></tr>
+<tr><td>采样</td><td>温度缩放 → 按题目次序筛选候选 → 概率归一化 → 抽原 token ID。Top-p 包含首个达到阈值的那一项。</td><td>核对同分规则、截断后概率和、seed 位置。</td></tr>
+<tr><td>训练与推理</td><td>训练输入/标签错一个位置，前向求 loss、反向求梯度、更新参数。推理取最后位置 logits 选 token，再按停止条件循环。</td><td>核对 padding 是否计入 loss、EOS 是否写入输出、步数上限。</td></tr>
+<tr><td>通用题</td><td>状态模拟、字典计数、排序键、前缀和，先写出哪一步更新什么。</td><td>核对 n=1、重复、负数、并列、下标、I/O 格式。</td></tr>
+</tbody>
+</table>
+<h2>交卷前自测</h2>
+<ol>
+<li><code>[1000, 1000]</code> 的 Softmax 为 <code>[0.5, 0.5]</code>。</li>
+<li>长度为 2 的因果自注意力，允许位置为 <code>[[True, False], [True, True]]</code>。</li>
+<li>候选 ID 对应概率 <code>[0.10, 0.50, 0.30, 0.10]</code>，Top-p 为 0.75 时抽样范围为原 ID <code>[1, 2]</code>。</li>
+<li><code>[0, 0, 0]</code> 中连续子数组和等于 0 的个数为 6。</li>
+</ol>
+</main>
+</body>
+</html>

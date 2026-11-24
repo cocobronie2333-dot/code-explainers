@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>通用编程限时练习</title>
+<style>
+  body { max-width: 740px; margin: auto; padding: clamp(18px, 5vw, 60px); color: #202936; background: #fafaf7; font: 17px/1.65 system-ui, sans-serif; }
+  h1, h2 { line-height: 1.25; } h1 { font-size: clamp(28px, 6vw, 46px); } h2 { margin-top: 2rem; }
+  a { color: #175d57; } nav { border-bottom: 1px solid #d7dfdd; padding-bottom: .8rem; } nav a { display: inline-block; margin-right: 1rem; }
+  pre { overflow-x: auto; padding: 1rem; background: #eef2ef; border-left: 3px solid #175d57; font-size: .84rem; }
+  code { font-family: Consolas, ui-monospace, monospace; } details { padding: .55rem .85rem; border: 1px solid #d7dfdd; } summary { cursor: pointer; font-weight: 650; }
+</style>
+</head>
+<body>
+<nav data-explainer-home aria-label="返回目录" style="max-width:1556px;margin:16px auto;padding:0 28px;font:13px/1.6 system-ui"><a href="../?category=exam" style="color:inherit">← 考试目录</a></nav>
+<main>
+<nav><a href="../ai-ko1-quick-reference/">考前速查</a><a href="../ai-ko1-ai-programming/">AI 编程练习</a><a href="../ai-ko1-mock-exams/">五套模拟考试</a></nav>
+<h1>从题面到判题</h1>
+<p>限时 20 分钟做一道前缀和题，练习写出可提交的 Python 程序并用边界用例自测。</p>
+<h2>练习：连续子数组计数</h2>
+<p>第一行有整数 <code>n k</code>，之后有 <code>n</code> 个整数，可正、可零、可负。统计有多少个非空连续子数组的和恰好为 <code>k</code>。输出一行整数。练习设定 <code>0 ≤ n ≤ 200000</code>。</p>
+<pre><code>输入
+5 2
+1 1 1 -1 2
+输出
+5</code></pre>
+<p>先写关系式。到当前位置的前缀和是 <code>s</code>，某个此前前缀和是 <code>t</code>，中间连续区间的和是 <code>s-t</code>。当 <code>t=s-k</code>，此前出现过多少次这个值，就有多少个以当前位置结尾的答案。</p>
+<p>先手推样例，再验证 <code>n=0</code> 输出 0、<code>[0,0,0], k=0</code> 输出 6、<code>[-1,1], k=0</code> 输出 1。</p>
+<details>
+<summary>展开参考实现和复杂度</summary>
+<pre><code data-test="general">import sys
+
+def count_subarrays(nums, k):
+    seen = {0: 1}
+    prefix = 0
+    answer = 0
+    for x in nums:
+        prefix += x
+        answer += seen.get(prefix - k, 0)
+        seen[prefix] = seen.get(prefix, 0) + 1
+    return answer
+
+def main():
+    data = iter(map(int, sys.stdin.buffer.read().split()))
+    n, k = next(data), next(data)
+    nums = (next(data) for _ in range(n))
+    print(count_subarrays(nums, k))
+
+if __name__ == "__main__":
+    main()</code></pre>
+<p><code>seen = {0: 1}</code> 计入数组起点之前的空前缀。先查询再记录当前前缀，避免在 <code>k=0</code> 时把长度 0 的区间也算进去。字典查找按均摊常数估算，时间 O(n)，额外空间 O(n)。</p>
+</details>
+<h2>迁移到通用题</h2>
+<ul>
+<li>事件或指令模拟：按题面顺序执行，维护状态与下标。</li>
+<li>多条件排序：例如 <code>sorted(items, key=lambda x: (-x[1], x[0]))</code> 表示第二项降序、第一项升序。</li>
+<li>区间频繁求和：设 <code>prefix[0]=0</code>，半开区间 <code>[l,r)</code> 的和为 <code>prefix[r]-prefix[l]</code>。</li>
+<li>网格最短步数：若每一步代价相同，用 <code>deque</code> 做 BFS，入队时标记已访问。</li>
+</ul>
+<p>把长度和下标约定写进草稿，再按题面选择标准输入输出或给定函数签名。可以把卡住的样例或程序发给 Codex，请它帮你构造反例。<a href="https://docs.python.org/3/tutorial/datastructures.html">Python 官方数据结构教程</a></p>
+</main>
+</body>
+</html>

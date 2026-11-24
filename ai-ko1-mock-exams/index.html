@@ -48,6 +48,9 @@
   .exam-tab[aria-current="true"] small { color: var(--accent); }
   .tab-title { display: block; font-weight: 740; }
   #persistence-note { margin-top: 13px; font-size: 12px; color: var(--muted); }
+  .study-resources { margin-top: 16px; padding-top: 13px; border-top: 1px solid var(--line); }
+  .study-resources ul { list-style: none; margin: 0; padding: 0; font-size: 13px; }
+  .study-resources li + li { margin-top: 5px; }
   .paper, .question { background: var(--paper); border: 1px solid var(--line); }
   .paper { display: grid; gap: 14px; padding: 19px 23px 15px; border-top: 3px solid var(--green); }
   .paper-top { display: flex; justify-content: space-between; align-items: start; gap: 20px; }
@@ -113,7 +116,7 @@
 </style>
 </head>
 <body>
-<nav data-explainer-home aria-label="返回目录" style="max-width:1556px;margin:16px auto;padding:0 28px;font:13px/1.6 system-ui"><a href="../?category=code" style="color:inherit">← 代码讲解目录</a></nav>
+<nav data-explainer-home aria-label="返回目录" style="max-width:1556px;margin:16px auto;padding:0 28px;font:13px/1.6 system-ui"><a href="../?category=exam" style="color:inherit">← 考试目录</a></nav>
 <header class="masthead">
   <div class="masthead-inner">
     <div>
@@ -128,6 +131,14 @@
     <h2 id="exam-list-title">选择试卷</h2>
     <nav id="exam-list" aria-labelledby="exam-list-title"></nav>
     <p id="persistence-note">答题代码和进度保存在当前浏览器。</p>
+    <nav class="study-resources" aria-labelledby="study-resources-title">
+      <h2 id="study-resources-title">备考资料</h2>
+      <ul>
+        <li><a href="../ai-ko1-ai-programming/">AI 编程讲义与练习</a></li>
+        <li><a href="../ai-ko1-python-practice/">通用编程限时练习</a></li>
+        <li><a href="../ai-ko1-quick-reference/">考前一页速查</a></li>
+      </ul>
+    </nav>
   </aside>
   <main>
     <section class="paper" aria-labelledby="paper-title">
