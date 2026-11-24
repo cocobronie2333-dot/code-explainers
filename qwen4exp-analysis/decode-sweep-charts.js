@@ -14,6 +14,15 @@
     COMMUNICATION: "通信",
   };
   const kernelStat = element("batch-kernel-stat");
+  const kernelDataset = element("batch-kernel-dataset");
+  const comparison = data.comparison;
+  const operatorGroups = [
+    ["GDN · 状态更新与门控", ["RecurrentGatedDeltaRule", "fused_gdn_gating_kernel"]],
+    ["QSA · 稀疏索引与注意力", ["LightningIndexerV2", "GenericBlockSparseAttention"]],
+    ["MoE · 分发、专家计算与回收", ["MoeDistributeDispatchV3", "GroupedMatmulSwigluQuantV2", "GroupedMatmul", "MoeDistributeCombineV3"]],
+    ["投影与 HC · 高频矩阵乘和跨层混合", ["MatMulV3", "_hc_combine_norm_kernel"]],
+    ["TP 通信 · 集合通信事件", ["hcom_allReduce_", "hcom_allGather_"]],
+  ];
   let disconnectOperators = [];
   let chartCount = 0;
 
@@ -34,7 +43,7 @@
     return unit * place * 4;
   }
 
-  function chart(parent, { title, axis, unit, batches, points, series, ceiling, isKernel = false }) {
+  function chart(parent, { title, axis, unit, batches, points, series, ceiling, isKernel = false, pointDetail }) {
     const frame = add(parent, "figure", "decode-chart");
     const heading = add(frame, "h3");
     if (isKernel) add(heading, "code", "", title);
@@ -63,8 +72,15 @@
     function describe() {
       const batch = batches[active];
       const point = byBatch.get(batch);
-      const readings = point ? series.map(metric => `${metric.label} ${format(metric.value(point))} ${unit}`) : ["该档无此算子样本"];
-      if (point?.calls) readings.push(`${count(point.calls)} 次 · ${cores[point.core] ?? point.core}`);
+      const readings = point ? series.map(metric => {
+        const value = metric.value(point);
+        return `${metric.label} ${Number.isFinite(value) ? `${format(value)} ${unit}` : "无样本"}`;
+      }) : ["该档无此算子样本"];
+      if (point?.calls) {
+        if (unit === "ms") readings.push(`单次均值 ${format(point.mean_us)} μs · P95 ${format(point.p95_us)} μs`);
+        readings.push(`${count(point.calls)} 次 / ${point.steps} 步 · ${cores[point.core] ?? point.core}`);
+      }
+      if (point && pointDetail) readings.push(...pointDetail(point));
       detail.textContent = `B${batch} · ${readings.join(" · ")}`;
     }
 
@@ -165,20 +181,59 @@
     disconnectOperators.forEach(disconnect => disconnect());
     const container = element("batch-operators");
     container.replaceChildren();
-    const batches = data.verified.map(row => row.batch);
+    const compare = kernelDataset.value === "compare" && comparison;
+    const compareSteps = new Map((comparison?.verified ?? []).map(row => [row.batch, row.steps]));
+    const batches = data.verified.map(row => row.batch).filter(batch => !compare || compareSteps.has(batch));
+    const stepsByBatch = new Map(data.verified.map(row => [row.batch, row.steps]));
+    const kernels = new Map(data.kernels.map(kernel => [kernel.name, kernel]));
+    const otherKernels = new Map((comparison?.kernels ?? []).map(kernel => [kernel.name, kernel]));
     const stat = kernelStat.value;
-    disconnectOperators = data.kernels.map(kernel => chart(container, {
-      title: kernel.name,
-      axis: "μs / rank / 次 · 实际 Batch（每 DP rank）",
-      unit: "μs",
-      batches,
-      points: kernel.points,
-      isKernel: true,
-      series: [
-        { label: "均值", value: point => point.mean_us },
-        { label: stat === "p95_us" ? "P95" : "P50", value: point => point[stat] },
-      ],
-    }));
+    const perStep = compare || stat === "step_ms";
+    kernelStat.disabled = Boolean(compare);
+    disconnectOperators = [];
+    function addCharts(parent, names) {
+      const grid = add(parent, "div", "decode-chart-grid");
+      for (const name of names) {
+        const kernel = kernels.get(name);
+        if (!kernel) continue;
+        const points = kernel.points.map(point => ({ ...point, steps: stepsByBatch.get(point.batch) }));
+        const series = perStep ? [{ label: "每步累计", value: point => point.total_us / point.steps / 1000 }] : [
+          { label: "均值", value: point => point.mean_us },
+          { label: stat === "p95_us" ? "P95" : "P50", value: point => point[stat] },
+        ];
+        if (compare) {
+          const baseline = new Map(points.map(point => [point.batch, point]));
+          const other = new Map((otherKernels.get(name)?.points ?? []).map(point => [point.batch, point]));
+          const paired = batches.map(batch => ({ batch, baseline: baseline.get(batch), off: other.get(batch) }));
+          disconnectOperators.push(chart(grid, { title: name,
+            axis: "ms / rank / Decode 调度步 · 相同实际 Batch", unit: "ms", batches, points: paired, isKernel: true,
+            series: [
+              { label: "MTP5", value: point => point.baseline ? point.baseline.total_us / point.baseline.steps / 1000 : null },
+              { label: "MTP 关闭", value: point => point.off ? point.off.total_us / compareSteps.get(point.batch) / 1000 : null },
+            ],
+            pointDetail: point => [point.baseline && `MTP5 ${count(point.baseline.calls)} 次 / ${point.baseline.steps} 步`,
+              point.off && `关闭 ${count(point.off.calls)} 次 / ${compareSteps.get(point.batch)} 步`].filter(Boolean),
+          }));
+          continue;
+        }
+        disconnectOperators.push(chart(grid, { title: name,
+          axis: `${perStep ? "ms / rank / Decode 调度步" : "μs / rank / 次调用"} · 实际 Batch（每 DP rank）`,
+          unit: perStep ? "ms" : "μs", batches, points, isKernel: true, series }));
+      }
+    }
+    for (const [label, names] of operatorGroups) {
+      if (!names.some(name => kernels.has(name))) continue;
+      const section = add(container, "section", "decode-operator-group");
+      add(section, "h3", "decode-group-title", label);
+      addCharts(section, names);
+    }
+    const featured = new Set(operatorGroups.flatMap(([, names]) => names));
+    const remaining = data.kernels.map(kernel => kernel.name).filter(name => !featured.has(name));
+    if (remaining.length) {
+      const extra = add(container, "details", "decode-operator-extra");
+      add(extra, "summary", "decode-group-title", `其他已采集算子（${remaining.length}）`);
+      addCharts(extra, remaining);
+    }
   }
 
   const points = data.perf;
@@ -191,10 +246,10 @@
     ? "Batch 是同一 API 请求提交的序列数，横轴为等距档位。每档进行一轮正式跑分，关闭 profiler，使用相同已预热的 128K 输入。"
     : "Batch 扫描正在采集，下方保留此前的多 token Decode 实测。";
   element("batch-kernel-context").textContent = data.kernels.length
-    ? `Decode rank 0（宿主 NPU 4） · ${data.verified.map(row => "B" + row.batch).join(" / ")} · 按 B${data.sort_batch} 的累计耗时排序`
+    ? `950DT · Decode rank 0 · ${data.verified.map(row => "B" + row.batch).join(" / ")}`
     : "Decode rank 0（宿主 NPU 4）";
   element("batch-kernel-note").textContent = data.kernels.length
-    ? "横轴为实际 Batch 的等距档位。每档采集 8 个输出步，按设备侧 metadata 保留主要 Batch 对应的时间窗。耗时统计包含主模型和 MTP 草稿的调用。"
+    ? "横轴为实际 Batch 的等距档位。每步累计 = 同名设备事件耗时之和 ÷ 保留的调度步数，含主模型和 MTP 草稿。不同 Stream 的事件可重叠，整轮延迟请看上方 ITL。"
     : "设备侧 Batch 与稳态步数校验通过后，显示各算子的曲线。";
   const adjustedBatches = data.verified.filter(row => row.steps < 8 || row.batch !== row.submitted_batch);
   if (adjustedBatches.length) {
@@ -206,6 +261,25 @@
   const failedBatches = Object.keys(data.failures);
   if (failedBatches.length) {
     element("batch-kernel-note").append(` 待复核档位 ${failedBatches.map(batch => "B" + batch).join(" / ")}。`);
+  }
+  if (comparison) {
+    const batchesWithProfiling = new Set(comparison.verified.map(row => row.batch));
+    if (data.verified.some(row => batchesWithProfiling.has(row.batch))) {
+      element("batch-kernel-dataset-field").hidden = false;
+      kernelDataset.addEventListener("change", renderOperators);
+    }
+    const basePerformance = new Map(data.perf.map(row => [row.batch, row]));
+    const comparable = comparison.perf.filter(row => basePerformance.has(row.batch));
+    if (comparable.length) {
+      element("batch-comparison").hidden = false;
+      element("batch-comparison-context").textContent = comparison.context;
+      element("batch-comparison-rows").innerHTML = comparable.map(off => {
+        const on = basePerformance.get(off.batch);
+        return `<tr><th scope="row">B${off.batch}</th><td class="number">${format(on.tpot_mean_ms)} ms</td><td class="number">${format(off.tpot_mean_ms)} ms</td>
+          <td class="number">${format(on.itl_mean_ms)} ms</td><td class="number">${format(off.itl_mean_ms)} ms</td>
+          <td class="number">${format(on.decoded_tokens_per_s)} tok/s</td><td class="number">${format(off.decoded_tokens_per_s)} tok/s</td></tr>`;
+      }).join("");
+    }
   }
   if (points.length) {
     const download = element("batch-download");

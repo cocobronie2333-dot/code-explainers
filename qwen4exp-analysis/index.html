@@ -253,15 +253,28 @@
       <article class="panel trace-panel" id="batch-kernels">
         <header class="panel-top">
           <div><h2>各算子耗时随 Batch 变化</h2><p id="batch-kernel-context"></p></div>
-          <label class="hero-control" for="batch-kernel-stat">对照统计
-            <select id="batch-kernel-stat">
-              <option value="p95_us">均值 + P95</option>
-              <option value="p50_us">均值 + P50</option>
-            </select>
-          </label>
+          <div class="decode-chart-controls">
+            <label for="batch-kernel-dataset" id="batch-kernel-dataset-field" hidden>对照工况
+              <select id="batch-kernel-dataset"><option value="baseline">MTP5 · 全部采样档</option><option value="compare">MTP5 / 关闭 · 相同实际 Batch</option></select>
+            </label>
+            <label for="batch-kernel-stat">对照统计
+              <select id="batch-kernel-stat">
+                <option value="step_ms">每调度步累计</option>
+                <option value="p95_us">均值 + P95</option>
+                <option value="p50_us">均值 + P50</option>
+              </select>
+            </label>
+          </div>
         </header>
-        <div id="batch-operators" class="decode-chart-grid"></div>
+        <div id="batch-operators" class="decode-operator-groups"></div>
         <p id="batch-kernel-note" class="footnote"></p>
+      </article>
+      <article class="panel cache-panel" id="batch-comparison" hidden>
+        <header class="panel-top"><div><h2>950DT · MTP5 与 MTP 关闭</h2><p id="batch-comparison-context"></p></div></header>
+        <div class="table-scroll" tabindex="0" aria-label="MTP 开关对照">
+          <table><thead><tr><th scope="col">提交 Batch</th><th scope="col">MTP5 TPOT</th><th scope="col">关闭后 TPOT</th><th scope="col">MTP5 ITL</th><th scope="col">关闭后 ITL</th><th scope="col">MTP5 吞吐</th><th scope="col">关闭后吞吐</th></tr></thead><tbody id="batch-comparison-rows"></tbody></table>
+        </div>
+        <p class="footnote">TPOT 是每生成 token 的平均间隔，ITL 是引擎输出步的平均间隔。MTP5 每步可接受多枚 token。吞吐为客户端 batch 合计 tokens/s。</p>
       </article>
       <article class="panel cache-panel">
         <header class="panel-top"><div><h2>104 · 多 token Decode</h2><p id="decode-context"></p></div><span id="decode-status" class="tag"></span></header>
