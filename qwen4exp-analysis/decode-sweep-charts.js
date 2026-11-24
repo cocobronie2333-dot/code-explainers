@@ -21,7 +21,7 @@
     ["QSA · 稀疏索引与注意力", ["LightningIndexerV2", "GenericBlockSparseAttention"]],
     ["MoE · 分发、专家计算与回收", ["MoeDistributeDispatchV3", "GroupedMatmulSwigluQuantV2", "GroupedMatmul", "MoeDistributeCombineV3"]],
     ["投影与 HC · 高频矩阵乘和跨层混合", ["MatMulV3", "_hc_combine_norm_kernel"]],
-    ["TP 通信 · 集合通信事件", ["hcom_allReduce_", "hcom_allGather_"]],
+    ["集合通信 · AllReduce / AllGather", ["hcom_allReduce_", "hcom_allGather_"]],
   ];
   let disconnectOperators = [];
   let chartCount = 0;
@@ -187,9 +187,13 @@
     const stepsByBatch = new Map(data.verified.map(row => [row.batch, row.steps]));
     const kernels = new Map(data.kernels.map(kernel => [kernel.name, kernel]));
     const otherKernels = new Map((comparison?.kernels ?? []).map(kernel => [kernel.name, kernel]));
+    if (compare) kernelStat.value = "step_ms";
     const stat = kernelStat.value;
-    const perStep = compare || stat === "step_ms";
+    const perStep = stat === "step_ms";
     kernelStat.disabled = Boolean(compare);
+    element("batch-kernel-context").textContent = batches.length
+      ? `950DT · Decode rank 0 · ${compare ? "MTP5 / MTP 关闭" : "MTP5"} · ${batches.map(batch => "B" + batch).join(" / ")}`
+      : "Decode rank 0";
     disconnectOperators = [];
     function addCharts(parent, names) {
       const grid = add(parent, "div", "decode-chart-grid");
@@ -245,11 +249,8 @@
   element("batch-note").textContent = points.length
     ? "Batch 是同一 API 请求提交的序列数，横轴为等距档位。每档进行一轮正式跑分，关闭 profiler，使用相同已预热的 128K 输入。"
     : "Batch 扫描正在采集，下方保留此前的多 token Decode 实测。";
-  element("batch-kernel-context").textContent = data.kernels.length
-    ? `950DT · Decode rank 0 · ${data.verified.map(row => "B" + row.batch).join(" / ")}`
-    : "Decode rank 0（宿主 NPU 4）";
   element("batch-kernel-note").textContent = data.kernels.length
-    ? "横轴为实际 Batch 的等距档位。每步累计 = 同名设备事件耗时之和 ÷ 保留的调度步数，含主模型和 MTP 草稿。不同 Stream 的事件可重叠，整轮延迟请看上方 ITL。"
+    ? "横轴为实际 Batch 的等距档位。每步累计 = 同一 Profiling Type 的设备耗时之和 ÷ 保留的调度步数。MTP5 曲线含主模型和草稿。不同 Stream 的事件可重叠，整轮延迟请看上方 ITL。"
     : "设备侧 Batch 与稳态步数校验通过后，显示各算子的曲线。";
   const adjustedBatches = data.verified.filter(row => row.steps < 8 || row.batch !== row.submitted_batch);
   if (adjustedBatches.length) {
