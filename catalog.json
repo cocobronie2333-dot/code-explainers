@@ -159,6 +159,27 @@
         "vllm": "c410543d9ffff03f5f6c4a8c0ae1d3ad082c4a15",
         "vllm-ascend": "c64ace678d12d5a48671d929c76f723f8158876c"
       }
+    },
+    {
+      "slug": "ascendstore-runtime-inspector",
+      "category": "performance",
+      "title": "Qwen4Exp · AscendStore KV Pool Runtime Inspector",
+      "summary": "用 Bulk、Layerwise 和 Offload 的实测 Trace 查看调用时间线、逐层耗时与读写量、Cache Spec、物理槽和跨层依赖。内嵌离线预览，支持拖入完整 Trace 包。",
+      "tags": [
+        "Qwen4Exp",
+        "Ascend",
+        "vLLM",
+        "KV Pool",
+        "Memcache",
+        "Layerwise",
+        "Offload",
+        "Runtime Trace"
+      ],
+      "updated": "2026-11-24",
+      "source_revisions": {
+        "vllm": "c410543d9ffff03f5f6c4a8c0ae1d3ad082c4a15",
+        "vllm-ascend": "d699a0dfcd917138113cb79e5194418a924c019b"
+      }
     }
   ],
   "references": [
