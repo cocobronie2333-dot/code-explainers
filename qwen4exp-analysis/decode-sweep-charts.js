@@ -13,6 +13,16 @@
     MIX_AIV: "Mix AIV",
     COMMUNICATION: "通信",
   };
+  const pipelineNames = ["MTE1", "MTE2", "MTE3", "Vector", "Cube", "Scalar", "Fixpipe"];
+  const coverageThreshold = 80;
+  const nearPeakRatio = 0.9;
+
+  function pipelineLabel(sample, communication) {
+    if (!sample || sample.coverage < coverageThreshold) return communication ? "通信" : "计数不足";
+    const scores = Object.entries(sample.scores).sort((a, b) => b[1] - a[1]);
+    const leaders = scores.filter(([, value]) => value >= scores[0][1] * nearPeakRatio);
+    return leaders.length > 2 ? "Mixed" : leaders.map(([name]) => name).join("/");
+  }
   const kernelStat = element("batch-kernel-stat");
   const kernelDataset = element("batch-kernel-dataset");
   const comparison = data.comparison;
@@ -43,7 +53,7 @@
     return unit * place * 4;
   }
 
-  function chart(parent, { title, axis, unit, batches, points, series, ceiling, isKernel = false, pointDetail }) {
+  function chart(parent, { title, axis, unit, batches, points, series, ceiling, isKernel = false, pointDetail, pipelines = [] }) {
     const frame = add(parent, "figure", "decode-chart");
     const heading = add(frame, "h3");
     if (isKernel) add(heading, "code", "", title);
@@ -62,12 +72,38 @@
       add(entry, "i").style.setProperty("--curve", colors[i]);
       entry.append(metric.label);
     }
+    const communication = title.startsWith("hcom_");
     const context = canvas.getContext("2d");
     const byBatch = new Map(points.map(point => [point.batch, point]));
     const values = points.flatMap(point => series.map(metric => metric.value(point))).filter(Number.isFinite);
     const max = ceiling ?? yCeiling(values);
     let active = batches.findLastIndex(batch => byBatch.has(batch));
     let plot = null;
+    const batchButtons = [];
+    let pipelineDetail;
+    if (pipelines.length) {
+      const batchList = add(frame, "div", "pipeline-batch-list");
+      batchList.setAttribute("role", "group");
+      batchList.setAttribute("aria-label", "按实际 Batch 查看流水线计数");
+      for (const [index, batch] of batches.entries()) {
+        const point = byBatch.get(batch);
+        const button = add(batchList, "button", "pipeline-batch-button");
+        button.type = "button";
+        add(button, "b", "", `B${batch}`);
+        for (const [trackIndex, track] of pipelines.entries()) {
+          const sample = point && track.sample(point);
+          const label = sample ? pipelineLabel(sample, communication) : "—";
+          const chip = add(button, "span", "pipeline-chip", label);
+          chip.style.setProperty("--curve", colors[trackIndex]);
+          chip.title = `${track.label} · ${label}`;
+        }
+        button.addEventListener("click", () => select(index));
+        batchButtons.push(button);
+      }
+      pipelineDetail = add(frame, "div", "pipeline-detail");
+      pipelineDetail.id = `${detail.id}-pipelines`;
+      canvas.setAttribute("aria-describedby", `${detail.id} ${pipelineDetail.id}`);
+    }
 
     function describe() {
       const batch = batches[active];
@@ -78,10 +114,32 @@
       }) : ["该档无此算子样本"];
       if (point?.calls) {
         if (unit === "ms") readings.push(`单次均值 ${format(point.mean_us)} μs · P95 ${format(point.p95_us)} μs`);
-        readings.push(`${count(point.calls)} 次 / ${point.steps} 步 · ${cores[point.core] ?? point.core}`);
+        readings.push(`${count(point.calls)} 次 / ${point.steps} 步 · 执行核 ${cores[point.core] ?? point.core}`);
       }
       if (point && pointDetail) readings.push(...pointDetail(point));
       detail.textContent = `B${batch} · ${readings.join(" · ")}`;
+      if (pipelineDetail) showPipelines(batch, point);
+    }
+
+    function showPipelines(batch, point) {
+      batchButtons.forEach((button, index) => button.setAttribute("aria-pressed", String(index === active)));
+      pipelineDetail.replaceChildren();
+      for (const [index, track] of pipelines.entries()) {
+        const sample = point && track.sample(point);
+        const row = add(pipelineDetail, "div", "pipeline-detail-row");
+        row.style.setProperty("--curve", colors[index]);
+        const label = sample ? pipelineLabel(sample, communication) : "无样本";
+        add(row, "strong", "", `B${batch} · ${track.label} · ${label}`);
+        if (!sample) continue;
+        add(row, "small", "", `PMU 覆盖 ${sample.coverage.toFixed(1)}% · ${count(sample.measured_calls)} 次有计数`);
+        if (Object.keys(sample.scores).length === 0) continue;
+        const metrics = add(row, "dl", "pipeline-metrics");
+        for (const name of pipelineNames) {
+          const metric = add(metrics, "div");
+          add(metric, "dt", "", name);
+          add(metric, "dd", "", `${sample.scores[name].toFixed(2)}%`);
+        }
+      }
     }
 
     function draw() {
@@ -93,7 +151,7 @@
       canvas.height = Math.round(height * scale);
       context.setTransform(scale, 0, 0, scale, 0, 0);
       const left = max >= 1000 ? 46 : 41;
-      const top = 8;
+      const top = pipelines.length ? 16 : 8;
       const right = width - 15;
       const bottom = height - 24;
       const x = index => batches.length > 1 ? left + (right - left) * index / (batches.length - 1) : (left + right) / 2;
@@ -144,6 +202,40 @@
           context.beginPath();
           context.arc(x(j), y(value), j === active ? 3.8 : 2.6, 0, Math.PI * 2);
           context.fill();
+        }
+      }
+      if (pipelines.length) drawPipelineLabels(x, y, left, right, bottom);
+    }
+
+    function drawPipelineLabels(x, y, left, right, bottom) {
+      const occupied = [];
+      const order = [active, ...batches.keys()].filter((index, i, all) => all.indexOf(index) === i);
+      context.font = '10px "Cascadia Mono", Consolas, monospace';
+      context.textAlign = "center";
+      for (const index of order) {
+        const point = byBatch.get(batches[index]);
+        if (!point) continue;
+        for (const [trackIndex, track] of pipelines.entries()) {
+          const sample = track.sample(point);
+          const value = series[trackIndex].value(point);
+          if (!sample || !Number.isFinite(value)) continue;
+          const label = pipelineLabel(sample, communication);
+          const w = context.measureText(label).width + 10;
+          const px = Math.max(left, Math.min(right - w, x(index) - w / 2));
+          const offsets = trackIndex === 0 ? [-23, 8, -41, 26] : [8, -23, 26, -41];
+          const py = offsets.map(offset => y(value) + offset).find(top => top >= 1 && top + 16 <= bottom &&
+            !occupied.some(rect => px < rect.x + rect.w + 3 && rect.x < px + w + 3 && top < rect.y + 18 && rect.y < top + 18));
+          if (py === undefined) continue;
+          occupied.push({ x: px, y: py, w });
+          context.beginPath();
+          context.roundRect(px, py, w, 16, 3);
+          context.fillStyle = "#171924";
+          context.fill();
+          context.lineWidth = 0.8;
+          context.strokeStyle = colors[trackIndex];
+          context.stroke();
+          context.fillStyle = colors[trackIndex];
+          context.fillText(label, px + w / 2, py + 8);
         }
       }
     }
@@ -215,6 +307,7 @@
               { label: "MTP5", value: point => point.baseline ? point.baseline.total_us / point.baseline.steps / 1000 : null },
               { label: "MTP 关闭", value: point => point.off ? point.off.total_us / compareSteps.get(point.batch) / 1000 : null },
             ],
+            pipelines: [{ label: "MTP5", sample: point => point.baseline?.pipeline }, { label: "MTP 关闭", sample: point => point.off?.pipeline }],
             pointDetail: point => [point.baseline && `MTP5 ${count(point.baseline.calls)} 次 / ${point.baseline.steps} 步`,
               point.off && `关闭 ${count(point.off.calls)} 次 / ${compareSteps.get(point.batch)} 步`].filter(Boolean),
           }));
@@ -222,7 +315,8 @@
         }
         disconnectOperators.push(chart(grid, { title: name,
           axis: `${perStep ? "ms / rank / Decode 调度步" : "μs / rank / 次调用"} · 实际 Batch（每 DP rank）`,
-          unit: perStep ? "ms" : "μs", batches, points, isKernel: true, series }));
+          unit: perStep ? "ms" : "μs", batches, points, isKernel: true, series,
+          pipelines: [{ label: "MTP5", sample: point => point.pipeline }] }));
       }
     }
     for (const [label, names] of operatorGroups) {

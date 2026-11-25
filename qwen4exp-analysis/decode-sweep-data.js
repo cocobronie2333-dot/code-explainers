@@ -92,7 +92,20 @@ window.qwenDecodeSweep = {
           "mean_us": 15.78822,
           "p50_us": 15.838,
           "p95_us": 16.896,
-          "core": "COMMUNICATION"
+          "core": "COMMUNICATION",
+          "pipeline": {
+            "coverage": 50.0,
+            "measured_calls": 904,
+            "scores": {
+              "MTE1": 0.0,
+              "MTE2": 9.55,
+              "MTE3": 20.31,
+              "Vector": 0.0,
+              "Cube": 0.0,
+              "Scalar": 16.13,
+              "Fixpipe": 0.0
+            }
+          }
         },
         {
           "batch": 2,
@@ -101,7 +114,20 @@ window.qwenDecodeSweep = {
           "mean_us": 23.71491,
           "p50_us": 24.4025,
           "p95_us": 26.843,
-          "core": "COMMUNICATION"
+          "core": "COMMUNICATION",
+          "pipeline": {
+            "coverage": 50.0,
+            "measured_calls": 904,
+            "scores": {
+              "MTE1": 0.0,
+              "MTE2": 33.82,
+              "MTE3": 5.21,
+              "Vector": 0.0,
+              "Cube": 0.0,
+              "Scalar": 20.29,
+              "Fixpipe": 0.0
+            }
+          }
         },
         {
           "batch": 4,
@@ -110,7 +136,20 @@ window.qwenDecodeSweep = {
           "mean_us": 25.06287,
           "p50_us": 25.9475,
           "p95_us": 28.405,
-          "core": "COMMUNICATION"
+          "core": "COMMUNICATION",
+          "pipeline": {
+            "coverage": 50.0,
+            "measured_calls": 904,
+            "scores": {
+              "MTE1": 0.0,
+              "MTE2": 33.8,
+              "MTE3": 5.26,
+              "Vector": 0.0,
+              "Cube": 0.0,
+              "Scalar": 19.36,
+              "Fixpipe": 0.0
+            }
+          }
         },
         {
           "batch": 8,
@@ -119,7 +158,20 @@ window.qwenDecodeSweep = {
           "mean_us": 25.9045,
           "p50_us": 26.654,
           "p95_us": 28.889,
-          "core": "COMMUNICATION"
+          "core": "COMMUNICATION",
+          "pipeline": {
+            "coverage": 50.0,
+            "measured_calls": 904,
+            "scores": {
+              "MTE1": 0.0,
+              "MTE2": 34.66,
+              "MTE3": 5.45,
+              "Vector": 0.0,
+              "Cube": 0.0,
+              "Scalar": 18.79,
+              "Fixpipe": 0.0
+            }
+          }
         },
         {
           "batch": 16,
@@ -128,7 +180,20 @@ window.qwenDecodeSweep = {
           "mean_us": 32.69709,
           "p50_us": 28.922,
           "p95_us": 61.216,
-          "core": "COMMUNICATION"
+          "core": "COMMUNICATION",
+          "pipeline": {
+            "coverage": 50.0,
+            "measured_calls": 791,
+            "scores": {
+              "MTE1": 0.0,
+              "MTE2": 42.05,
+              "MTE3": 4.08,
+              "Vector": 0.0,
+              "Cube": 0.0,
+              "Scalar": 16.39,
+              "Fixpipe": 0.0
+            }
+          }
         },
         {
           "batch": 17,
@@ -137,7 +202,20 @@ window.qwenDecodeSweep = {
           "mean_us": 38.80215,
           "p50_us": 29.326,
           "p95_us": 104.17,
-          "core": "COMMUNICATION"
+          "core": "COMMUNICATION",
+          "pipeline": {
+            "coverage": 50.0,
+            "measured_calls": 791,
+            "scores": {
+              "MTE1": 0.0,
+              "MTE2": 45.93,
+              "MTE3": 4.03,
+              "Vector": 0.0,
+              "Cube": 0.0,
+              "Scalar": 15.03,
+              "Fixpipe": 0.0
+            }
+          }
         }
       ]
     },
@@ -151,7 +229,20 @@ window.qwenDecodeSweep = {
           "mean_us": 6.89089,
           "p50_us": 5.89,
           "p95_us": 11.164,
-          "core": "AI_CORE"
+          "core": "AI_CORE",
+          "pipeline": {
+            "coverage": 100.0,
+            "measured_calls": 4648,
+            "scores": {
+              "MTE1": 17.2,
+              "MTE2": 57.7,
+              "MTE3": 0.12,
+              "Vector": 0.19,
+              "Cube": 13.8,
+              "Scalar": 37.42,
+              "Fixpipe": 30.11
+            }
+          }
         },
         {
           "batch": 2,
@@ -160,7 +251,20 @@ window.qwenDecodeSweep = {
           "mean_us": 7.12415,
           "p50_us": 5.9915,
           "p95_us": 11.368,
-          "core": "AI_CORE"
+          "core": "AI_CORE",
+          "pipeline": {
+            "coverage": 100.0,
+            "measured_calls": 4648,
+            "scores": {
+              "MTE1": 16.72,
+              "MTE2": 58.93,
+              "MTE3": 0.22,
+              "Vector": 0.43,
+              "Cube": 13.29,
+              "Scalar": 35.95,
+              "Fixpipe": 31.64
+            }
+          }
         },
         {
           "batch": 4,
@@ -169,7 +273,20 @@ window.qwenDecodeSweep = {
           "mean_us": 7.50587,
           "p50_us": 6.2075,
           "p95_us": 12.113,
-          "core": "AI_CORE"
+          "core": "AI_CORE",
+          "pipeline": {
+            "coverage": 100.0,
+            "measured_calls": 4648,
+            "scores": {
+              "MTE1": 16.99,
+              "MTE2": 59.77,
+              "MTE3": 0.4,
+              "Vector": 1.13,
+              "Cube": 15.75,
+              "Scalar": 34.74,
+              "Fixpipe": 33.19
+            }
+          }
         },
         {
           "batch": 8,
@@ -178,7 +295,20 @@ window.qwenDecodeSweep = {
           "mean_us": 8.1359,
           "p50_us": 6.752,
           "p95_us": 13.682,
-          "core": "AI_CORE"
+          "core": "AI_CORE",
+          "pipeline": {
+            "coverage": 100.0,
+            "measured_calls": 4648,
+            "scores": {
+              "MTE1": 16.78,
+              "MTE2": 61.6,
+              "MTE3": 0.41,
+              "Vector": 1.02,
+              "Cube": 17.44,
+              "Scalar": 32.49,
+              "Fixpipe": 33.27
+            }
+          }
         },
         {
           "batch": 16,
@@ -187,7 +317,20 @@ window.qwenDecodeSweep = {
           "mean_us": 10.1574,
           "p50_us": 8.354,
           "p95_us": 20.78,
-          "core": "AI_CORE"
+          "core": "AI_CORE",
+          "pipeline": {
+            "coverage": 100.0,
+            "measured_calls": 4067,
+            "scores": {
+              "MTE1": 18.2,
+              "MTE2": 63.25,
+              "MTE3": 0.47,
+              "Vector": 1.14,
+              "Cube": 29.33,
+              "Scalar": 26.92,
+              "Fixpipe": 40.87
+            }
+          }
         },
         {
           "batch": 17,
@@ -196,7 +339,20 @@ window.qwenDecodeSweep = {
           "mean_us": 11.2273,
           "p50_us": 7.71,
           "p95_us": 28.239,
-          "core": "AI_CORE"
+          "core": "AI_CORE",
+          "pipeline": {
+            "coverage": 100.0,
+            "measured_calls": 4067,
+            "scores": {
+              "MTE1": 18.97,
+              "MTE2": 65.37,
+              "MTE3": 0.41,
+              "Vector": 0.77,
+              "Cube": 37.2,
+              "Scalar": 25.81,
+              "Fixpipe": 39.21
+            }
+          }
         }
       ]
     },
@@ -210,7 +366,20 @@ window.qwenDecodeSweep = {
           "mean_us": 33.32693,
           "p50_us": 34.0455,
           "p95_us": 35.907,
-          "core": "MIX_AIC"
+          "core": "MIX_AIC",
+          "pipeline": {
+            "coverage": 100.0,
+            "measured_calls": 136,
+            "scores": {
+              "MTE1": 3.73,
+              "MTE2": 27.78,
+              "MTE3": 1.91,
+              "Vector": 2.54,
+              "Cube": 3.44,
+              "Scalar": 41.34,
+              "Fixpipe": 0.72
+            }
+          }
         },
         {
           "batch": 2,
@@ -219,7 +388,20 @@ window.qwenDecodeSweep = {
           "mean_us": 52.48379,
           "p50_us": 58.3075,
           "p95_us": 64.46,
-          "core": "MIX_AIC"
+          "core": "MIX_AIC",
+          "pipeline": {
+            "coverage": 100.0,
+            "measured_calls": 136,
+            "scores": {
+              "MTE1": 9.06,
+              "MTE2": 60.29,
+              "MTE3": 1.31,
+              "Vector": 0.87,
+              "Cube": 7.96,
+              "Scalar": 39.68,
+              "Fixpipe": 1.33
+            }
+          }
         },
         {
           "batch": 4,
@@ -228,7 +410,20 @@ window.qwenDecodeSweep = {
           "mean_us": 53.53186,
           "p50_us": 59.465,
           "p95_us": 65.234,
-          "core": "MIX_AIC"
+          "core": "MIX_AIC",
+          "pipeline": {
+            "coverage": 100.0,
+            "measured_calls": 136,
+            "scores": {
+              "MTE1": 10.41,
+              "MTE2": 69.36,
+              "MTE3": 2.63,
+              "Vector": 1.49,
+              "Cube": 9.17,
+              "Scalar": 38.51,
+              "Fixpipe": 1.5
+            }
+          }
         },
         {
           "batch": 8,
@@ -237,7 +432,20 @@ window.qwenDecodeSweep = {
           "mean_us": 79.49037,
           "p50_us": 89.457,
           "p95_us": 105.374,
-          "core": "MIX_AIC"
+          "core": "MIX_AIC",
+          "pipeline": {
+            "coverage": 100.0,
+            "measured_calls": 136,
+            "scores": {
+              "MTE1": 13.5,
+              "MTE2": 75.31,
+              "MTE3": 2.84,
+              "Vector": 1.82,
+              "Cube": 11.47,
+              "Scalar": 41.98,
+              "Fixpipe": 1.85
+            }
+          }
         },
         {
           "batch": 16,
@@ -246,7 +454,20 @@ window.qwenDecodeSweep = {
           "mean_us": 195.3454,
           "p50_us": 136.971,
           "p95_us": 803.808,
-          "core": "MIX_AIC"
+          "core": "MIX_AIC",
+          "pipeline": {
+            "coverage": 100.0,
+            "measured_calls": 119,
+            "scores": {
+              "MTE1": 17.02,
+              "MTE2": 81.22,
+              "MTE3": 2.62,
+              "Vector": 2.02,
+              "Cube": 14.06,
+              "Scalar": 56.16,
+              "Fixpipe": 2.26
+            }
+          }
         },
         {
           "batch": 17,
@@ -255,7 +476,20 @@ window.qwenDecodeSweep = {
           "mean_us": 293.50911,
           "p50_us": 151.83,
           "p95_us": 1616.175,
-          "core": "MIX_AIC"
+          "core": "MIX_AIC",
+          "pipeline": {
+            "coverage": 100.0,
+            "measured_calls": 119,
+            "scores": {
+              "MTE1": 16.44,
+              "MTE2": 74.02,
+              "MTE3": 2.38,
+              "Vector": 1.93,
+              "Cube": 13.44,
+              "Scalar": 66.49,
+              "Fixpipe": 2.16
+            }
+          }
         }
       ]
     },
@@ -269,7 +503,20 @@ window.qwenDecodeSweep = {
           "mean_us": 28.93871,
           "p50_us": 27.3055,
           "p95_us": 39.77,
-          "core": "MIX_AIC"
+          "core": "MIX_AIC",
+          "pipeline": {
+            "coverage": 100.0,
+            "measured_calls": 384,
+            "scores": {
+              "MTE1": 13.78,
+              "MTE2": 37.84,
+              "MTE3": 0.97,
+              "Vector": 0.39,
+              "Cube": 12.98,
+              "Scalar": 74.98,
+              "Fixpipe": 0.35
+            }
+          }
         },
         {
           "batch": 2,
@@ -278,7 +525,20 @@ window.qwenDecodeSweep = {
           "mean_us": 39.44056,
           "p50_us": 40.8125,
           "p95_us": 46.09,
-          "core": "MIX_AIC"
+          "core": "MIX_AIC",
+          "pipeline": {
+            "coverage": 100.0,
+            "measured_calls": 384,
+            "scores": {
+              "MTE1": 16.34,
+              "MTE2": 49.01,
+              "MTE3": 1.99,
+              "Vector": 0.55,
+              "Cube": 15.89,
+              "Scalar": 71.64,
+              "Fixpipe": 0.43
+            }
+          }
         },
         {
           "batch": 4,
@@ -287,7 +547,20 @@ window.qwenDecodeSweep = {
           "mean_us": 47.1622,
           "p50_us": 44.5145,
           "p95_us": 59.834,
-          "core": "MIX_AIC"
+          "core": "MIX_AIC",
+          "pipeline": {
+            "coverage": 100.0,
+            "measured_calls": 384,
+            "scores": {
+              "MTE1": 17.58,
+              "MTE2": 55.4,
+              "MTE3": 3.13,
+              "Vector": 0.82,
+              "Cube": 17.12,
+              "Scalar": 67.98,
+              "Fixpipe": 0.47
+            }
+          }
         },
         {
           "batch": 8,
@@ -296,7 +569,20 @@ window.qwenDecodeSweep = {
           "mean_us": 45.54377,
           "p50_us": 44.3755,
           "p95_us": 60.866,
-          "core": "MIX_AIC"
+          "core": "MIX_AIC",
+          "pipeline": {
+            "coverage": 100.0,
+            "measured_calls": 384,
+            "scores": {
+              "MTE1": 15.97,
+              "MTE2": 54.33,
+              "MTE3": 2.66,
+              "Vector": 1.35,
+              "Cube": 15.79,
+              "Scalar": 65.29,
+              "Fixpipe": 0.48
+            }
+          }
         },
         {
           "batch": 16,
@@ -305,7 +591,20 @@ window.qwenDecodeSweep = {
           "mean_us": 71.71103,
           "p50_us": 60.2155,
           "p95_us": 162.514,
-          "core": "MIX_AIC"
+          "core": "MIX_AIC",
+          "pipeline": {
+            "coverage": 100.0,
+            "measured_calls": 336,
+            "scores": {
+              "MTE1": 18.15,
+              "MTE2": 66.58,
+              "MTE3": 1.61,
+              "Vector": 2.51,
+              "Cube": 18.68,
+              "Scalar": 58.66,
+              "Fixpipe": 0.63
+            }
+          }
         },
         {
           "batch": 17,
@@ -314,7 +613,20 @@ window.qwenDecodeSweep = {
           "mean_us": 76.49645,
           "p50_us": 65.942,
           "p95_us": 167.402,
-          "core": "MIX_AIC"
+          "core": "MIX_AIC",
+          "pipeline": {
+            "coverage": 100.0,
+            "measured_calls": 336,
+            "scores": {
+              "MTE1": 18.82,
+              "MTE2": 68.38,
+              "MTE3": 1.66,
+              "Vector": 3.27,
+              "Cube": 20.07,
+              "Scalar": 58.29,
+              "Fixpipe": 0.72
+            }
+          }
         }
       ]
     },
@@ -328,7 +640,20 @@ window.qwenDecodeSweep = {
           "mean_us": 24.76615,
           "p50_us": 26.7675,
           "p95_us": 28.199,
-          "core": "MIX_AIC"
+          "core": "MIX_AIC",
+          "pipeline": {
+            "coverage": 100.0,
+            "measured_calls": 136,
+            "scores": {
+              "MTE1": 10.54,
+              "MTE2": 44.69,
+              "MTE3": 8.71,
+              "Vector": 10.92,
+              "Cube": 8.32,
+              "Scalar": 40.6,
+              "Fixpipe": 4.02
+            }
+          }
         },
         {
           "batch": 2,
@@ -337,7 +662,20 @@ window.qwenDecodeSweep = {
           "mean_us": 34.64202,
           "p50_us": 39.2575,
           "p95_us": 40.385,
-          "core": "MIX_AIC"
+          "core": "MIX_AIC",
+          "pipeline": {
+            "coverage": 100.0,
+            "measured_calls": 136,
+            "scores": {
+              "MTE1": 13.52,
+              "MTE2": 51.64,
+              "MTE3": 11.35,
+              "Vector": 11.94,
+              "Cube": 10.91,
+              "Scalar": 38.46,
+              "Fixpipe": 5.28
+            }
+          }
         },
         {
           "batch": 4,
@@ -346,7 +684,20 @@ window.qwenDecodeSweep = {
           "mean_us": 49.33938,
           "p50_us": 56.6655,
           "p95_us": 58.191,
-          "core": "MIX_AIC"
+          "core": "MIX_AIC",
+          "pipeline": {
+            "coverage": 100.0,
+            "measured_calls": 136,
+            "scores": {
+              "MTE1": 18.6,
+              "MTE2": 66.29,
+              "MTE3": 15.37,
+              "Vector": 14.69,
+              "Cube": 14.81,
+              "Scalar": 43.36,
+              "Fixpipe": 7.18
+            }
+          }
         },
         {
           "batch": 8,
@@ -355,7 +706,20 @@ window.qwenDecodeSweep = {
           "mean_us": 79.66388,
           "p50_us": 91.5985,
           "p95_us": 93.966,
-          "core": "MIX_AIC"
+          "core": "MIX_AIC",
+          "pipeline": {
+            "coverage": 100.0,
+            "measured_calls": 136,
+            "scores": {
+              "MTE1": 21.25,
+              "MTE2": 90.81,
+              "MTE3": 20.83,
+              "Vector": 18.55,
+              "Cube": 16.56,
+              "Scalar": 45.17,
+              "Fixpipe": 8.01
+            }
+          }
         },
         {
           "batch": 16,
@@ -364,7 +728,20 @@ window.qwenDecodeSweep = {
           "mean_us": 178.36706,
           "p50_us": 177.639,
           "p95_us": 381.314,
-          "core": "MIX_AIC"
+          "core": "MIX_AIC",
+          "pipeline": {
+            "coverage": 100.0,
+            "measured_calls": 119,
+            "scores": {
+              "MTE1": 28.76,
+              "MTE2": 90.37,
+              "MTE3": 24.23,
+              "Vector": 26.57,
+              "Cube": 19.94,
+              "Scalar": 47.08,
+              "Fixpipe": 10.03
+            }
+          }
         },
         {
           "batch": 17,
@@ -373,7 +750,20 @@ window.qwenDecodeSweep = {
           "mean_us": 158.27802,
           "p50_us": 105.635,
           "p95_us": 673.287,
-          "core": "MIX_AIC"
+          "core": "MIX_AIC",
+          "pipeline": {
+            "coverage": 100.0,
+            "measured_calls": 119,
+            "scores": {
+              "MTE1": 51.52,
+              "MTE2": 75.58,
+              "MTE3": 32.37,
+              "Vector": 43.15,
+              "Cube": 31.39,
+              "Scalar": 68.5,
+              "Fixpipe": 16.05
+            }
+          }
         }
       ]
     },
@@ -387,7 +777,20 @@ window.qwenDecodeSweep = {
           "mean_us": 20.40632,
           "p50_us": 20.4555,
           "p95_us": 23.524,
-          "core": "MIX_AIC"
+          "core": "MIX_AIC",
+          "pipeline": {
+            "coverage": 100.0,
+            "measured_calls": 464,
+            "scores": {
+              "MTE1": 8.08,
+              "MTE2": 24.23,
+              "MTE3": 1.42,
+              "Vector": 0.46,
+              "Cube": 6.83,
+              "Scalar": 90.46,
+              "Fixpipe": 15.22
+            }
+          }
         },
         {
           "batch": 2,
@@ -396,7 +799,20 @@ window.qwenDecodeSweep = {
           "mean_us": 26.45515,
           "p50_us": 26.547,
           "p95_us": 32.418,
-          "core": "MIX_AIC"
+          "core": "MIX_AIC",
+          "pipeline": {
+            "coverage": 100.0,
+            "measured_calls": 464,
+            "scores": {
+              "MTE1": 10.26,
+              "MTE2": 32.71,
+              "MTE3": 2.12,
+              "Vector": 0.71,
+              "Cube": 8.92,
+              "Scalar": 82.29,
+              "Fixpipe": 9.4
+            }
+          }
         },
         {
           "batch": 4,
@@ -405,7 +821,20 @@ window.qwenDecodeSweep = {
           "mean_us": 30.77803,
           "p50_us": 30.546,
           "p95_us": 39.373,
-          "core": "MIX_AIC"
+          "core": "MIX_AIC",
+          "pipeline": {
+            "coverage": 100.0,
+            "measured_calls": 464,
+            "scores": {
+              "MTE1": 12.29,
+              "MTE2": 39.41,
+              "MTE3": 2.51,
+              "Vector": 1.13,
+              "Cube": 10.42,
+              "Scalar": 79.46,
+              "Fixpipe": 11.43
+            }
+          }
         },
         {
           "batch": 8,
@@ -414,7 +843,20 @@ window.qwenDecodeSweep = {
           "mean_us": 29.15386,
           "p50_us": 28.7075,
           "p95_us": 37.292,
-          "core": "MIX_AIC"
+          "core": "MIX_AIC",
+          "pipeline": {
+            "coverage": 100.0,
+            "measured_calls": 464,
+            "scores": {
+              "MTE1": 11.26,
+              "MTE2": 37.06,
+              "MTE3": 3.7,
+              "Vector": 1.9,
+              "Cube": 9.73,
+              "Scalar": 79.6,
+              "Fixpipe": 10.8
+            }
+          }
         },
         {
           "batch": 16,
@@ -423,7 +865,20 @@ window.qwenDecodeSweep = {
           "mean_us": 41.6737,
           "p50_us": 35.2035,
           "p95_us": 96.554,
-          "core": "MIX_AIC"
+          "core": "MIX_AIC",
+          "pipeline": {
+            "coverage": 100.0,
+            "measured_calls": 406,
+            "scores": {
+              "MTE1": 14.6,
+              "MTE2": 48.6,
+              "MTE3": 6.5,
+              "Vector": 3.56,
+              "Cube": 13.48,
+              "Scalar": 75.83,
+              "Fixpipe": 15.08
+            }
+          }
         },
         {
           "batch": 17,
@@ -432,7 +887,20 @@ window.qwenDecodeSweep = {
           "mean_us": 44.43148,
           "p50_us": 37.619,
           "p95_us": 101.802,
-          "core": "MIX_AIC"
+          "core": "MIX_AIC",
+          "pipeline": {
+            "coverage": 100.0,
+            "measured_calls": 406,
+            "scores": {
+              "MTE1": 15.16,
+              "MTE2": 50.46,
+              "MTE3": 6.6,
+              "Vector": 4.26,
+              "Cube": 14.78,
+              "Scalar": 74.87,
+              "Fixpipe": 16.42
+            }
+          }
         }
       ]
     },
@@ -446,7 +914,20 @@ window.qwenDecodeSweep = {
           "mean_us": 3.65177,
           "p50_us": 3.647,
           "p95_us": 4.171,
-          "core": "AI_VECTOR_CORE"
+          "core": "AI_VECTOR_CORE",
+          "pipeline": {
+            "coverage": 100.0,
+            "measured_calls": 840,
+            "scores": {
+              "MTE1": 0.0,
+              "MTE2": 18.65,
+              "MTE3": 14.43,
+              "Vector": 37.92,
+              "Cube": 0.0,
+              "Scalar": 28.11,
+              "Fixpipe": 0.0
+            }
+          }
         },
         {
           "batch": 2,
@@ -455,7 +936,20 @@ window.qwenDecodeSweep = {
           "mean_us": 4.50394,
           "p50_us": 4.472,
           "p95_us": 5.32,
-          "core": "AI_VECTOR_CORE"
+          "core": "AI_VECTOR_CORE",
+          "pipeline": {
+            "coverage": 100.0,
+            "measured_calls": 840,
+            "scores": {
+              "MTE1": 0.0,
+              "MTE2": 13.63,
+              "MTE3": 12.15,
+              "Vector": 39.57,
+              "Cube": 0.0,
+              "Scalar": 27.75,
+              "Fixpipe": 0.0
+            }
+          }
         },
         {
           "batch": 4,
@@ -464,7 +958,20 @@ window.qwenDecodeSweep = {
           "mean_us": 6.1637,
           "p50_us": 6.2045,
           "p95_us": 7.416,
-          "core": "AI_VECTOR_CORE"
+          "core": "AI_VECTOR_CORE",
+          "pipeline": {
+            "coverage": 100.0,
+            "measured_calls": 840,
+            "scores": {
+              "MTE1": 0.0,
+              "MTE2": 15.92,
+              "MTE3": 14.17,
+              "Vector": 42.64,
+              "Cube": 0.0,
+              "Scalar": 27.45,
+              "Fixpipe": 0.0
+            }
+          }
         },
         {
           "batch": 8,
@@ -473,7 +980,20 @@ window.qwenDecodeSweep = {
           "mean_us": 7.75296,
           "p50_us": 8.0575,
           "p95_us": 9.024,
-          "core": "AI_VECTOR_CORE"
+          "core": "AI_VECTOR_CORE",
+          "pipeline": {
+            "coverage": 100.0,
+            "measured_calls": 840,
+            "scores": {
+              "MTE1": 0.0,
+              "MTE2": 21.85,
+              "MTE3": 19.9,
+              "Vector": 48.05,
+              "Cube": 0.0,
+              "Scalar": 27.55,
+              "Fixpipe": 0.0
+            }
+          }
         },
         {
           "batch": 16,
@@ -482,7 +1002,20 @@ window.qwenDecodeSweep = {
           "mean_us": 17.3997,
           "p50_us": 12.374,
           "p95_us": 55.188,
-          "core": "AI_VECTOR_CORE"
+          "core": "AI_VECTOR_CORE",
+          "pipeline": {
+            "coverage": 100.0,
+            "measured_calls": 735,
+            "scores": {
+              "MTE1": 0.0,
+              "MTE2": 35.37,
+              "MTE3": 27.28,
+              "Vector": 52.77,
+              "Cube": 0.0,
+              "Scalar": 29.65,
+              "Fixpipe": 0.0
+            }
+          }
         },
         {
           "batch": 17,
@@ -491,7 +1024,20 @@ window.qwenDecodeSweep = {
           "mean_us": 24.1726,
           "p50_us": 13.7,
           "p95_us": 98.116,
-          "core": "AI_VECTOR_CORE"
+          "core": "AI_VECTOR_CORE",
+          "pipeline": {
+            "coverage": 100.0,
+            "measured_calls": 735,
+            "scores": {
+              "MTE1": 0.0,
+              "MTE2": 38.13,
+              "MTE3": 27.94,
+              "Vector": 53.3,
+              "Cube": 0.0,
+              "Scalar": 30.6,
+              "Fixpipe": 0.0
+            }
+          }
         }
       ]
     },
@@ -505,7 +1051,20 @@ window.qwenDecodeSweep = {
           "mean_us": 12.10056,
           "p50_us": 11.5195,
           "p95_us": 15.842,
-          "core": "COMMUNICATION"
+          "core": "COMMUNICATION",
+          "pipeline": {
+            "coverage": 50.0,
+            "measured_calls": 552,
+            "scores": {
+              "MTE1": 0.0,
+              "MTE2": 5.11,
+              "MTE3": 1.77,
+              "Vector": 0.0,
+              "Cube": 0.0,
+              "Scalar": 27.79,
+              "Fixpipe": 0.0
+            }
+          }
         },
         {
           "batch": 2,
@@ -514,7 +1073,20 @@ window.qwenDecodeSweep = {
           "mean_us": 12.90133,
           "p50_us": 12.475,
           "p95_us": 21.009,
-          "core": "COMMUNICATION"
+          "core": "COMMUNICATION",
+          "pipeline": {
+            "coverage": 50.0,
+            "measured_calls": 544,
+            "scores": {
+              "MTE1": 0.0,
+              "MTE2": 3.57,
+              "MTE3": 1.67,
+              "Vector": 0.0,
+              "Cube": 0.0,
+              "Scalar": 26.86,
+              "Fixpipe": 0.0
+            }
+          }
         },
         {
           "batch": 4,
@@ -523,7 +1095,20 @@ window.qwenDecodeSweep = {
           "mean_us": 14.38975,
           "p50_us": 13.1345,
           "p95_us": 33.313,
-          "core": "COMMUNICATION"
+          "core": "COMMUNICATION",
+          "pipeline": {
+            "coverage": 50.0,
+            "measured_calls": 544,
+            "scores": {
+              "MTE1": 0.0,
+              "MTE2": 4.55,
+              "MTE3": 1.91,
+              "Vector": 0.0,
+              "Cube": 0.0,
+              "Scalar": 26.02,
+              "Fixpipe": 0.0
+            }
+          }
         },
         {
           "batch": 8,
@@ -532,7 +1117,20 @@ window.qwenDecodeSweep = {
           "mean_us": 14.2001,
           "p50_us": 14.558,
           "p95_us": 15.728,
-          "core": "COMMUNICATION"
+          "core": "COMMUNICATION",
+          "pipeline": {
+            "coverage": 50.0,
+            "measured_calls": 504,
+            "scores": {
+              "MTE1": 0.0,
+              "MTE2": 3.44,
+              "MTE3": 1.55,
+              "Vector": 0.0,
+              "Cube": 0.0,
+              "Scalar": 26.61,
+              "Fixpipe": 0.0
+            }
+          }
         },
         {
           "batch": 16,
@@ -541,7 +1139,20 @@ window.qwenDecodeSweep = {
           "mean_us": 16.94866,
           "p50_us": 17.671,
           "p95_us": 18.79,
-          "core": "COMMUNICATION"
+          "core": "COMMUNICATION",
+          "pipeline": {
+            "coverage": 50.0,
+            "measured_calls": 391,
+            "scores": {
+              "MTE1": 0.0,
+              "MTE2": 5.1,
+              "MTE3": 1.95,
+              "Vector": 0.0,
+              "Cube": 0.0,
+              "Scalar": 26.25,
+              "Fixpipe": 0.0
+            }
+          }
         },
         {
           "batch": 17,
@@ -550,7 +1161,20 @@ window.qwenDecodeSweep = {
           "mean_us": 17.26285,
           "p50_us": 18.029,
           "p95_us": 19.032,
-          "core": "COMMUNICATION"
+          "core": "COMMUNICATION",
+          "pipeline": {
+            "coverage": 50.0,
+            "measured_calls": 390,
+            "scores": {
+              "MTE1": 0.0,
+              "MTE2": 4.92,
+              "MTE3": 1.97,
+              "Vector": 0.0,
+              "Cube": 0.0,
+              "Scalar": 25.94,
+              "Fixpipe": 0.0
+            }
+          }
         }
       ]
     },
@@ -564,7 +1188,20 @@ window.qwenDecodeSweep = {
           "mean_us": 11.13883,
           "p50_us": 11.0995,
           "p95_us": 11.597,
-          "core": "AI_VECTOR_CORE"
+          "core": "AI_VECTOR_CORE",
+          "pipeline": {
+            "coverage": 100.0,
+            "measured_calls": 288,
+            "scores": {
+              "MTE1": 0.0,
+              "MTE2": 18.83,
+              "MTE3": 47.72,
+              "Vector": 66.18,
+              "Cube": 0.0,
+              "Scalar": 43.62,
+              "Fixpipe": 0.0
+            }
+          }
         },
         {
           "batch": 2,
@@ -573,7 +1210,20 @@ window.qwenDecodeSweep = {
           "mean_us": 11.75416,
           "p50_us": 11.757,
           "p95_us": 12.282,
-          "core": "AI_VECTOR_CORE"
+          "core": "AI_VECTOR_CORE",
+          "pipeline": {
+            "coverage": 100.0,
+            "measured_calls": 288,
+            "scores": {
+              "MTE1": 0.0,
+              "MTE2": 18.29,
+              "MTE3": 45.77,
+              "Vector": 64.3,
+              "Cube": 0.0,
+              "Scalar": 45.66,
+              "Fixpipe": 0.0
+            }
+          }
         },
         {
           "batch": 4,
@@ -582,7 +1232,20 @@ window.qwenDecodeSweep = {
           "mean_us": 12.99632,
           "p50_us": 12.9935,
           "p95_us": 13.736,
-          "core": "AI_VECTOR_CORE"
+          "core": "AI_VECTOR_CORE",
+          "pipeline": {
+            "coverage": 100.0,
+            "measured_calls": 288,
+            "scores": {
+              "MTE1": 0.0,
+              "MTE2": 18.07,
+              "MTE3": 42.96,
+              "Vector": 60.58,
+              "Cube": 0.0,
+              "Scalar": 48.28,
+              "Fixpipe": 0.0
+            }
+          }
         },
         {
           "batch": 8,
@@ -591,7 +1254,20 @@ window.qwenDecodeSweep = {
           "mean_us": 21.08544,
           "p50_us": 20.978,
           "p95_us": 22.21,
-          "core": "AI_VECTOR_CORE"
+          "core": "AI_VECTOR_CORE",
+          "pipeline": {
+            "coverage": 100.0,
+            "measured_calls": 288,
+            "scores": {
+              "MTE1": 0.0,
+              "MTE2": 18.67,
+              "MTE3": 48.32,
+              "Vector": 66.38,
+              "Cube": 0.0,
+              "Scalar": 50.25,
+              "Fixpipe": 0.0
+            }
+          }
         },
         {
           "batch": 16,
@@ -600,7 +1276,20 @@ window.qwenDecodeSweep = {
           "mean_us": 30.26094,
           "p50_us": 30.219,
           "p95_us": 31.367,
-          "core": "AI_VECTOR_CORE"
+          "core": "AI_VECTOR_CORE",
+          "pipeline": {
+            "coverage": 100.0,
+            "measured_calls": 252,
+            "scores": {
+              "MTE1": 0.0,
+              "MTE2": 19.73,
+              "MTE3": 56.31,
+              "Vector": 74.39,
+              "Cube": 0.0,
+              "Scalar": 50.76,
+              "Fixpipe": 0.0
+            }
+          }
         },
         {
           "batch": 17,
@@ -609,7 +1298,20 @@ window.qwenDecodeSweep = {
           "mean_us": 35.97794,
           "p50_us": 36.842,
           "p95_us": 38.059,
-          "core": "AI_VECTOR_CORE"
+          "core": "AI_VECTOR_CORE",
+          "pipeline": {
+            "coverage": 100.0,
+            "measured_calls": 252,
+            "scores": {
+              "MTE1": 0.0,
+              "MTE2": 19.37,
+              "MTE3": 55.65,
+              "Vector": 75.5,
+              "Cube": 0.0,
+              "Scalar": 50.81,
+              "Fixpipe": 0.0
+            }
+          }
         }
       ]
     },
@@ -623,7 +1325,20 @@ window.qwenDecodeSweep = {
           "mean_us": 2.27412,
           "p50_us": 2.0825,
           "p95_us": 3.694,
-          "core": "AI_VECTOR_CORE"
+          "core": "AI_VECTOR_CORE",
+          "pipeline": {
+            "coverage": 100.0,
+            "measured_calls": 2600,
+            "scores": {
+              "MTE1": 0.0,
+              "MTE2": 28.23,
+              "MTE3": 10.35,
+              "Vector": 0.0,
+              "Cube": 0.0,
+              "Scalar": 34.41,
+              "Fixpipe": 0.0
+            }
+          }
         },
         {
           "batch": 2,
@@ -632,7 +1347,20 @@ window.qwenDecodeSweep = {
           "mean_us": 2.44234,
           "p50_us": 2.174,
           "p95_us": 4.546,
-          "core": "AI_VECTOR_CORE"
+          "core": "AI_VECTOR_CORE",
+          "pipeline": {
+            "coverage": 100.0,
+            "measured_calls": 2984,
+            "scores": {
+              "MTE1": 0.0,
+              "MTE2": 27.21,
+              "MTE3": 8.95,
+              "Vector": 0.0,
+              "Cube": 0.0,
+              "Scalar": 34.79,
+              "Fixpipe": 0.0
+            }
+          }
         },
         {
           "batch": 4,
@@ -641,7 +1369,20 @@ window.qwenDecodeSweep = {
           "mean_us": 2.58383,
           "p50_us": 2.324,
           "p95_us": 4.354,
-          "core": "AI_VECTOR_CORE"
+          "core": "AI_VECTOR_CORE",
+          "pipeline": {
+            "coverage": 100.0,
+            "measured_calls": 2984,
+            "scores": {
+              "MTE1": 0.0,
+              "MTE2": 26.94,
+              "MTE3": 8.87,
+              "Vector": 0.0,
+              "Cube": 0.0,
+              "Scalar": 35.37,
+              "Fixpipe": 0.0
+            }
+          }
         },
         {
           "batch": 8,
@@ -650,7 +1391,20 @@ window.qwenDecodeSweep = {
           "mean_us": 2.77988,
           "p50_us": 2.718,
           "p95_us": 4.095,
-          "core": "AI_VECTOR_CORE"
+          "core": "AI_VECTOR_CORE",
+          "pipeline": {
+            "coverage": 100.0,
+            "measured_calls": 2984,
+            "scores": {
+              "MTE1": 0.0,
+              "MTE2": 26.97,
+              "MTE3": 8.67,
+              "Vector": 0.0,
+              "Cube": 0.0,
+              "Scalar": 38.8,
+              "Fixpipe": 0.0
+            }
+          }
         },
         {
           "batch": 16,
@@ -659,7 +1413,20 @@ window.qwenDecodeSweep = {
           "mean_us": 2.97332,
           "p50_us": 2.916,
           "p95_us": 4.422,
-          "core": "AI_VECTOR_CORE"
+          "core": "AI_VECTOR_CORE",
+          "pipeline": {
+            "coverage": 100.0,
+            "measured_calls": 2652,
+            "scores": {
+              "MTE1": 0.0,
+              "MTE2": 27.95,
+              "MTE3": 9.85,
+              "Vector": 0.0,
+              "Cube": 0.0,
+              "Scalar": 36.86,
+              "Fixpipe": 0.0
+            }
+          }
         },
         {
           "batch": 17,
@@ -668,7 +1435,20 @@ window.qwenDecodeSweep = {
           "mean_us": 3.09797,
           "p50_us": 2.98,
           "p95_us": 4.875,
-          "core": "AI_VECTOR_CORE"
+          "core": "AI_VECTOR_CORE",
+          "pipeline": {
+            "coverage": 100.0,
+            "measured_calls": 2652,
+            "scores": {
+              "MTE1": 0.0,
+              "MTE2": 28.43,
+              "MTE3": 10.11,
+              "Vector": 0.0,
+              "Cube": 0.0,
+              "Scalar": 36.36,
+              "Fixpipe": 0.0
+            }
+          }
         }
       ]
     },
@@ -682,7 +1462,20 @@ window.qwenDecodeSweep = {
           "mean_us": 16.83952,
           "p50_us": 16.825,
           "p95_us": 18.762,
-          "core": "MIX_AIV"
+          "core": "MIX_AIV",
+          "pipeline": {
+            "coverage": 100.0,
+            "measured_calls": 424,
+            "scores": {
+              "MTE1": 0.0,
+              "MTE2": 12.49,
+              "MTE3": 12.23,
+              "Vector": 9.08,
+              "Cube": 0.0,
+              "Scalar": 31.03,
+              "Fixpipe": 0.0
+            }
+          }
         },
         {
           "batch": 2,
@@ -691,7 +1484,20 @@ window.qwenDecodeSweep = {
           "mean_us": 18.14036,
           "p50_us": 18.3115,
           "p95_us": 19.954,
-          "core": "MIX_AIV"
+          "core": "MIX_AIV",
+          "pipeline": {
+            "coverage": 100.0,
+            "measured_calls": 424,
+            "scores": {
+              "MTE1": 0.0,
+              "MTE2": 12.59,
+              "MTE3": 12.91,
+              "Vector": 9.36,
+              "Cube": 0.0,
+              "Scalar": 30.11,
+              "Fixpipe": 0.0
+            }
+          }
         },
         {
           "batch": 4,
@@ -700,7 +1506,20 @@ window.qwenDecodeSweep = {
           "mean_us": 18.91428,
           "p50_us": 19.159,
           "p95_us": 20.757,
-          "core": "MIX_AIV"
+          "core": "MIX_AIV",
+          "pipeline": {
+            "coverage": 100.0,
+            "measured_calls": 424,
+            "scores": {
+              "MTE1": 0.0,
+              "MTE2": 13.09,
+              "MTE3": 15.39,
+              "Vector": 10.79,
+              "Cube": 0.0,
+              "Scalar": 30.09,
+              "Fixpipe": 0.0
+            }
+          }
         },
         {
           "batch": 8,
@@ -709,7 +1528,20 @@ window.qwenDecodeSweep = {
           "mean_us": 20.38624,
           "p50_us": 20.6495,
           "p95_us": 22.49,
-          "core": "MIX_AIV"
+          "core": "MIX_AIV",
+          "pipeline": {
+            "coverage": 100.0,
+            "measured_calls": 424,
+            "scores": {
+              "MTE1": 0.0,
+              "MTE2": 13.34,
+              "MTE3": 18.61,
+              "Vector": 12.99,
+              "Cube": 0.0,
+              "Scalar": 29.99,
+              "Fixpipe": 0.0
+            }
+          }
         },
         {
           "batch": 16,
@@ -718,7 +1550,20 @@ window.qwenDecodeSweep = {
           "mean_us": 23.50306,
           "p50_us": 24.0445,
           "p95_us": 25.558,
-          "core": "MIX_AIV"
+          "core": "MIX_AIV",
+          "pipeline": {
+            "coverage": 100.0,
+            "measured_calls": 322,
+            "scores": {
+              "MTE1": 0.0,
+              "MTE2": 13.41,
+              "MTE3": 23.59,
+              "Vector": 16.15,
+              "Cube": 0.0,
+              "Scalar": 29.26,
+              "Fixpipe": 0.0
+            }
+          }
         },
         {
           "batch": 17,
@@ -727,7 +1572,20 @@ window.qwenDecodeSweep = {
           "mean_us": 24.17306,
           "p50_us": 24.8315,
           "p95_us": 26.339,
-          "core": "MIX_AIV"
+          "core": "MIX_AIV",
+          "pipeline": {
+            "coverage": 100.0,
+            "measured_calls": 322,
+            "scores": {
+              "MTE1": 0.0,
+              "MTE2": 13.32,
+              "MTE3": 24.72,
+              "Vector": 17.07,
+              "Cube": 0.0,
+              "Scalar": 29.16,
+              "Fixpipe": 0.0
+            }
+          }
         }
       ]
     },
@@ -741,7 +1599,20 @@ window.qwenDecodeSweep = {
           "mean_us": 9.11666,
           "p50_us": 9.3695,
           "p95_us": 10.461,
-          "core": "AI_VECTOR_CORE"
+          "core": "AI_VECTOR_CORE",
+          "pipeline": {
+            "coverage": 100.0,
+            "measured_calls": 288,
+            "scores": {
+              "MTE1": 0.0,
+              "MTE2": 9.38,
+              "MTE3": 0.25,
+              "Vector": 49.8,
+              "Cube": 0.0,
+              "Scalar": 24.73,
+              "Fixpipe": 0.0
+            }
+          }
         },
         {
           "batch": 2,
@@ -750,7 +1621,20 @@ window.qwenDecodeSweep = {
           "mean_us": 11.00061,
           "p50_us": 11.1375,
           "p95_us": 12.191,
-          "core": "AI_VECTOR_CORE"
+          "core": "AI_VECTOR_CORE",
+          "pipeline": {
+            "coverage": 100.0,
+            "measured_calls": 288,
+            "scores": {
+              "MTE1": 0.0,
+              "MTE2": 9.38,
+              "MTE3": 0.27,
+              "Vector": 48.29,
+              "Cube": 0.0,
+              "Scalar": 24.84,
+              "Fixpipe": 0.0
+            }
+          }
         },
         {
           "batch": 4,
@@ -759,7 +1643,20 @@ window.qwenDecodeSweep = {
           "mean_us": 14.55022,
           "p50_us": 14.6545,
           "p95_us": 15.726,
-          "core": "AI_VECTOR_CORE"
+          "core": "AI_VECTOR_CORE",
+          "pipeline": {
+            "coverage": 100.0,
+            "measured_calls": 288,
+            "scores": {
+              "MTE1": 0.0,
+              "MTE2": 9.52,
+              "MTE3": 0.29,
+              "Vector": 47.58,
+              "Cube": 0.0,
+              "Scalar": 25.33,
+              "Fixpipe": 0.0
+            }
+          }
         },
         {
           "batch": 8,
@@ -768,7 +1665,20 @@ window.qwenDecodeSweep = {
           "mean_us": 21.88825,
           "p50_us": 21.9095,
           "p95_us": 23.165,
-          "core": "AI_VECTOR_CORE"
+          "core": "AI_VECTOR_CORE",
+          "pipeline": {
+            "coverage": 100.0,
+            "measured_calls": 288,
+            "scores": {
+              "MTE1": 0.0,
+              "MTE2": 9.48,
+              "MTE3": 0.32,
+              "Vector": 47.12,
+              "Cube": 0.0,
+              "Scalar": 26.6,
+              "Fixpipe": 0.0
+            }
+          }
         },
         {
           "batch": 16,
@@ -777,7 +1687,20 @@ window.qwenDecodeSweep = {
           "mean_us": 25.58759,
           "p50_us": 25.5385,
           "p95_us": 28.394,
-          "core": "AI_VECTOR_CORE"
+          "core": "AI_VECTOR_CORE",
+          "pipeline": {
+            "coverage": 100.0,
+            "measured_calls": 252,
+            "scores": {
+              "MTE1": 0.0,
+              "MTE2": 9.43,
+              "MTE3": 0.88,
+              "Vector": 43.29,
+              "Cube": 0.0,
+              "Scalar": 30.81,
+              "Fixpipe": 0.0
+            }
+          }
         },
         {
           "batch": 17,
@@ -786,7 +1709,20 @@ window.qwenDecodeSweep = {
           "mean_us": 26.90082,
           "p50_us": 27.0365,
           "p95_us": 28.186,
-          "core": "AI_VECTOR_CORE"
+          "core": "AI_VECTOR_CORE",
+          "pipeline": {
+            "coverage": 100.0,
+            "measured_calls": 252,
+            "scores": {
+              "MTE1": 0.0,
+              "MTE2": 9.25,
+              "MTE3": 1.06,
+              "Vector": 42.29,
+              "Cube": 0.0,
+              "Scalar": 32.04,
+              "Fixpipe": 0.0
+            }
+          }
         }
       ]
     },
@@ -800,7 +1736,12 @@ window.qwenDecodeSweep = {
           "mean_us": 228.86912,
           "p50_us": 176.086,
           "p95_us": 594.339,
-          "core": "COMMUNICATION"
+          "core": "COMMUNICATION",
+          "pipeline": {
+            "coverage": 0.0,
+            "measured_calls": 0,
+            "scores": {}
+          }
         },
         {
           "batch": 4,
@@ -809,7 +1750,12 @@ window.qwenDecodeSweep = {
           "mean_us": 215.89525,
           "p50_us": 202.897,
           "p95_us": 306.124,
-          "core": "COMMUNICATION"
+          "core": "COMMUNICATION",
+          "pipeline": {
+            "coverage": 0.0,
+            "measured_calls": 0,
+            "scores": {}
+          }
         },
         {
           "batch": 8,
@@ -818,7 +1764,12 @@ window.qwenDecodeSweep = {
           "mean_us": 130.13348,
           "p50_us": 107.639,
           "p95_us": 186.17,
-          "core": "COMMUNICATION"
+          "core": "COMMUNICATION",
+          "pipeline": {
+            "coverage": 0.0,
+            "measured_calls": 0,
+            "scores": {}
+          }
         },
         {
           "batch": 16,
@@ -827,7 +1778,12 @@ window.qwenDecodeSweep = {
           "mean_us": 137.98953,
           "p50_us": 122.904,
           "p95_us": 214.11,
-          "core": "COMMUNICATION"
+          "core": "COMMUNICATION",
+          "pipeline": {
+            "coverage": 0.0,
+            "measured_calls": 0,
+            "scores": {}
+          }
         },
         {
           "batch": 17,
@@ -836,7 +1792,12 @@ window.qwenDecodeSweep = {
           "mean_us": 138.65843,
           "p50_us": 127.696,
           "p95_us": 215.513,
-          "core": "COMMUNICATION"
+          "core": "COMMUNICATION",
+          "pipeline": {
+            "coverage": 0.0,
+            "measured_calls": 0,
+            "scores": {}
+          }
         }
       ]
     },
@@ -850,7 +1811,20 @@ window.qwenDecodeSweep = {
           "mean_us": 2.58995,
           "p50_us": 2.7405,
           "p95_us": 3.712,
-          "core": "AI_VECTOR_CORE"
+          "core": "AI_VECTOR_CORE",
+          "pipeline": {
+            "coverage": 100.0,
+            "measured_calls": 1848,
+            "scores": {
+              "MTE1": 0.0,
+              "MTE2": 26.3,
+              "MTE3": 6.53,
+              "Vector": 13.87,
+              "Cube": 0.0,
+              "Scalar": 46.59,
+              "Fixpipe": 0.0
+            }
+          }
         },
         {
           "batch": 2,
@@ -859,7 +1833,20 @@ window.qwenDecodeSweep = {
           "mean_us": 2.76598,
           "p50_us": 2.831,
           "p95_us": 3.837,
-          "core": "AI_VECTOR_CORE"
+          "core": "AI_VECTOR_CORE",
+          "pipeline": {
+            "coverage": 100.0,
+            "measured_calls": 1848,
+            "scores": {
+              "MTE1": 0.0,
+              "MTE2": 26.97,
+              "MTE3": 6.52,
+              "Vector": 13.67,
+              "Cube": 0.0,
+              "Scalar": 45.44,
+              "Fixpipe": 0.0
+            }
+          }
         },
         {
           "batch": 4,
@@ -868,7 +1855,20 @@ window.qwenDecodeSweep = {
           "mean_us": 2.85791,
           "p50_us": 2.8825,
           "p95_us": 3.989,
-          "core": "AI_VECTOR_CORE"
+          "core": "AI_VECTOR_CORE",
+          "pipeline": {
+            "coverage": 100.0,
+            "measured_calls": 1848,
+            "scores": {
+              "MTE1": 0.0,
+              "MTE2": 27.03,
+              "MTE3": 6.5,
+              "Vector": 13.81,
+              "Cube": 0.0,
+              "Scalar": 45.57,
+              "Fixpipe": 0.0
+            }
+          }
         },
         {
           "batch": 8,
@@ -877,7 +1877,20 @@ window.qwenDecodeSweep = {
           "mean_us": 3.00808,
           "p50_us": 3.03,
           "p95_us": 4.318,
-          "core": "AI_VECTOR_CORE"
+          "core": "AI_VECTOR_CORE",
+          "pipeline": {
+            "coverage": 100.0,
+            "measured_calls": 1848,
+            "scores": {
+              "MTE1": 0.0,
+              "MTE2": 26.67,
+              "MTE3": 6.65,
+              "Vector": 13.91,
+              "Cube": 0.0,
+              "Scalar": 45.19,
+              "Fixpipe": 0.0
+            }
+          }
         },
         {
           "batch": 16,
@@ -886,7 +1899,20 @@ window.qwenDecodeSweep = {
           "mean_us": 3.47206,
           "p50_us": 3.3375,
           "p95_us": 5.592,
-          "core": "AI_VECTOR_CORE"
+          "core": "AI_VECTOR_CORE",
+          "pipeline": {
+            "coverage": 100.0,
+            "measured_calls": 1666,
+            "scores": {
+              "MTE1": 0.0,
+              "MTE2": 26.52,
+              "MTE3": 7.23,
+              "Vector": 15.13,
+              "Cube": 0.0,
+              "Scalar": 44.85,
+              "Fixpipe": 0.0
+            }
+          }
         },
         {
           "batch": 17,
@@ -895,7 +1921,20 @@ window.qwenDecodeSweep = {
           "mean_us": 3.62045,
           "p50_us": 3.426,
           "p95_us": 5.732,
-          "core": "AI_VECTOR_CORE"
+          "core": "AI_VECTOR_CORE",
+          "pipeline": {
+            "coverage": 100.0,
+            "measured_calls": 1666,
+            "scores": {
+              "MTE1": 0.0,
+              "MTE2": 27.38,
+              "MTE3": 7.73,
+              "Vector": 16.03,
+              "Cube": 0.0,
+              "Scalar": 44.92,
+              "Fixpipe": 0.0
+            }
+          }
         }
       ]
     },
@@ -909,7 +1948,20 @@ window.qwenDecodeSweep = {
           "mean_us": 10.9437,
           "p50_us": 10.8205,
           "p95_us": 12.856,
-          "core": "MIX_AIV"
+          "core": "MIX_AIV",
+          "pipeline": {
+            "coverage": 100.0,
+            "measured_calls": 424,
+            "scores": {
+              "MTE1": 0.0,
+              "MTE2": 19.46,
+              "MTE3": 6.37,
+              "Vector": 3.99,
+              "Cube": 0.0,
+              "Scalar": 54.93,
+              "Fixpipe": 0.0
+            }
+          }
         },
         {
           "batch": 2,
@@ -918,7 +1970,20 @@ window.qwenDecodeSweep = {
           "mean_us": 11.49524,
           "p50_us": 11.55,
           "p95_us": 13.127,
-          "core": "MIX_AIV"
+          "core": "MIX_AIV",
+          "pipeline": {
+            "coverage": 100.0,
+            "measured_calls": 424,
+            "scores": {
+              "MTE1": 0.0,
+              "MTE2": 20.65,
+              "MTE3": 10.24,
+              "Vector": 4.86,
+              "Cube": 0.0,
+              "Scalar": 51.06,
+              "Fixpipe": 0.0
+            }
+          }
         },
         {
           "batch": 4,
@@ -927,7 +1992,20 @@ window.qwenDecodeSweep = {
           "mean_us": 11.94534,
           "p50_us": 12.072,
           "p95_us": 13.284,
-          "core": "MIX_AIV"
+          "core": "MIX_AIV",
+          "pipeline": {
+            "coverage": 100.0,
+            "measured_calls": 424,
+            "scores": {
+              "MTE1": 0.0,
+              "MTE2": 21.56,
+              "MTE3": 15.82,
+              "Vector": 6.42,
+              "Cube": 0.0,
+              "Scalar": 46.6,
+              "Fixpipe": 0.0
+            }
+          }
         },
         {
           "batch": 8,
@@ -936,7 +2014,20 @@ window.qwenDecodeSweep = {
           "mean_us": 12.17481,
           "p50_us": 12.2165,
           "p95_us": 13.498,
-          "core": "MIX_AIV"
+          "core": "MIX_AIV",
+          "pipeline": {
+            "coverage": 100.0,
+            "measured_calls": 424,
+            "scores": {
+              "MTE1": 0.0,
+              "MTE2": 22.89,
+              "MTE3": 24.38,
+              "Vector": 8.07,
+              "Cube": 0.0,
+              "Scalar": 41.48,
+              "Fixpipe": 0.0
+            }
+          }
         },
         {
           "batch": 16,
@@ -945,7 +2036,20 @@ window.qwenDecodeSweep = {
           "mean_us": 15.15919,
           "p50_us": 14.709,
           "p95_us": 20.2,
-          "core": "MIX_AIV"
+          "core": "MIX_AIV",
+          "pipeline": {
+            "coverage": 100.0,
+            "measured_calls": 322,
+            "scores": {
+              "MTE1": 0.0,
+              "MTE2": 24.5,
+              "MTE3": 35.74,
+              "Vector": 9.94,
+              "Cube": 0.0,
+              "Scalar": 34.05,
+              "Fixpipe": 0.0
+            }
+          }
         },
         {
           "batch": 17,
@@ -954,7 +2058,20 @@ window.qwenDecodeSweep = {
           "mean_us": 15.55469,
           "p50_us": 15.2925,
           "p95_us": 20.147,
-          "core": "MIX_AIV"
+          "core": "MIX_AIV",
+          "pipeline": {
+            "coverage": 100.0,
+            "measured_calls": 322,
+            "scores": {
+              "MTE1": 0.0,
+              "MTE2": 25.17,
+              "MTE3": 35.52,
+              "Vector": 10.33,
+              "Cube": 0.0,
+              "Scalar": 34.09,
+              "Fixpipe": 0.0
+            }
+          }
         }
       ]
     },
@@ -968,7 +2085,20 @@ window.qwenDecodeSweep = {
           "mean_us": 2.96487,
           "p50_us": 2.936,
           "p95_us": 3.684,
-          "core": "AI_VECTOR_CORE"
+          "core": "AI_VECTOR_CORE",
+          "pipeline": {
+            "coverage": 100.0,
+            "measured_calls": 896,
+            "scores": {
+              "MTE1": 0.0,
+              "MTE2": 26.45,
+              "MTE3": 8.07,
+              "Vector": 12.26,
+              "Cube": 0.0,
+              "Scalar": 37.43,
+              "Fixpipe": 0.0
+            }
+          }
         },
         {
           "batch": 2,
@@ -977,7 +2107,20 @@ window.qwenDecodeSweep = {
           "mean_us": 3.98703,
           "p50_us": 3.8825,
           "p95_us": 5.133,
-          "core": "AI_VECTOR_CORE"
+          "core": "AI_VECTOR_CORE",
+          "pipeline": {
+            "coverage": 100.0,
+            "measured_calls": 896,
+            "scores": {
+              "MTE1": 0.0,
+              "MTE2": 21.9,
+              "MTE3": 6.36,
+              "Vector": 11.63,
+              "Cube": 0.0,
+              "Scalar": 32.1,
+              "Fixpipe": 0.0
+            }
+          }
         },
         {
           "batch": 4,
@@ -986,7 +2129,20 @@ window.qwenDecodeSweep = {
           "mean_us": 4.49726,
           "p50_us": 4.4215,
           "p95_us": 5.595,
-          "core": "AI_VECTOR_CORE"
+          "core": "AI_VECTOR_CORE",
+          "pipeline": {
+            "coverage": 100.0,
+            "measured_calls": 896,
+            "scores": {
+              "MTE1": 0.0,
+              "MTE2": 28.07,
+              "MTE3": 9.86,
+              "Vector": 15.39,
+              "Cube": 0.0,
+              "Scalar": 36.23,
+              "Fixpipe": 0.0
+            }
+          }
         },
         {
           "batch": 8,
@@ -995,7 +2151,20 @@ window.qwenDecodeSweep = {
           "mean_us": 5.22072,
           "p50_us": 5.4385,
           "p95_us": 6.096,
-          "core": "AI_VECTOR_CORE"
+          "core": "AI_VECTOR_CORE",
+          "pipeline": {
+            "coverage": 100.0,
+            "measured_calls": 896,
+            "scores": {
+              "MTE1": 0.0,
+              "MTE2": 36.46,
+              "MTE3": 16.06,
+              "Vector": 22.36,
+              "Cube": 0.0,
+              "Scalar": 44.6,
+              "Fixpipe": 0.0
+            }
+          }
         },
         {
           "batch": 16,
@@ -1004,7 +2173,20 @@ window.qwenDecodeSweep = {
           "mean_us": 8.62567,
           "p50_us": 7.2225,
           "p95_us": 21.413,
-          "core": "AI_VECTOR_CORE"
+          "core": "AI_VECTOR_CORE",
+          "pipeline": {
+            "coverage": 100.0,
+            "measured_calls": 784,
+            "scores": {
+              "MTE1": 0.0,
+              "MTE2": 59.65,
+              "MTE3": 29.78,
+              "Vector": 34.56,
+              "Cube": 0.0,
+              "Scalar": 62.72,
+              "Fixpipe": 0.0
+            }
+          }
         },
         {
           "batch": 17,
@@ -1013,7 +2195,20 @@ window.qwenDecodeSweep = {
           "mean_us": 7.0228,
           "p50_us": 7.3295,
           "p95_us": 7.857,
-          "core": "AI_VECTOR_CORE"
+          "core": "AI_VECTOR_CORE",
+          "pipeline": {
+            "coverage": 100.0,
+            "measured_calls": 684,
+            "scores": {
+              "MTE1": 0.0,
+              "MTE2": 47.79,
+              "MTE3": 22.56,
+              "Vector": 30.08,
+              "Cube": 0.0,
+              "Scalar": 53.22,
+              "Fixpipe": 0.0
+            }
+          }
         }
       ]
     }
@@ -1158,7 +2353,20 @@ window.qwenDecodeSweep = {
             "mean_us": 14.15536,
             "p50_us": 14.068,
             "p95_us": 14.78,
-            "core": "COMMUNICATION"
+            "core": "COMMUNICATION",
+            "pipeline": {
+              "coverage": 50.0,
+              "measured_calls": 784,
+              "scores": {
+                "MTE1": 0.0,
+                "MTE2": 9.48,
+                "MTE3": 19.22,
+                "Vector": 0.0,
+                "Cube": 0.0,
+                "Scalar": 18.14,
+                "Fixpipe": 0.0
+              }
+            }
           },
           {
             "batch": 4,
@@ -1167,7 +2375,20 @@ window.qwenDecodeSweep = {
             "mean_us": 15.37724,
             "p50_us": 15.193,
             "p95_us": 16.194,
-            "core": "COMMUNICATION"
+            "core": "COMMUNICATION",
+            "pipeline": {
+              "coverage": 50.0,
+              "measured_calls": 784,
+              "scores": {
+                "MTE1": 0.0,
+                "MTE2": 9.69,
+                "MTE3": 20.01,
+                "Vector": 0.0,
+                "Cube": 0.0,
+                "Scalar": 16.87,
+                "Fixpipe": 0.0
+              }
+            }
           },
           {
             "batch": 8,
@@ -1176,7 +2397,20 @@ window.qwenDecodeSweep = {
             "mean_us": 17.03392,
             "p50_us": 16.8685,
             "p95_us": 17.782,
-            "core": "COMMUNICATION"
+            "core": "COMMUNICATION",
+            "pipeline": {
+              "coverage": 50.0,
+              "measured_calls": 784,
+              "scores": {
+                "MTE1": 0.0,
+                "MTE2": 9.9,
+                "MTE3": 20.86,
+                "Vector": 0.0,
+                "Cube": 0.0,
+                "Scalar": 15.07,
+                "Fixpipe": 0.0
+              }
+            }
           }
         ]
       },
@@ -1190,7 +2424,20 @@ window.qwenDecodeSweep = {
             "mean_us": 5.90087,
             "p50_us": 5.799,
             "p95_us": 10.454,
-            "core": "AI_CORE"
+            "core": "AI_CORE",
+            "pipeline": {
+              "coverage": 100.0,
+              "measured_calls": 3968,
+              "scores": {
+                "MTE1": 15.09,
+                "MTE2": 52.16,
+                "MTE3": 0.05,
+                "Vector": 0.04,
+                "Cube": 12.17,
+                "Scalar": 39.74,
+                "Fixpipe": 30.58
+              }
+            }
           },
           {
             "batch": 4,
@@ -1199,7 +2446,20 @@ window.qwenDecodeSweep = {
             "mean_us": 6.13694,
             "p50_us": 5.991,
             "p95_us": 10.99,
-            "core": "AI_CORE"
+            "core": "AI_CORE",
+            "pipeline": {
+              "coverage": 100.0,
+              "measured_calls": 3968,
+              "scores": {
+                "MTE1": 14.58,
+                "MTE2": 53.44,
+                "MTE3": 0.11,
+                "Vector": 0.17,
+                "Cube": 11.71,
+                "Scalar": 38.29,
+                "Fixpipe": 32.31
+              }
+            }
           },
           {
             "batch": 8,
@@ -1208,7 +2468,20 @@ window.qwenDecodeSweep = {
             "mean_us": 6.26308,
             "p50_us": 6.086,
             "p95_us": 11.224,
-            "core": "AI_CORE"
+            "core": "AI_CORE",
+            "pipeline": {
+              "coverage": 100.0,
+              "measured_calls": 3968,
+              "scores": {
+                "MTE1": 14.33,
+                "MTE2": 54.79,
+                "MTE3": 0.19,
+                "Vector": 0.39,
+                "Cube": 11.42,
+                "Scalar": 37.06,
+                "Fixpipe": 33.58
+              }
+            }
           }
         ]
       },
@@ -1222,7 +2495,20 @@ window.qwenDecodeSweep = {
             "mean_us": 23.78695,
             "p50_us": 24.057,
             "p95_us": 27.027,
-            "core": "MIX_AIC"
+            "core": "MIX_AIC",
+            "pipeline": {
+              "coverage": 100.0,
+              "measured_calls": 384,
+              "scores": {
+                "MTE1": 6.57,
+                "MTE2": 16.01,
+                "MTE3": 0.12,
+                "Vector": 0.09,
+                "Cube": 5.92,
+                "Scalar": 83.57,
+                "Fixpipe": 0.17
+              }
+            }
           },
           {
             "batch": 4,
@@ -1231,7 +2517,20 @@ window.qwenDecodeSweep = {
             "mean_us": 25.1296,
             "p50_us": 25.1655,
             "p95_us": 27.969,
-            "core": "MIX_AIC"
+            "core": "MIX_AIC",
+            "pipeline": {
+              "coverage": 100.0,
+              "measured_calls": 384,
+              "scores": {
+                "MTE1": 9.23,
+                "MTE2": 22.38,
+                "MTE3": 0.64,
+                "Vector": 0.28,
+                "Cube": 8.31,
+                "Scalar": 80.85,
+                "Fixpipe": 0.24
+              }
+            }
           },
           {
             "batch": 8,
@@ -1240,7 +2539,20 @@ window.qwenDecodeSweep = {
             "mean_us": 26.22881,
             "p50_us": 26.316,
             "p95_us": 29.543,
-            "core": "MIX_AIC"
+            "core": "MIX_AIC",
+            "pipeline": {
+              "coverage": 100.0,
+              "measured_calls": 384,
+              "scores": {
+                "MTE1": 8.76,
+                "MTE2": 22.83,
+                "MTE3": 1.7,
+                "Vector": 0.46,
+                "Cube": 8.26,
+                "Scalar": 81.01,
+                "Fixpipe": 0.24
+              }
+            }
           }
         ]
       },
@@ -1254,7 +2566,20 @@ window.qwenDecodeSweep = {
             "mean_us": 11.16853,
             "p50_us": 10.8615,
             "p95_us": 12.364,
-            "core": "COMMUNICATION"
+            "core": "COMMUNICATION",
+            "pipeline": {
+              "coverage": 50.0,
+              "measured_calls": 392,
+              "scores": {
+                "MTE1": 0.0,
+                "MTE2": 3.0,
+                "MTE3": 1.78,
+                "Vector": 0.0,
+                "Cube": 0.0,
+                "Scalar": 29.93,
+                "Fixpipe": 0.0
+              }
+            }
           },
           {
             "batch": 4,
@@ -1263,7 +2588,20 @@ window.qwenDecodeSweep = {
             "mean_us": 11.67768,
             "p50_us": 11.037,
             "p95_us": 12.49,
-            "core": "COMMUNICATION"
+            "core": "COMMUNICATION",
+            "pipeline": {
+              "coverage": 50.0,
+              "measured_calls": 392,
+              "scores": {
+                "MTE1": 0.0,
+                "MTE2": 3.3,
+                "MTE3": 1.75,
+                "Vector": 0.0,
+                "Cube": 0.0,
+                "Scalar": 28.55,
+                "Fixpipe": 0.0
+              }
+            }
           },
           {
             "batch": 8,
@@ -1272,7 +2610,20 @@ window.qwenDecodeSweep = {
             "mean_us": 11.2807,
             "p50_us": 11.0805,
             "p95_us": 12.416,
-            "core": "COMMUNICATION"
+            "core": "COMMUNICATION",
+            "pipeline": {
+              "coverage": 50.0,
+              "measured_calls": 384,
+              "scores": {
+                "MTE1": 0.0,
+                "MTE2": 2.89,
+                "MTE3": 1.68,
+                "Vector": 0.0,
+                "Cube": 0.0,
+                "Scalar": 29.39,
+                "Fixpipe": 0.0
+              }
+            }
           }
         ]
       },
@@ -1286,7 +2637,20 @@ window.qwenDecodeSweep = {
             "mean_us": 17.27659,
             "p50_us": 17.1525,
             "p95_us": 18.803,
-            "core": "MIX_AIC"
+            "core": "MIX_AIC",
+            "pipeline": {
+              "coverage": 100.0,
+              "measured_calls": 384,
+              "scores": {
+                "MTE1": 2.72,
+                "MTE2": 8.02,
+                "MTE3": 0.34,
+                "Vector": 0.11,
+                "Cube": 2.33,
+                "Scalar": 92.78,
+                "Fixpipe": 5.55
+              }
+            }
           },
           {
             "batch": 4,
@@ -1295,7 +2659,20 @@ window.qwenDecodeSweep = {
             "mean_us": 18.13326,
             "p50_us": 18.118,
             "p95_us": 20.359,
-            "core": "MIX_AIC"
+            "core": "MIX_AIC",
+            "pipeline": {
+              "coverage": 100.0,
+              "measured_calls": 384,
+              "scores": {
+                "MTE1": 4.16,
+                "MTE2": 12.1,
+                "MTE3": 1.15,
+                "Vector": 0.42,
+                "Cube": 3.59,
+                "Scalar": 92.9,
+                "Fixpipe": 8.67
+              }
+            }
           },
           {
             "batch": 8,
@@ -1304,7 +2681,20 @@ window.qwenDecodeSweep = {
             "mean_us": 18.18377,
             "p50_us": 18.1335,
             "p95_us": 20.408,
-            "core": "MIX_AIC"
+            "core": "MIX_AIC",
+            "pipeline": {
+              "coverage": 100.0,
+              "measured_calls": 384,
+              "scores": {
+                "MTE1": 4.04,
+                "MTE2": 12.07,
+                "MTE3": 2.09,
+                "Vector": 0.84,
+                "Cube": 3.54,
+                "Scalar": 92.73,
+                "Fixpipe": 8.61
+              }
+            }
           }
         ]
       },
@@ -1318,7 +2708,20 @@ window.qwenDecodeSweep = {
             "mean_us": 15.81742,
             "p50_us": 15.6055,
             "p95_us": 17.387,
-            "core": "MIX_AIV"
+            "core": "MIX_AIV",
+            "pipeline": {
+              "coverage": 100.0,
+              "measured_calls": 384,
+              "scores": {
+                "MTE1": 0.0,
+                "MTE2": 11.94,
+                "MTE3": 11.34,
+                "Vector": 8.81,
+                "Cube": 0.0,
+                "Scalar": 32.15,
+                "Fixpipe": 0.0
+              }
+            }
           },
           {
             "batch": 4,
@@ -1327,7 +2730,20 @@ window.qwenDecodeSweep = {
             "mean_us": 16.33283,
             "p50_us": 16.266,
             "p95_us": 18.036,
-            "core": "MIX_AIV"
+            "core": "MIX_AIV",
+            "pipeline": {
+              "coverage": 100.0,
+              "measured_calls": 384,
+              "scores": {
+                "MTE1": 0.0,
+                "MTE2": 12.07,
+                "MTE3": 11.66,
+                "Vector": 8.82,
+                "Cube": 0.0,
+                "Scalar": 31.7,
+                "Fixpipe": 0.0
+              }
+            }
           },
           {
             "batch": 8,
@@ -1336,7 +2752,20 @@ window.qwenDecodeSweep = {
             "mean_us": 16.70601,
             "p50_us": 16.5985,
             "p95_us": 18.42,
-            "core": "MIX_AIV"
+            "core": "MIX_AIV",
+            "pipeline": {
+              "coverage": 100.0,
+              "measured_calls": 384,
+              "scores": {
+                "MTE1": 0.0,
+                "MTE2": 12.07,
+                "MTE3": 12.45,
+                "Vector": 9.27,
+                "Cube": 0.0,
+                "Scalar": 31.64,
+                "Fixpipe": 0.0
+              }
+            }
           }
         ]
       },
@@ -1350,7 +2779,20 @@ window.qwenDecodeSweep = {
             "mean_us": 2.1572,
             "p50_us": 2.08,
             "p95_us": 2.672,
-            "core": "AI_VECTOR_CORE"
+            "core": "AI_VECTOR_CORE",
+            "pipeline": {
+              "coverage": 100.0,
+              "measured_calls": 192,
+              "scores": {
+                "MTE1": 0.0,
+                "MTE2": 25.17,
+                "MTE3": 12.43,
+                "Vector": 0.0,
+                "Cube": 0.0,
+                "Scalar": 32.77,
+                "Fixpipe": 0.0
+              }
+            }
           },
           {
             "batch": 4,
@@ -1359,7 +2801,20 @@ window.qwenDecodeSweep = {
             "mean_us": 2.08908,
             "p50_us": 1.922,
             "p95_us": 3.268,
-            "core": "AI_VECTOR_CORE"
+            "core": "AI_VECTOR_CORE",
+            "pipeline": {
+              "coverage": 100.0,
+              "measured_calls": 2496,
+              "scores": {
+                "MTE1": 0.0,
+                "MTE2": 27.64,
+                "MTE3": 10.66,
+                "Vector": 0.0,
+                "Cube": 0.0,
+                "Scalar": 35.83,
+                "Fixpipe": 0.0
+              }
+            }
           },
           {
             "batch": 8,
@@ -1368,7 +2823,20 @@ window.qwenDecodeSweep = {
             "mean_us": 2.25446,
             "p50_us": 2.013,
             "p95_us": 3.79,
-            "core": "AI_VECTOR_CORE"
+            "core": "AI_VECTOR_CORE",
+            "pipeline": {
+              "coverage": 100.0,
+              "measured_calls": 2496,
+              "scores": {
+                "MTE1": 0.0,
+                "MTE2": 27.86,
+                "MTE3": 10.06,
+                "Vector": 0.0,
+                "Cube": 0.0,
+                "Scalar": 35.67,
+                "Fixpipe": 0.0
+              }
+            }
           }
         ]
       },
@@ -1382,7 +2850,20 @@ window.qwenDecodeSweep = {
             "mean_us": 19.71669,
             "p50_us": 19.6635,
             "p95_us": 20.829,
-            "core": "MIX_AIC"
+            "core": "MIX_AIC",
+            "pipeline": {
+              "coverage": 100.0,
+              "measured_calls": 96,
+              "scores": {
+                "MTE1": 9.41,
+                "MTE2": 48.56,
+                "MTE3": 3.04,
+                "Vector": 4.11,
+                "Cube": 8.02,
+                "Scalar": 54.07,
+                "Fixpipe": 3.53
+              }
+            }
           },
           {
             "batch": 4,
@@ -1391,7 +2872,20 @@ window.qwenDecodeSweep = {
             "mean_us": 27.24151,
             "p50_us": 27.255,
             "p95_us": 28.33,
-            "core": "MIX_AIC"
+            "core": "MIX_AIC",
+            "pipeline": {
+              "coverage": 100.0,
+              "measured_calls": 96,
+              "scores": {
+                "MTE1": 18.49,
+                "MTE2": 76.33,
+                "MTE3": 7.9,
+                "Vector": 6.86,
+                "Cube": 14.5,
+                "Scalar": 52.0,
+                "Fixpipe": 6.36
+              }
+            }
           },
           {
             "batch": 8,
@@ -1400,7 +2894,20 @@ window.qwenDecodeSweep = {
             "mean_us": 44.17659,
             "p50_us": 44.0745,
             "p95_us": 45.551,
-            "core": "MIX_AIC"
+            "core": "MIX_AIC",
+            "pipeline": {
+              "coverage": 100.0,
+              "measured_calls": 96,
+              "scores": {
+                "MTE1": 20.66,
+                "MTE2": 86.64,
+                "MTE3": 9.64,
+                "Vector": 7.47,
+                "Cube": 16.1,
+                "Scalar": 48.7,
+                "Fixpipe": 7.06
+              }
+            }
           }
         ]
       },
@@ -1414,7 +2921,20 @@ window.qwenDecodeSweep = {
             "mean_us": 10.10848,
             "p50_us": 9.909,
             "p95_us": 11.963,
-            "core": "MIX_AIV"
+            "core": "MIX_AIV",
+            "pipeline": {
+              "coverage": 100.0,
+              "measured_calls": 384,
+              "scores": {
+                "MTE1": 0.0,
+                "MTE2": 18.44,
+                "MTE3": 2.63,
+                "Vector": 3.02,
+                "Cube": 0.0,
+                "Scalar": 60.22,
+                "Fixpipe": 0.0
+              }
+            }
           },
           {
             "batch": 4,
@@ -1423,7 +2943,20 @@ window.qwenDecodeSweep = {
             "mean_us": 10.28292,
             "p50_us": 9.997,
             "p95_us": 12.391,
-            "core": "MIX_AIV"
+            "core": "MIX_AIV",
+            "pipeline": {
+              "coverage": 100.0,
+              "measured_calls": 384,
+              "scores": {
+                "MTE1": 0.0,
+                "MTE2": 18.6,
+                "MTE3": 5.6,
+                "Vector": 3.26,
+                "Cube": 0.0,
+                "Scalar": 57.56,
+                "Fixpipe": 0.0
+              }
+            }
           },
           {
             "batch": 8,
@@ -1432,7 +2965,20 @@ window.qwenDecodeSweep = {
             "mean_us": 10.74438,
             "p50_us": 10.4845,
             "p95_us": 12.694,
-            "core": "MIX_AIV"
+            "core": "MIX_AIV",
+            "pipeline": {
+              "coverage": 100.0,
+              "measured_calls": 384,
+              "scores": {
+                "MTE1": 0.0,
+                "MTE2": 19.0,
+                "MTE3": 8.41,
+                "Vector": 4.15,
+                "Cube": 0.0,
+                "Scalar": 54.57,
+                "Fixpipe": 0.0
+              }
+            }
           }
         ]
       },
@@ -1446,7 +2992,20 @@ window.qwenDecodeSweep = {
             "mean_us": 1.99661,
             "p50_us": 2.028,
             "p95_us": 3.047,
-            "core": "AI_VECTOR_CORE"
+            "core": "AI_VECTOR_CORE",
+            "pipeline": {
+              "coverage": 100.0,
+              "measured_calls": 1304,
+              "scores": {
+                "MTE1": 0.0,
+                "MTE2": 19.81,
+                "MTE3": 10.91,
+                "Vector": 14.57,
+                "Cube": 0.0,
+                "Scalar": 49.82,
+                "Fixpipe": 0.0
+              }
+            }
           },
           {
             "batch": 4,
@@ -1455,7 +3014,20 @@ window.qwenDecodeSweep = {
             "mean_us": 2.77903,
             "p50_us": 2.926,
             "p95_us": 3.582,
-            "core": "AI_VECTOR_CORE"
+            "core": "AI_VECTOR_CORE",
+            "pipeline": {
+              "coverage": 100.0,
+              "measured_calls": 1304,
+              "scores": {
+                "MTE1": 0.0,
+                "MTE2": 28.36,
+                "MTE3": 6.5,
+                "Vector": 13.98,
+                "Cube": 0.0,
+                "Scalar": 45.49,
+                "Fixpipe": 0.0
+              }
+            }
           },
           {
             "batch": 8,
@@ -1464,7 +3036,20 @@ window.qwenDecodeSweep = {
             "mean_us": 2.8933,
             "p50_us": 3.005,
             "p95_us": 3.717,
-            "core": "AI_VECTOR_CORE"
+            "core": "AI_VECTOR_CORE",
+            "pipeline": {
+              "coverage": 100.0,
+              "measured_calls": 1304,
+              "scores": {
+                "MTE1": 0.0,
+                "MTE2": 28.14,
+                "MTE3": 7.01,
+                "Vector": 14.21,
+                "Cube": 0.0,
+                "Scalar": 45.1,
+                "Fixpipe": 0.0
+              }
+            }
           }
         ]
       },
@@ -1478,7 +3063,20 @@ window.qwenDecodeSweep = {
             "mean_us": 31.02833,
             "p50_us": 31.0275,
             "p95_us": 32.367,
-            "core": "MIX_AIC"
+            "core": "MIX_AIC",
+            "pipeline": {
+              "coverage": 100.0,
+              "measured_calls": 96,
+              "scores": {
+                "MTE1": 1.25,
+                "MTE2": 13.09,
+                "MTE3": 1.33,
+                "Vector": 1.81,
+                "Cube": 1.6,
+                "Scalar": 46.13,
+                "Fixpipe": 0.63
+              }
+            }
           },
           {
             "batch": 4,
@@ -1487,7 +3085,20 @@ window.qwenDecodeSweep = {
             "mean_us": 31.74784,
             "p50_us": 31.776,
             "p95_us": 33.143,
-            "core": "MIX_AIC"
+            "core": "MIX_AIC",
+            "pipeline": {
+              "coverage": 100.0,
+              "measured_calls": 96,
+              "scores": {
+                "MTE1": 3.15,
+                "MTE2": 27.51,
+                "MTE3": 1.74,
+                "Vector": 2.26,
+                "Cube": 2.93,
+                "Scalar": 40.23,
+                "Fixpipe": 0.64
+              }
+            }
           },
           {
             "batch": 8,
@@ -1496,7 +3107,20 @@ window.qwenDecodeSweep = {
             "mean_us": 38.30565,
             "p50_us": 38.2205,
             "p95_us": 40.034,
-            "core": "MIX_AIC"
+            "core": "MIX_AIC",
+            "pipeline": {
+              "coverage": 100.0,
+              "measured_calls": 96,
+              "scores": {
+                "MTE1": 4.86,
+                "MTE2": 41.51,
+                "MTE3": 2.3,
+                "Vector": 2.86,
+                "Cube": 4.52,
+                "Scalar": 39.2,
+                "Fixpipe": 0.73
+              }
+            }
           }
         ]
       },
@@ -1510,7 +3134,20 @@ window.qwenDecodeSweep = {
             "mean_us": 5.70672,
             "p50_us": 5.6715,
             "p95_us": 6.063,
-            "core": "AI_VECTOR_CORE"
+            "core": "AI_VECTOR_CORE",
+            "pipeline": {
+              "coverage": 100.0,
+              "measured_calls": 288,
+              "scores": {
+                "MTE1": 0.0,
+                "MTE2": 37.6,
+                "MTE3": 13.35,
+                "Vector": 31.81,
+                "Cube": 0.0,
+                "Scalar": 46.55,
+                "Fixpipe": 0.0
+              }
+            }
           },
           {
             "batch": 4,
@@ -1519,7 +3156,20 @@ window.qwenDecodeSweep = {
             "mean_us": 7.36349,
             "p50_us": 7.2945,
             "p95_us": 8.145,
-            "core": "AI_VECTOR_CORE"
+            "core": "AI_VECTOR_CORE",
+            "pipeline": {
+              "coverage": 100.0,
+              "measured_calls": 288,
+              "scores": {
+                "MTE1": 0.0,
+                "MTE2": 32.61,
+                "MTE3": 10.42,
+                "Vector": 27.8,
+                "Cube": 0.0,
+                "Scalar": 53.02,
+                "Fixpipe": 0.0
+              }
+            }
           },
           {
             "batch": 8,
@@ -1528,7 +3178,20 @@ window.qwenDecodeSweep = {
             "mean_us": 10.36317,
             "p50_us": 10.2465,
             "p95_us": 11.39,
-            "core": "AI_VECTOR_CORE"
+            "core": "AI_VECTOR_CORE",
+            "pipeline": {
+              "coverage": 100.0,
+              "measured_calls": 288,
+              "scores": {
+                "MTE1": 0.0,
+                "MTE2": 35.41,
+                "MTE3": 12.52,
+                "Vector": 30.43,
+                "Cube": 0.0,
+                "Scalar": 58.04,
+                "Fixpipe": 0.0
+              }
+            }
           }
         ]
       },
@@ -1542,7 +3205,20 @@ window.qwenDecodeSweep = {
             "mean_us": 3.26312,
             "p50_us": 3.226,
             "p95_us": 3.55,
-            "core": "AI_VECTOR_CORE"
+            "core": "AI_VECTOR_CORE",
+            "pipeline": {
+              "coverage": 100.0,
+              "measured_calls": 760,
+              "scores": {
+                "MTE1": 0.0,
+                "MTE2": 26.59,
+                "MTE3": 14.59,
+                "Vector": 36.72,
+                "Cube": 0.0,
+                "Scalar": 27.99,
+                "Fixpipe": 0.0
+              }
+            }
           },
           {
             "batch": 4,
@@ -1551,7 +3227,20 @@ window.qwenDecodeSweep = {
             "mean_us": 3.52708,
             "p50_us": 3.496,
             "p95_us": 3.821,
-            "core": "AI_VECTOR_CORE"
+            "core": "AI_VECTOR_CORE",
+            "pipeline": {
+              "coverage": 100.0,
+              "measured_calls": 760,
+              "scores": {
+                "MTE1": 0.0,
+                "MTE2": 21.32,
+                "MTE3": 14.22,
+                "Vector": 37.55,
+                "Cube": 0.0,
+                "Scalar": 26.95,
+                "Fixpipe": 0.0
+              }
+            }
           },
           {
             "batch": 8,
@@ -1560,7 +3249,20 @@ window.qwenDecodeSweep = {
             "mean_us": 3.83003,
             "p50_us": 3.786,
             "p95_us": 4.239,
-            "core": "AI_VECTOR_CORE"
+            "core": "AI_VECTOR_CORE",
+            "pipeline": {
+              "coverage": 100.0,
+              "measured_calls": 760,
+              "scores": {
+                "MTE1": 0.0,
+                "MTE2": 15.57,
+                "MTE3": 12.61,
+                "Vector": 39.0,
+                "Cube": 0.0,
+                "Scalar": 28.62,
+                "Fixpipe": 0.0
+              }
+            }
           }
         ]
       },
@@ -1574,7 +3276,20 @@ window.qwenDecodeSweep = {
             "mean_us": 7.1013,
             "p50_us": 6.981,
             "p95_us": 8.251,
-            "core": "AI_VECTOR_CORE"
+            "core": "AI_VECTOR_CORE",
+            "pipeline": {
+              "coverage": 100.0,
+              "measured_calls": 288,
+              "scores": {
+                "MTE1": 0.0,
+                "MTE2": 9.29,
+                "MTE3": 0.09,
+                "Vector": 52.25,
+                "Cube": 0.0,
+                "Scalar": 25.37,
+                "Fixpipe": 0.0
+              }
+            }
           },
           {
             "batch": 4,
@@ -1583,7 +3298,20 @@ window.qwenDecodeSweep = {
             "mean_us": 8.41761,
             "p50_us": 8.6715,
             "p95_us": 9.738,
-            "core": "AI_VECTOR_CORE"
+            "core": "AI_VECTOR_CORE",
+            "pipeline": {
+              "coverage": 100.0,
+              "measured_calls": 288,
+              "scores": {
+                "MTE1": 0.0,
+                "MTE2": 9.31,
+                "MTE3": 0.19,
+                "Vector": 50.61,
+                "Cube": 0.0,
+                "Scalar": 25.22,
+                "Fixpipe": 0.0
+              }
+            }
           },
           {
             "batch": 8,
@@ -1592,7 +3320,20 @@ window.qwenDecodeSweep = {
             "mean_us": 9.53366,
             "p50_us": 9.6185,
             "p95_us": 10.919,
-            "core": "AI_VECTOR_CORE"
+            "core": "AI_VECTOR_CORE",
+            "pipeline": {
+              "coverage": 100.0,
+              "measured_calls": 288,
+              "scores": {
+                "MTE1": 0.0,
+                "MTE2": 9.39,
+                "MTE3": 0.28,
+                "Vector": 50.87,
+                "Cube": 0.0,
+                "Scalar": 25.58,
+                "Fixpipe": 0.0
+              }
+            }
           }
         ]
       },
@@ -1606,7 +3347,20 @@ window.qwenDecodeSweep = {
             "mean_us": 6.87685,
             "p50_us": 2.7835,
             "p95_us": 3.315,
-            "core": "AI_VECTOR_CORE"
+            "core": "AI_VECTOR_CORE",
+            "pipeline": {
+              "coverage": 36.82,
+              "measured_calls": 352,
+              "scores": {
+                "MTE1": 0.0,
+                "MTE2": 16.92,
+                "MTE3": 1.67,
+                "Vector": 26.43,
+                "Cube": 0.0,
+                "Scalar": 40.98,
+                "Fixpipe": 0.0
+              }
+            }
           },
           {
             "batch": 4,
@@ -1615,7 +3369,20 @@ window.qwenDecodeSweep = {
             "mean_us": 6.84551,
             "p50_us": 2.8175,
             "p95_us": 3.415,
-            "core": "AI_VECTOR_CORE"
+            "core": "AI_VECTOR_CORE",
+            "pipeline": {
+              "coverage": 37.83,
+              "measured_calls": 352,
+              "scores": {
+                "MTE1": 0.0,
+                "MTE2": 16.9,
+                "MTE3": 1.78,
+                "Vector": 27.21,
+                "Cube": 0.0,
+                "Scalar": 40.47,
+                "Fixpipe": 0.0
+              }
+            }
           },
           {
             "batch": 8,
@@ -1624,7 +3391,20 @@ window.qwenDecodeSweep = {
             "mean_us": 7.58725,
             "p50_us": 2.8905,
             "p95_us": 3.426,
-            "core": "AI_VECTOR_CORE"
+            "core": "AI_VECTOR_CORE",
+            "pipeline": {
+              "coverage": 34.56,
+              "measured_calls": 352,
+              "scores": {
+                "MTE1": 0.0,
+                "MTE2": 16.97,
+                "MTE3": 1.92,
+                "Vector": 28.35,
+                "Cube": 0.0,
+                "Scalar": 39.74,
+                "Fixpipe": 0.0
+              }
+            }
           }
         ]
       },
@@ -1638,7 +3418,20 @@ window.qwenDecodeSweep = {
             "mean_us": 2.26113,
             "p50_us": 2.23,
             "p95_us": 2.541,
-            "core": "AI_VECTOR_CORE"
+            "core": "AI_VECTOR_CORE",
+            "pipeline": {
+              "coverage": 100.0,
+              "measured_calls": 776,
+              "scores": {
+                "MTE1": 0.0,
+                "MTE2": 31.48,
+                "MTE3": 9.16,
+                "Vector": 11.78,
+                "Cube": 0.0,
+                "Scalar": 41.8,
+                "Fixpipe": 0.0
+              }
+            }
           },
           {
             "batch": 4,
@@ -1647,7 +3440,20 @@ window.qwenDecodeSweep = {
             "mean_us": 2.73276,
             "p50_us": 2.6845,
             "p95_us": 3.18,
-            "core": "AI_VECTOR_CORE"
+            "core": "AI_VECTOR_CORE",
+            "pipeline": {
+              "coverage": 100.0,
+              "measured_calls": 776,
+              "scores": {
+                "MTE1": 0.0,
+                "MTE2": 28.36,
+                "MTE3": 8.99,
+                "Vector": 12.12,
+                "Cube": 0.0,
+                "Scalar": 38.62,
+                "Fixpipe": 0.0
+              }
+            }
           },
           {
             "batch": 8,
@@ -1656,7 +3462,20 @@ window.qwenDecodeSweep = {
             "mean_us": 3.28852,
             "p50_us": 3.21,
             "p95_us": 3.881,
-            "core": "AI_VECTOR_CORE"
+            "core": "AI_VECTOR_CORE",
+            "pipeline": {
+              "coverage": 100.0,
+              "measured_calls": 776,
+              "scores": {
+                "MTE1": 0.0,
+                "MTE2": 25.48,
+                "MTE3": 7.71,
+                "Vector": 11.29,
+                "Cube": 0.0,
+                "Scalar": 36.33,
+                "Fixpipe": 0.0
+              }
+            }
           }
         ]
       }

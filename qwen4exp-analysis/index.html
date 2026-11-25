@@ -266,6 +266,12 @@
             </label>
           </div>
         </header>
+        <details class="pipeline-method">
+          <summary>流水线标注口径</summary>
+          <p>点旁标出 PMU 活跃度最高的流水线，点击 Batch 可看 MTE1、MTE2、MTE3、Vector、Cube、Scalar 和 Fixpipe 的读数。</p>
+          <p>活跃度 = profiler 流水线耗时字段之和 ÷ 有计数的 kernel 设备耗时之和。Scalar、MTE2、MTE3 在单次调用内取 AIC/AIV 较大值。各流水线可以重叠，百分比之和可能超过 100%。</p>
+          <p>达到最高项 90% 的流水线并列，超过两项显示 Mixed。PMU 覆盖低于设备耗时的 80% 时，标为通信或计数不足。标签用于定位值得检查的流水线，确认瓶颈还需结合等待时间与优化前后验证。<a href="https://github.com/Ascend/msopprof/blob/master/docs/zh/user_guide/msopprof_performance_data.md">Ascend 计数说明 ↗</a></p>
+        </details>
         <div id="batch-operators" class="decode-operator-groups"></div>
         <p id="batch-kernel-note" class="footnote"></p>
       </article>
