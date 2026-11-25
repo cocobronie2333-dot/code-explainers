@@ -114,10 +114,8 @@ h1 { margin-top: 11px; font-size: clamp(40px, 5.4vw, 76px); line-height: 1.1; le
 :is(.operator-board, .operator-layer-map, .operator-legend) [data-tone="mtp"] { --wire: #ff88ab; }
 .operator-box { position: absolute; z-index: 2; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 2px; padding: 3px 5px; color: #f0f6fe; border: 1px solid var(--wire); border-radius: 10px; background: #112332; text-align: center; }
 .operator-box:hover, .operator-box:focus-visible { z-index: 4; background: #233c50; }
-.operator-stream-name { max-width: 100%; font-size: 11.5px; font-weight: 650; line-height: 1.1; overflow-wrap: anywhere; }
-.operator-stream-name.long-name { font-size: 10px; word-break: break-all; }
-.operator-caption { color: #bed0de; font-size: 10.5px; line-height: 1.2; }
-.operator-box small { color: #8ce3db; font: 10px/1.12 var(--mono); }
+.operator-stream-name { font-size: 14px; font-weight: 650; line-height: 1.2; white-space: nowrap; }
+.operator-caption { color: #bed0de; font-size: 11px; line-height: 1.2; white-space: nowrap; }
 .operator-shape-badge { position: absolute; z-index: 2; transform: translate(-50%, -50%); padding: 2px 5px; color: #ffe0a5; border: 1px solid #3b5166; border-radius: 4px; background: #0c1925; font: 11px/1.15 var(--mono); white-space: nowrap; pointer-events: none; }
 .operator-board.has-layer [data-branch] { opacity: .45; }
 .operator-board.has-layer [data-branch].is-layer, .operator-board.has-layer [data-branch]:focus-visible, .operator-board.has-layer [data-branch]:hover { opacity: 1; }

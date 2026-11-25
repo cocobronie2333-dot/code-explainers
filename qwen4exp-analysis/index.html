@@ -42,7 +42,7 @@
           <p class="eyebrow">QWEN3.8-FLASH-NEXT <span>·</span> ASCEND 950DT</p>
           <h1>Qwen4Exp · Prefill / Decode <span>算子框图</span></h1>
           <p class="intro">48 层 · 36 GDN + 12 QSA · 每层 MoE（512 选 10 + shared）· 4 路 HC · MTP5</p>
-          <p class="operator-hint">框内上方为 NPU Stream 事件原名，下方为中文说明。点击 Attention 或 MoE 节点可展开 tensor 数据流。</p>
+          <p class="operator-hint">框内显示算子简称和中文说明。悬停可看 NPU Stream 原名，点击 Attention 或 MoE 节点可看 tensor 数据流。</p>
         </div>
         <aside class="operator-shapes" aria-labelledby="operator-shapes-title">
           <h2 id="operator-shapes-title">张量形状</h2>
@@ -68,7 +68,7 @@
         <p class="operator-hint" id="layer-caption" aria-live="polite">层号从 0 开始。点击层号可在两张图里对照其 Attention 分支。</p>
       </section>
       <div id="operator-boards"></div>
-      <p class="operator-hint operator-provenance">一个框包含多步时展示代表性事件。占比按采集窗口内的完整事件名汇总。Prefill 取 114 A 组，Decode 取 104 的 128K C1 采集，均为 rank 0。<a href="#ascend">查看实测 ↗</a></p>
+      <p class="operator-hint operator-provenance">每框展示代表性事件，点击可查完整名称、调用次数和耗时占比。Prefill 取 114 A 组，Decode 取 104 的 128K C1 采集，均为 rank 0。<a href="#ascend">查看实测 ↗</a></p>
       <dialog id="operator-detail" class="operator-dialog" aria-labelledby="operator-dialog-title">
         <form method="dialog"><button class="outline-button" aria-label="关闭算子详情">关闭 ×</button></form>
         <div id="operator-detail-content"></div>

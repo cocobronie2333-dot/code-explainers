@@ -168,6 +168,60 @@
     },
   };
 
+  const streamLabels = {
+    _compute_slot_mappings_kernel: "Slot Map",
+    aclnnMatmul_MatMulV3Common_MatMulV3: "MatMulV3",
+    fused_gdn_gating_kernel: "GDN Gate",
+    _layer_norm_fwd_1pass_kernel_npu: "LayerNorm",
+    _compress_qsa_groups_kernel: "QSA Compress",
+    LightningIndexerV2: "LI V2",
+    _store_qsa_rows_kernel: "KV Store",
+    aclnnGenericBlockSparseAttention_GenericBlockSparseAttention_GenericBlockSparseAttention: "GBSA",
+    aclnnSigmoid_SigmoidAiCore_Sigmoid: "Sigmoid",
+    aclnnQuantMatmulWeightNz_QuantBatchMatmulV3_QuantBatchMatmulV3: "QMatMulV3",
+    aclnnMoeGatingTopK_MoeGatingTopK_MoeGatingTopK: "MoE TopK",
+    aclnnGroupedMatmulSwigluQuantWeightNzV2_GroupedMatmulSwigluQuantV2_GroupedMatmulSwigluQuantV2: "GMM+SwiGLU",
+    aclnnEmbedding_GatherV2AiCore_GatherV2: "GatherV2",
+    aclnnEmbedding_EmbeddingAiCore_Embedding: "Embedding",
+    _ple_conv_kernel: "PLE Conv",
+    _ple_conv_spec_kernel: "PLE Conv",
+    _hc_gate_mix_row_block_kernel: "HC Mix",
+    _hc_gate_mix_kernel: "HC Mix",
+    _hc_combine_norm_kernel: "HC Norm",
+    aclnnChunkGatedDeltaRuleFwd_ChunkFwdH_ChunkFwdH: "ChunkFwdH",
+    aclnnRecurrentGatedDeltaRule_RecurrentGatedDeltaRule_RecurrentGatedDeltaRule: "RGDR",
+    _triton_mrope_forward: "MRoPE",
+    _triton_rope: "RoPE",
+    aclnnMoeInitRoutingV3_MoeInitRoutingV3_MoeInitRoutingV3: "MoE Route",
+    aclnnMoeTokenUnpermute_MoeFinalizeRoutingV2_MoeFinalizeRoutingV2: "MoE Finalize",
+    MoeDistributeDispatchV3: "EP Dispatch",
+    MoeDistributeCombineV3: "EP Combine",
+    aclnnAdd_AddAiCore_Add: "Add",
+    aclnnArgMax_ArgMaxV2AiCore_ArgMaxV2: "ArgMaxV2",
+    _probabilistic_rejection_kernel: "Rejection",
+    _post_update_kernel: "Post Update",
+  };
+  const boxCaptions = {
+    embed: "词嵌入",
+    meta: "缓存槽位",
+    gates: "递推参数",
+    gout: "门控与投影",
+    qproj: "位置编码",
+    qsa: "块稀疏注意力",
+    qout: "门控与投影",
+    hcffn: "输出混合",
+    route: "专家路由",
+    shared: "共享专家",
+    dispatch: "令牌分发",
+    experts: "专家分组计算",
+    combine: "专家汇合",
+    head: "词表投影",
+    draftLayer: "草稿注意力",
+    draftHead: "生成候选",
+    verify: "候选校验",
+    commit: "提交结果",
+  };
+
   const stages = {
     prefill: {
       label: "PREFILL",
@@ -276,15 +330,11 @@
       button.dataset.node = id;
       if (branch) button.dataset.branch = branch;
       place(button, x, y, w, h);
-      const trace = streamOperators[stage];
-      const names = trace.nodes[id];
-      const mainName = names[0];
-      const nameLabel = add(button, "code", "operator-stream-name", mainName);
-      if (mainName.length > 40) nameLabel.classList.add("long-name");
-      add(button, "span", "operator-caption", node[0]);
-      if (id === "index" || !decoding && id === "gdn" || decoding && ["dispatch", "combine"].includes(id)) {
-        add(button, "small", "", "trace " + trace.events[mainName].share.toFixed(2) + "%");
-      }
+      const names = streamOperators[stage].nodes[id];
+      const shortName = streamLabels[names[0]] ?? names[0];
+      add(button, "code", "operator-stream-name", shortName);
+      add(button, "span", "operator-caption", boxCaptions[id] ?? node[0]);
+      button.setAttribute("aria-label", shortName + " · " + node[0]);
       button.title = names.join(" · ") + " · " + node[0];
       button.addEventListener("click", () => {
         const kind = id === "hc" ? (activeLayer !== null && activeLayer % 4 === 3 ? "qsa" : "gdn") : tensorKind[id];
