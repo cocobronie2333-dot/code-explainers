@@ -227,6 +227,9 @@ summary.decode-group-title { cursor: pointer; padding-bottom: 11px; }
 .pipeline-method p { margin-top: 5px; }
 .pipeline-method a { margin-left: 6px; }
 .pipeline-batch-list { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px; }
+.dense-batch-control { display: grid; grid-template-columns: auto 2ch minmax(100px, 1fr); align-items: center; gap: 8px; width: 100%; color: var(--muted); }
+.dense-batch-control output { color: var(--text); font-family: var(--mono); }
+.dense-batch-control input { width: 100%; min-width: 0; accent-color: #c8b9ff; }
 .pipeline-batch-button { display: inline-flex; align-items: baseline; flex-wrap: wrap; gap: 4px; padding: 3px 5px; border: 1px solid #3b3a4d; border-radius: 4px; background: #1b1c25; color: #d4d2e0; font: 10px/1.4 var(--mono); }
 .pipeline-batch-button:hover, .pipeline-batch-button[aria-pressed="true"] { background: #272537; border-color: #9f8ed1; }
 .pipeline-chip { color: var(--curve); }

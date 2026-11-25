@@ -27,6 +27,7 @@
   const kernelDataset = element("batch-kernel-dataset");
   const comparison = data.comparison;
   const a3 = data.a3;
+  const reduced = window.qwenReducedDecodeSweep;
   const operatorGroups = [
     ["GDN · 状态更新与门控", ["RecurrentGatedDeltaRule", "fused_gdn_gating_kernel"]],
     ["QSA · 稀疏索引与注意力", ["LightningIndexerV2", "LightningIndexer", "GenericBlockSparseAttention", "SparseFlashAttention", "FusedInferAttentionScore"]],
@@ -77,17 +78,28 @@
     const communication = title.startsWith("hcom_");
     const context = canvas.getContext("2d");
     const byBatch = new Map(points.map(point => [point.batch, point]));
+    const dense = batches.length > 24;
+    const tickIndices = dense ? [0, 19, 39, 59, batches.length - 1] : [...batches.keys()];
     const values = points.flatMap(point => series.map(metric => metric.value(point))).filter(Number.isFinite);
     const max = ceiling ?? yCeiling(values);
     let active = batches.findLastIndex(batch => byBatch.has(batch));
     let plot = null;
     const batchButtons = [];
+    let batchRange;
+    let batchRangeValue;
     let pipelineDetail;
     if (pipelines.length) {
       const batchList = add(frame, "div", "pipeline-batch-list");
       batchList.setAttribute("role", "group");
       batchList.setAttribute("aria-label", "按实际 Batch 查看流水线计数");
-      for (const [index, batch] of batches.entries()) {
+      if (dense) {
+        const label = add(batchList, "label", "dense-batch-control", "实际 Batch ");
+        batchRangeValue = add(label, "output");
+        batchRange = add(label, "input");
+        Object.assign(batchRange, { type: "range", min: 0, max: batches.length - 1, value: active });
+        batchRange.addEventListener("input", () => select(Number(batchRange.value)));
+      }
+      for (const [index, batch] of dense ? [] : batches.entries()) {
         const point = byBatch.get(batch);
         const button = add(batchList, "button", "pipeline-batch-button");
         button.type = "button";
@@ -125,6 +137,11 @@
 
     function showPipelines(batch, point) {
       batchButtons.forEach((button, index) => button.setAttribute("aria-pressed", String(index === active)));
+      if (batchRange) {
+        batchRange.value = active;
+        batchRangeValue.value = batch;
+        batchRange.setAttribute("aria-valuetext", `B${batch}`);
+      }
       pipelineDetail.replaceChildren();
       for (const [index, track] of pipelines.entries()) {
         const sample = point && track.sample(point);
@@ -174,7 +191,8 @@
         context.textAlign = "right";
         context.fillText(Number(value.toPrecision(3)).toString(), left - 6, line);
       }
-      for (const [i, batch] of batches.entries()) {
+      const ticks = dense && !tickIndices.includes(active) ? [...tickIndices, active] : tickIndices;
+      for (const i of ticks) {
         const line = x(i);
         context.strokeStyle = i === active ? "#7a718c" : "#23252e";
         context.beginPath();
@@ -183,7 +201,9 @@
         context.stroke();
         context.textAlign = "center";
         context.fillStyle = i === active ? "#f5f2fb" : "#a8a8b7";
-        context.fillText(String(batch), line, bottom + 12);
+        if (!dense || i === active || Math.abs(x(i) - x(active)) >= 18) {
+          context.fillText(String(batches[i]), line, bottom + 12);
+        }
       }
       for (const [i, metric] of series.entries()) {
         const readings = batches.map(batch => byBatch.has(batch) ? metric.value(byBatch.get(batch)) : null);
@@ -202,7 +222,7 @@
           if (!Number.isFinite(value)) continue;
           context.fillStyle = colors[i];
           context.beginPath();
-          context.arc(x(j), y(value), j === active ? 3.8 : 2.6, 0, Math.PI * 2);
+          context.arc(x(j), y(value), j === active ? 3.8 : dense ? 1.35 : 2.6, 0, Math.PI * 2);
           context.fill();
         }
       }
@@ -211,7 +231,7 @@
 
     function drawPipelineLabels(x, y, left, right, bottom) {
       const occupied = [];
-      const order = [active, ...batches.keys()].filter((index, i, all) => all.indexOf(index) === i);
+      const order = [...new Set([active, ...tickIndices])];
       context.font = '10px "Cascadia Mono", Consolas, monospace';
       context.textAlign = "center";
       for (const index of order) {
@@ -276,22 +296,30 @@
     const container = element("batch-operators");
     container.replaceChildren();
     const hardware = kernelDataset.value === "a3";
-    const baseData = hardware && a3.mtp === 0 ? comparison : data;
-    const otherData = hardware ? a3 : kernelDataset.value === "compare" ? comparison : null;
+    const reducedMode = kernelDataset.value === "reduced";
+    const baseData = reducedMode ? reduced.dt : hardware && a3.mtp === 0 ? comparison : data;
+    const otherData = reducedMode ? reduced.a3 : hardware ? a3 : kernelDataset.value === "compare" ? comparison : null;
     const compare = Boolean(otherData);
-    const labels = hardware ? ["950DT", "A3"] : ["MTP5", "MTP 关闭"];
+    const labels = hardware || reducedMode ? ["950DT", "A3"] : ["MTP5", "MTP 关闭"];
     const compareSteps = new Map((otherData?.verified ?? []).map(row => [row.batch, row.steps]));
-    const batches = baseData.verified.map(row => row.batch).filter(batch => !compare || compareSteps.has(batch));
+    const batches = reducedMode ? Array.from({ length: 80 }, (_, i) => i + 1)
+      : baseData.verified.map(row => row.batch).filter(batch => !compare || compareSteps.has(batch));
     const stepsByBatch = new Map(baseData.verified.map(row => [row.batch, row.steps]));
     const kernels = new Map(baseData.kernels.map(kernel => [kernel.name, kernel]));
     const otherKernels = new Map((otherData?.kernels ?? []).map(kernel => [kernel.name, kernel]));
-    const visible = new Set(hardware ? [...kernels.keys(), ...otherKernels.keys()] : kernels.keys());
-    if (compare) kernelStat.value = "step_ms";
+    const visible = new Set(hardware || reducedMode ? [...kernels.keys(), ...otherKernels.keys()] : kernels.keys());
+    for (const option of kernelStat.options) {
+      option.hidden = reducedMode ? option.value.endsWith("_us") : option.value === "reduced_mean";
+    }
+    if (kernelStat.selectedOptions[0].hidden || (compare && !reducedMode)) kernelStat.value = "step_ms";
     const stat = kernelStat.value;
     const perStep = stat === "step_ms";
-    kernelStat.disabled = Boolean(compare);
-    const mode = hardware ? a3.kernelContext : compare ? "950DT · MTP5 / MTP 关闭" : "950DT · MTP5";
-    element("batch-kernel-context").textContent = `${mode} · Decode rank 0 · ${batches.map(batch => "B" + batch).join(" / ")}`;
+    kernelStat.disabled = compare && !reducedMode;
+    const mode = reducedMode ? "950DT / A3 · 4 层 + MTP5 · TP4/EP4" : hardware ? a3.kernelContext
+      : compare ? "950DT · MTP5 / MTP 关闭" : "950DT · MTP5";
+    const batchLabel = reducedMode ? "B1–B80" : batches.map(batch => "B" + batch).join(" / ");
+    element("batch-kernel-context").textContent = `${mode} · Decode rank 0 · ${batchLabel}`;
+    if (reduced) element("reduced-decode-sweep").hidden = !reducedMode;
     disconnectOperators = [];
     function addCharts(parent, names) {
       const grid = add(parent, "div", "decode-chart-grid");
@@ -306,13 +334,24 @@
         if (compare) {
           const baseline = new Map(points.map(point => [point.batch, point]));
           const other = new Map((otherKernels.get(name)?.points ?? []).map(point => [point.batch, point]));
-          const paired = batches.map(batch => ({ batch, baseline: baseline.get(batch), other: other.get(batch) }));
-          if (!paired.some(point => point.baseline || point.other)) continue;
+          const paired = batches.map(batch => ({ batch, baseline: baseline.get(batch), other: other.get(batch) }))
+            .filter(point => point.baseline || point.other);
+          if (!paired.length) continue;
+          const unit = perStep ? "ms" : "μs";
           disconnectOperators.push(chart(grid, { title: name,
-            axis: "ms / rank / Decode 调度步 · 相同实际 Batch", unit: "ms", batches, points: paired, isKernel: true,
+            axis: `${unit} / rank / ${perStep ? "Decode 调度步" : "次调用"} · 相同实际 Batch`,
+            unit, batches, points: paired, isKernel: true,
             series: [
-              { label: labels[0], value: point => point.baseline ? point.baseline.total_us / point.baseline.steps / 1000 : null },
-              { label: labels[1], value: point => point.other ? point.other.total_us / compareSteps.get(point.batch) / 1000 : null },
+              {
+                label: labels[0], value: point => point.baseline
+                  ? (perStep ? point.baseline.total_us / point.baseline.steps / 1000 : point.baseline.mean_us)
+                  : null,
+              },
+              {
+                label: labels[1], value: point => point.other
+                  ? (perStep ? point.other.total_us / compareSteps.get(point.batch) / 1000 : point.other.mean_us)
+                  : null,
+              },
             ],
             pipelines: [{ label: labels[0], sample: point => point.baseline?.pipeline }, { label: labels[1], sample: point => point.other?.pipeline }],
             pointDetail: point => [point.baseline && `${labels[0]} ${count(point.baseline.calls)} 次 / ${point.baseline.steps} 步`,
@@ -435,6 +474,18 @@
           series: [{ label: "950DT", value: point => point.baseline[metric] }, { label: "A3", value: point => point.a3[metric] }],
         });
       }
+    }
+  }
+  if (reduced) {
+    const a3Batches = new Set(reduced.a3.verified.map(row => row.batch));
+    const paired = reduced.dt.verified.filter(row => a3Batches.has(row.batch));
+    element("batch-kernel-dataset-field").hidden = false;
+    add(kernelDataset, "option", "", "950DT / A3 · 4 层 · B1–B80").value = "reduced";
+    element("reduced-decode-context").textContent = `已核实 950DT ${reduced.dt.verified.length}/80 档、A3 ${reduced.a3.verified.length}/80 档，同 Batch 配对 ${paired.length} 档。未验证或未采到该算子的档位留空。`;
+    element("reduced-decode-data").href = URL.createObjectURL(new Blob([JSON.stringify(reduced, null, 2)], { type: "application/json" }));
+    if (location.hash === "#reduced-decode-sweep") {
+      kernelDataset.value = "reduced";
+      element("reduced-decode-sweep").open = true;
     }
   }
   kernelDataset.addEventListener("change", renderOperators);

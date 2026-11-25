@@ -13,6 +13,7 @@
   <script defer src="validation-104.js"></script>
   <script defer src="performance.js"></script>
   <script defer src="decode-sweep-data.js"></script>
+  <script defer src="reduced-decode-sweep-data.js"></script>
   <script defer src="decode-sweep-charts.js"></script>
   <script defer src="tensor-flow.js"></script>
   <script defer src="operator-diagram.js"></script>
@@ -269,12 +270,20 @@
             <label for="batch-kernel-stat">对照统计
               <select id="batch-kernel-stat">
                 <option value="step_ms">每调度步累计</option>
+                <option value="reduced_mean" hidden>单次调用均值</option>
                 <option value="p95_us">均值 + P95</option>
                 <option value="p50_us">均值 + P50</option>
               </select>
             </label>
           </div>
         </header>
+        <details class="pipeline-method" id="reduced-decode-sweep" hidden>
+          <summary>减层实测 B1–B80 · 配置与覆盖</summary>
+          <p id="reduced-decode-context"></p>
+          <p>保留原模型前 4 层的 3 层 GDN、1 层 QSA、MoE 和 PLE，另保留 1 个 MTP 层。两台设备均用 W8A8、TP4/EP4、DP1、MTP5，输入 130,561 tokens，每请求生成 72 tokens。每档在 rank 0 上核对实际 Batch 后聚合 3 个 Decode 调度步。曲线展示减层配置下的算子行为。</p>
+          <p>软件版本为 950DT vLLM 0.30.0 / CANN 9.2.1，A3 vLLM 0.33.0 / CANN 9.3.0。减层后的 MTP 接受数及草稿数可在数据中查看。</p>
+          <p><a id="reduced-decode-data" class="text-link" download="qwen4exp-reduced-b1-b80.json">下载减层实测数据 ↗</a></p>
+        </details>
         <details class="pipeline-method">
           <summary>流水线标注口径</summary>
           <p>点旁标出 PMU 活跃度最高的流水线，点击 Batch 可看 MTE1、MTE2、MTE3、Vector、Cube、Scalar 和 Fixpipe 的读数。</p>
