@@ -3480,5 +3480,1308 @@ window.qwenDecodeSweep = {
         ]
       }
     ]
+  },
+  "a3": {
+    "perf": [
+      {
+        "batch": 1,
+        "input_tokens_per_request": 131072,
+        "output_tokens_per_request": 96,
+        "ttft_mean_ms": 664.5911,
+        "tpot_mean_ms": 75.22066,
+        "decoded_tokens_per_s": 13.29422,
+        "itl_mean_ms": 361.40875,
+        "itl_samples": 20,
+        "drafted": 100,
+        "accepted": 79,
+        "acceptance_rate": 0.79,
+        "prefix_cache_queries": 131072,
+        "prefix_cache_hits": 130560
+      },
+      {
+        "batch": 4,
+        "input_tokens_per_request": 131072,
+        "output_tokens_per_request": 96,
+        "ttft_mean_ms": 1192.25328,
+        "tpot_mean_ms": 77.59462,
+        "decoded_tokens_per_s": 44.90718,
+        "itl_mean_ms": 382.92945,
+        "itl_samples": 79,
+        "drafted": 395,
+        "accepted": 309,
+        "acceptance_rate": 0.78228,
+        "prefix_cache_queries": 524288,
+        "prefix_cache_hits": 522240
+      },
+      {
+        "batch": 8,
+        "input_tokens_per_request": 131072,
+        "output_tokens_per_request": 96,
+        "ttft_mean_ms": 2314.0911,
+        "tpot_mean_ms": 75.95778,
+        "decoded_tokens_per_s": 77.16842,
+        "itl_mean_ms": 379.09989,
+        "itl_samples": 164,
+        "drafted": 820,
+        "accepted": 621,
+        "acceptance_rate": 0.75732,
+        "prefix_cache_queries": 1048576,
+        "prefix_cache_hits": 1044480
+      }
+    ],
+    "kernels": [
+      {
+        "name": "MatMulV2",
+        "points": [
+          {
+            "batch": 1,
+            "calls": 4224,
+            "total_us": 51852.929,
+            "mean_us": 12.27579,
+            "p50_us": 10.78,
+            "p95_us": 15.56,
+            "core": "AI_CORE",
+            "pipeline": {
+              "coverage": 100.0,
+              "measured_calls": 4224,
+              "scores": {
+                "MTE1": 15.52,
+                "MTE2": 53.11,
+                "MTE3": 0.0,
+                "Vector": 0.0,
+                "Cube": 7.55,
+                "Scalar": 40.03,
+                "Fixpipe": 3.0
+              }
+            }
+          },
+          {
+            "batch": 4,
+            "calls": 4224,
+            "total_us": 60481.148,
+            "mean_us": 14.31845,
+            "p50_us": 12.32,
+            "p95_us": 19.661,
+            "core": "AI_CORE",
+            "pipeline": {
+              "coverage": 100.0,
+              "measured_calls": 4224,
+              "scores": {
+                "MTE1": 16.84,
+                "MTE2": 54.81,
+                "MTE3": 0.0,
+                "Vector": 0.0,
+                "Cube": 9.49,
+                "Scalar": 53.15,
+                "Fixpipe": 3.96
+              }
+            }
+          },
+          {
+            "batch": 8,
+            "calls": 4224,
+            "total_us": 68721.153,
+            "mean_us": 16.26921,
+            "p50_us": 12.4505,
+            "p95_us": 23.58,
+            "core": "AI_CORE",
+            "pipeline": {
+              "coverage": 100.0,
+              "measured_calls": 4224,
+              "scores": {
+                "MTE1": 21.43,
+                "MTE2": 66.13,
+                "MTE3": 0.0,
+                "Vector": 0.0,
+                "Cube": 12.5,
+                "Scalar": 42.35,
+                "Fixpipe": 4.73
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "GenericBlockSparseAttention",
+        "points": [
+          {
+            "batch": 1,
+            "calls": 136,
+            "total_us": 10234.827,
+            "mean_us": 75.25608,
+            "p50_us": 78.232,
+            "p95_us": 94.221,
+            "core": "MIX_AIC",
+            "pipeline": {
+              "coverage": 100.0,
+              "measured_calls": 136,
+              "scores": {
+                "MTE1": 2.63,
+                "MTE2": 38.81,
+                "MTE3": 0.64,
+                "Vector": 1.29,
+                "Cube": 1.16,
+                "Scalar": 56.16,
+                "Fixpipe": 1.56
+              }
+            }
+          },
+          {
+            "batch": 4,
+            "calls": 136,
+            "total_us": 19133.922,
+            "mean_us": 140.6906,
+            "p50_us": 156.023,
+            "p95_us": 180.844,
+            "core": "MIX_AIC",
+            "pipeline": {
+              "coverage": 100.0,
+              "measured_calls": 136,
+              "scores": {
+                "MTE1": 5.6,
+                "MTE2": 62.52,
+                "MTE3": 0.76,
+                "Vector": 2.18,
+                "Cube": 2.46,
+                "Scalar": 58.85,
+                "Fixpipe": 3.18
+              }
+            }
+          },
+          {
+            "batch": 8,
+            "calls": 136,
+            "total_us": 31594.972,
+            "mean_us": 232.31597,
+            "p50_us": 248.215,
+            "p95_us": 278.005,
+            "core": "MIX_AIC",
+            "pipeline": {
+              "coverage": 100.0,
+              "measured_calls": 136,
+              "scores": {
+                "MTE1": 6.74,
+                "MTE2": 66.91,
+                "MTE3": 0.8,
+                "Vector": 2.54,
+                "Cube": 2.97,
+                "Scalar": 57.41,
+                "Fixpipe": 3.59
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "GroupedMatmulSwigluQuant",
+        "points": [
+          {
+            "batch": 1,
+            "calls": 384,
+            "total_us": 15783.369,
+            "mean_us": 41.10252,
+            "p50_us": 40.08,
+            "p95_us": 50.601,
+            "core": "MIX_AIC",
+            "pipeline": {
+              "coverage": 100.0,
+              "measured_calls": 384,
+              "scores": {
+                "MTE1": 8.08,
+                "MTE2": 19.58,
+                "MTE3": 0.12,
+                "Vector": 0.2,
+                "Cube": 2.9,
+                "Scalar": 48.38,
+                "Fixpipe": 3.48
+              }
+            }
+          },
+          {
+            "batch": 4,
+            "calls": 384,
+            "total_us": 19682.766,
+            "mean_us": 51.2572,
+            "p50_us": 50.751,
+            "p95_us": 66.601,
+            "core": "MIX_AIC",
+            "pipeline": {
+              "coverage": 100.0,
+              "measured_calls": 384,
+              "scores": {
+                "MTE1": 9.98,
+                "MTE2": 25.65,
+                "MTE3": 0.5,
+                "Vector": 0.47,
+                "Cube": 3.64,
+                "Scalar": 54.01,
+                "Fixpipe": 4.75
+              }
+            }
+          },
+          {
+            "batch": 8,
+            "calls": 384,
+            "total_us": 23840.715,
+            "mean_us": 62.0852,
+            "p50_us": 61.9215,
+            "p95_us": 79.522,
+            "core": "MIX_AIC",
+            "pipeline": {
+              "coverage": 100.0,
+              "measured_calls": 384,
+              "scores": {
+                "MTE1": 14.06,
+                "MTE2": 34.08,
+                "MTE3": 0.81,
+                "Vector": 0.73,
+                "Cube": 5.21,
+                "Scalar": 48.5,
+                "Fixpipe": 7.26
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "hcom_allReduce_",
+        "points": [
+          {
+            "batch": 1,
+            "calls": 1808,
+            "total_us": 13365.198,
+            "mean_us": 7.39226,
+            "p50_us": 7.4,
+            "p95_us": 7.96,
+            "core": "COMMUNICATION",
+            "pipeline": {
+              "coverage": 50.0,
+              "measured_calls": 904,
+              "scores": {
+                "MTE1": 0.0,
+                "MTE2": 23.96,
+                "MTE3": 6.84,
+                "Vector": 0.3,
+                "Cube": 0.0,
+                "Scalar": 28.38,
+                "Fixpipe": 0.0
+              }
+            }
+          },
+          {
+            "batch": 4,
+            "calls": 1808,
+            "total_us": 17523.582,
+            "mean_us": 9.69225,
+            "p50_us": 9.84,
+            "p95_us": 10.581,
+            "core": "COMMUNICATION",
+            "pipeline": {
+              "coverage": 50.0,
+              "measured_calls": 904,
+              "scores": {
+                "MTE1": 0.0,
+                "MTE2": 35.08,
+                "MTE3": 16.22,
+                "Vector": 0.35,
+                "Cube": 0.0,
+                "Scalar": 27.22,
+                "Fixpipe": 0.0
+              }
+            }
+          },
+          {
+            "batch": 8,
+            "calls": 1808,
+            "total_us": 19992.594,
+            "mean_us": 11.05785,
+            "p50_us": 11.26,
+            "p95_us": 12.021,
+            "core": "COMMUNICATION",
+            "pipeline": {
+              "coverage": 50.0,
+              "measured_calls": 904,
+              "scores": {
+                "MTE1": 0.0,
+                "MTE2": 36.94,
+                "MTE3": 17.09,
+                "Vector": 0.3,
+                "Cube": 0.0,
+                "Scalar": 23.99,
+                "Fixpipe": 0.0
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "MoeDistributeDispatchV2",
+        "points": [
+          {
+            "batch": 1,
+            "calls": 424,
+            "total_us": 17936.64,
+            "mean_us": 42.3034,
+            "p50_us": 41.67,
+            "p95_us": 46.721,
+            "core": "MIX_AIV",
+            "pipeline": {
+              "coverage": 100.0,
+              "measured_calls": 424,
+              "scores": {
+                "MTE1": 0.0,
+                "MTE2": 5.71,
+                "MTE3": 7.05,
+                "Vector": 3.89,
+                "Cube": 0.0,
+                "Scalar": 12.95,
+                "Fixpipe": 0.0
+              }
+            }
+          },
+          {
+            "batch": 4,
+            "calls": 424,
+            "total_us": 18587.19,
+            "mean_us": 43.83771,
+            "p50_us": 43.501,
+            "p95_us": 47.561,
+            "core": "MIX_AIV",
+            "pipeline": {
+              "coverage": 100.0,
+              "measured_calls": 424,
+              "scores": {
+                "MTE1": 0.0,
+                "MTE2": 7.49,
+                "MTE3": 7.09,
+                "Vector": 4.09,
+                "Cube": 0.0,
+                "Scalar": 12.94,
+                "Fixpipe": 0.0
+              }
+            }
+          },
+          {
+            "batch": 8,
+            "calls": 424,
+            "total_us": 19235.127,
+            "mean_us": 45.36587,
+            "p50_us": 45.561,
+            "p95_us": 47.761,
+            "core": "MIX_AIV",
+            "pipeline": {
+              "coverage": 100.0,
+              "measured_calls": 424,
+              "scores": {
+                "MTE1": 0.0,
+                "MTE2": 7.79,
+                "MTE3": 7.86,
+                "Vector": 4.43,
+                "Cube": 0.0,
+                "Scalar": 13.23,
+                "Fixpipe": 0.0
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "LightningIndexerV2",
+        "points": [
+          {
+            "batch": 1,
+            "calls": 136,
+            "total_us": 10424.842,
+            "mean_us": 76.65325,
+            "p50_us": 85.7815,
+            "p95_us": 88.502,
+            "core": "MIX_AIC",
+            "pipeline": {
+              "coverage": 100.0,
+              "measured_calls": 136,
+              "scores": {
+                "MTE1": 2.38,
+                "MTE2": 16.02,
+                "MTE3": 1.65,
+                "Vector": 15.36,
+                "Cube": 1.3,
+                "Scalar": 29.2,
+                "Fixpipe": 17.18
+              }
+            }
+          },
+          {
+            "batch": 4,
+            "calls": 136,
+            "total_us": 12882.397,
+            "mean_us": 94.72351,
+            "p50_us": 103.0025,
+            "p95_us": 114.623,
+            "core": "MIX_AIC",
+            "pipeline": {
+              "coverage": 100.0,
+              "measured_calls": 136,
+              "scores": {
+                "MTE1": 7.76,
+                "MTE2": 45.3,
+                "MTE3": 1.63,
+                "Vector": 41.54,
+                "Cube": 4.21,
+                "Scalar": 57.63,
+                "Fixpipe": 48.72
+              }
+            }
+          },
+          {
+            "batch": 8,
+            "calls": 136,
+            "total_us": 16674.304,
+            "mean_us": 122.60518,
+            "p50_us": 134.4225,
+            "p95_us": 135.863,
+            "core": "MIX_AIC",
+            "pipeline": {
+              "coverage": 100.0,
+              "measured_calls": 136,
+              "scores": {
+                "MTE1": 12.07,
+                "MTE2": 32.19,
+                "MTE3": 1.1,
+                "Vector": 61.58,
+                "Cube": 6.51,
+                "Scalar": 49.62,
+                "Fixpipe": 37.82
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "Slice",
+        "points": [
+          {
+            "batch": 1,
+            "calls": 4632,
+            "total_us": 9696.268,
+            "mean_us": 2.09332,
+            "p50_us": 2.04,
+            "p95_us": 2.86,
+            "core": "AI_VECTOR_CORE",
+            "pipeline": {
+              "coverage": 100.0,
+              "measured_calls": 4632,
+              "scores": {
+                "MTE1": 0.0,
+                "MTE2": 6.8,
+                "MTE3": 7.72,
+                "Vector": 0.62,
+                "Cube": 0.0,
+                "Scalar": 25.09,
+                "Fixpipe": 0.0
+              }
+            }
+          },
+          {
+            "batch": 4,
+            "calls": 5432,
+            "total_us": 14636.142,
+            "mean_us": 2.69443,
+            "p50_us": 2.58,
+            "p95_us": 4.34,
+            "core": "AI_VECTOR_CORE",
+            "pipeline": {
+              "coverage": 100.0,
+              "measured_calls": 5432,
+              "scores": {
+                "MTE1": 0.0,
+                "MTE2": 5.33,
+                "MTE3": 5.41,
+                "Vector": 0.88,
+                "Cube": 0.0,
+                "Scalar": 27.74,
+                "Fixpipe": 0.0
+              }
+            }
+          },
+          {
+            "batch": 8,
+            "calls": 5432,
+            "total_us": 15748.011,
+            "mean_us": 2.89912,
+            "p50_us": 2.9,
+            "p95_us": 4.26,
+            "core": "AI_VECTOR_CORE",
+            "pipeline": {
+              "coverage": 100.0,
+              "measured_calls": 5432,
+              "scores": {
+                "MTE1": 0.0,
+                "MTE2": 6.15,
+                "MTE3": 5.57,
+                "Vector": 0.85,
+                "Cube": 0.0,
+                "Scalar": 23.1,
+                "Fixpipe": 0.0
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "GroupedMatmul",
+        "points": [
+          {
+            "batch": 1,
+            "calls": 464,
+            "total_us": 12342.09,
+            "mean_us": 26.59933,
+            "p50_us": 26.751,
+            "p95_us": 32.881,
+            "core": "MIX_AIC",
+            "pipeline": {
+              "coverage": 100.0,
+              "measured_calls": 464,
+              "scores": {
+                "MTE1": 6.59,
+                "MTE2": 13.26,
+                "MTE3": 0.69,
+                "Vector": 0.79,
+                "Cube": 2.42,
+                "Scalar": 49.96,
+                "Fixpipe": 6.34
+              }
+            }
+          },
+          {
+            "batch": 4,
+            "calls": 464,
+            "total_us": 12535.374,
+            "mean_us": 27.01589,
+            "p50_us": 25.661,
+            "p95_us": 33.961,
+            "core": "MIX_AIC",
+            "pipeline": {
+              "coverage": 100.0,
+              "measured_calls": 464,
+              "scores": {
+                "MTE1": 10.26,
+                "MTE2": 21.78,
+                "MTE3": 1.16,
+                "Vector": 1.43,
+                "Cube": 3.91,
+                "Scalar": 49.38,
+                "Fixpipe": 10.06
+              }
+            }
+          },
+          {
+            "batch": 8,
+            "calls": 464,
+            "total_us": 15589.159,
+            "mean_us": 33.59733,
+            "p50_us": 32.4305,
+            "p95_us": 51.341,
+            "core": "MIX_AIC",
+            "pipeline": {
+              "coverage": 100.0,
+              "measured_calls": 464,
+              "scores": {
+                "MTE1": 14.73,
+                "MTE2": 33.71,
+                "MTE3": 1.61,
+                "Vector": 2.08,
+                "Cube": 5.72,
+                "Scalar": 47.06,
+                "Fixpipe": 14.95
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "_hc_combine_norm_kernel",
+        "points": [
+          {
+            "batch": 1,
+            "calls": 840,
+            "total_us": 5553.241,
+            "mean_us": 6.611,
+            "p50_us": 6.66,
+            "p95_us": 7.56,
+            "core": "AI_VECTOR_CORE",
+            "pipeline": {
+              "coverage": 100.0,
+              "measured_calls": 840,
+              "scores": {
+                "MTE1": 0.0,
+                "MTE2": 15.51,
+                "MTE3": 6.0,
+                "Vector": 15.68,
+                "Cube": 0.0,
+                "Scalar": 11.86,
+                "Fixpipe": 0.0
+              }
+            }
+          },
+          {
+            "batch": 4,
+            "calls": 840,
+            "total_us": 10816.134,
+            "mean_us": 12.87635,
+            "p50_us": 13.2,
+            "p95_us": 14.16,
+            "core": "AI_VECTOR_CORE",
+            "pipeline": {
+              "coverage": 100.0,
+              "measured_calls": 840,
+              "scores": {
+                "MTE1": 0.0,
+                "MTE2": 22.68,
+                "MTE3": 10.38,
+                "Vector": 14.89,
+                "Cube": 0.0,
+                "Scalar": 10.3,
+                "Fixpipe": 0.0
+              }
+            }
+          },
+          {
+            "batch": 8,
+            "calls": 840,
+            "total_us": 13354.689,
+            "mean_us": 15.89844,
+            "p50_us": 16.28,
+            "p95_us": 16.86,
+            "core": "AI_VECTOR_CORE",
+            "pipeline": {
+              "coverage": 100.0,
+              "measured_calls": 840,
+              "scores": {
+                "MTE1": 0.0,
+                "MTE2": 24.07,
+                "MTE3": 12.17,
+                "Vector": 23.46,
+                "Cube": 0.0,
+                "Scalar": 13.28,
+                "Fixpipe": 0.0
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "hcom_allGather_",
+        "points": [
+          {
+            "batch": 1,
+            "calls": 1104,
+            "total_us": 7134.03,
+            "mean_us": 6.46198,
+            "p50_us": 5.94,
+            "p95_us": 9.0,
+            "core": "COMMUNICATION",
+            "pipeline": {
+              "coverage": 50.0,
+              "measured_calls": 552,
+              "scores": {
+                "MTE1": 0.0,
+                "MTE2": 26.06,
+                "MTE3": 5.27,
+                "Vector": 0.34,
+                "Cube": 0.0,
+                "Scalar": 28.37,
+                "Fixpipe": 0.0
+              }
+            }
+          },
+          {
+            "batch": 4,
+            "calls": 1096,
+            "total_us": 10539.096,
+            "mean_us": 9.61596,
+            "p50_us": 6.4,
+            "p95_us": 20.021,
+            "core": "COMMUNICATION",
+            "pipeline": {
+              "coverage": 38.45,
+              "measured_calls": 544,
+              "scores": {
+                "MTE1": 0.0,
+                "MTE2": 30.04,
+                "MTE3": 5.69,
+                "Vector": 0.29,
+                "Cube": 0.0,
+                "Scalar": 26.78,
+                "Fixpipe": 0.0
+              }
+            }
+          },
+          {
+            "batch": 8,
+            "calls": 1096,
+            "total_us": 12795.575,
+            "mean_us": 11.67479,
+            "p50_us": 7.36,
+            "p95_us": 33.421,
+            "core": "COMMUNICATION",
+            "pipeline": {
+              "coverage": 39.38,
+              "measured_calls": 544,
+              "scores": {
+                "MTE1": 0.0,
+                "MTE2": 36.17,
+                "MTE3": 7.06,
+                "Vector": 0.23,
+                "Cube": 0.0,
+                "Scalar": 21.81,
+                "Fixpipe": 0.0
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "RecurrentGatedDeltaRule",
+        "points": [
+          {
+            "batch": 1,
+            "calls": 288,
+            "total_us": 8613.568,
+            "mean_us": 29.90822,
+            "p50_us": 29.5705,
+            "p95_us": 31.36,
+            "core": "AI_VECTOR_CORE",
+            "pipeline": {
+              "coverage": 100.0,
+              "measured_calls": 288,
+              "scores": {
+                "MTE1": 0.0,
+                "MTE2": 5.97,
+                "MTE3": 14.29,
+                "Vector": 73.69,
+                "Cube": 0.0,
+                "Scalar": 33.93,
+                "Fixpipe": 0.0
+              }
+            }
+          },
+          {
+            "batch": 4,
+            "calls": 288,
+            "total_us": 10046.625,
+            "mean_us": 34.88411,
+            "p50_us": 34.64,
+            "p95_us": 36.341,
+            "core": "AI_VECTOR_CORE",
+            "pipeline": {
+              "coverage": 100.0,
+              "measured_calls": 288,
+              "scores": {
+                "MTE1": 0.0,
+                "MTE2": 7.4,
+                "MTE3": 12.05,
+                "Vector": 63.17,
+                "Cube": 0.0,
+                "Scalar": 31.72,
+                "Fixpipe": 0.0
+              }
+            }
+          },
+          {
+            "batch": 8,
+            "calls": 288,
+            "total_us": 12247.452,
+            "mean_us": 42.52587,
+            "p50_us": 42.121,
+            "p95_us": 46.061,
+            "core": "AI_VECTOR_CORE",
+            "pipeline": {
+              "coverage": 100.0,
+              "measured_calls": 288,
+              "scores": {
+                "MTE1": 0.0,
+                "MTE2": 9.82,
+                "MTE3": 10.45,
+                "Vector": 51.82,
+                "Cube": 0.0,
+                "Scalar": 29.03,
+                "Fixpipe": 0.0
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "Mul",
+        "points": [
+          {
+            "batch": 1,
+            "calls": 1848,
+            "total_us": 8716.019,
+            "mean_us": 4.71646,
+            "p50_us": 2.42,
+            "p95_us": 14.78,
+            "core": "AI_VECTOR_CORE",
+            "pipeline": {
+              "coverage": 100.0,
+              "measured_calls": 1848,
+              "scores": {
+                "MTE1": 0.0,
+                "MTE2": 9.17,
+                "MTE3": 3.4,
+                "Vector": 2.62,
+                "Cube": 0.0,
+                "Scalar": 12.11,
+                "Fixpipe": 0.0
+              }
+            }
+          },
+          {
+            "batch": 4,
+            "calls": 1848,
+            "total_us": 11133.305,
+            "mean_us": 6.02452,
+            "p50_us": 4.6505,
+            "p95_us": 16.44,
+            "core": "AI_VECTOR_CORE",
+            "pipeline": {
+              "coverage": 100.0,
+              "measured_calls": 1848,
+              "scores": {
+                "MTE1": 0.0,
+                "MTE2": 6.71,
+                "MTE3": 2.86,
+                "Vector": 1.97,
+                "Cube": 0.0,
+                "Scalar": 15.83,
+                "Fixpipe": 0.0
+              }
+            }
+          },
+          {
+            "batch": 8,
+            "calls": 1848,
+            "total_us": 11609.501,
+            "mean_us": 6.2822,
+            "p50_us": 4.89,
+            "p95_us": 16.041,
+            "core": "AI_VECTOR_CORE",
+            "pipeline": {
+              "coverage": 100.0,
+              "measured_calls": 1848,
+              "scores": {
+                "MTE1": 0.0,
+                "MTE2": 6.46,
+                "MTE3": 3.17,
+                "Vector": 2.02,
+                "Cube": 0.0,
+                "Scalar": 15.87,
+                "Fixpipe": 0.0
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "_hc_gate_mix_kernel",
+        "points": [
+          {
+            "batch": 1,
+            "calls": 896,
+            "total_us": 5587.836,
+            "mean_us": 6.23642,
+            "p50_us": 6.64,
+            "p95_us": 7.44,
+            "core": "AI_VECTOR_CORE",
+            "pipeline": {
+              "coverage": 100.0,
+              "measured_calls": 896,
+              "scores": {
+                "MTE1": 0.0,
+                "MTE2": 18.83,
+                "MTE3": 2.42,
+                "Vector": 9.52,
+                "Cube": 0.0,
+                "Scalar": 11.94,
+                "Fixpipe": 0.0
+              }
+            }
+          },
+          {
+            "batch": 4,
+            "calls": 896,
+            "total_us": 8644.575,
+            "mean_us": 9.64796,
+            "p50_us": 9.941,
+            "p95_us": 11.18,
+            "core": "AI_VECTOR_CORE",
+            "pipeline": {
+              "coverage": 100.0,
+              "measured_calls": 896,
+              "scores": {
+                "MTE1": 0.0,
+                "MTE2": 26.5,
+                "MTE3": 3.81,
+                "Vector": 13.83,
+                "Cube": 0.0,
+                "Scalar": 12.05,
+                "Fixpipe": 0.0
+              }
+            }
+          },
+          {
+            "batch": 8,
+            "calls": 896,
+            "total_us": 10510.96,
+            "mean_us": 11.73098,
+            "p50_us": 11.86,
+            "p95_us": 12.64,
+            "core": "AI_VECTOR_CORE",
+            "pipeline": {
+              "coverage": 100.0,
+              "measured_calls": 896,
+              "scores": {
+                "MTE1": 0.0,
+                "MTE2": 31.55,
+                "MTE3": 5.78,
+                "Vector": 21.88,
+                "Cube": 0.0,
+                "Scalar": 15.22,
+                "Fixpipe": 0.0
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "MoeDistributeCombineV2",
+        "points": [
+          {
+            "batch": 1,
+            "calls": 424,
+            "total_us": 6513.205,
+            "mean_us": 15.36133,
+            "p50_us": 14.98,
+            "p95_us": 18.46,
+            "core": "MIX_AIV",
+            "pipeline": {
+              "coverage": 100.0,
+              "measured_calls": 424,
+              "scores": {
+                "MTE1": 0.0,
+                "MTE2": 11.01,
+                "MTE3": 2.71,
+                "Vector": 0.97,
+                "Cube": 0.0,
+                "Scalar": 17.82,
+                "Fixpipe": 0.0
+              }
+            }
+          },
+          {
+            "batch": 4,
+            "calls": 424,
+            "total_us": 6487.11,
+            "mean_us": 15.29979,
+            "p50_us": 15.221,
+            "p95_us": 16.96,
+            "core": "MIX_AIV",
+            "pipeline": {
+              "coverage": 100.0,
+              "measured_calls": 424,
+              "scores": {
+                "MTE1": 0.0,
+                "MTE2": 7.35,
+                "MTE3": 7.01,
+                "Vector": 1.4,
+                "Cube": 0.0,
+                "Scalar": 17.05,
+                "Fixpipe": 0.0
+              }
+            }
+          },
+          {
+            "batch": 8,
+            "calls": 424,
+            "total_us": 7187.53,
+            "mean_us": 16.95172,
+            "p50_us": 16.2905,
+            "p95_us": 19.761,
+            "core": "MIX_AIV",
+            "pipeline": {
+              "coverage": 100.0,
+              "measured_calls": 424,
+              "scores": {
+                "MTE1": 0.0,
+                "MTE2": 8.39,
+                "MTE3": 9.58,
+                "Vector": 1.82,
+                "Cube": 0.0,
+                "Scalar": 17.37,
+                "Fixpipe": 0.0
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "MatMulV3",
+        "points": [
+          {
+            "batch": 1,
+            "calls": 424,
+            "total_us": 5658.78,
+            "mean_us": 13.34618,
+            "p50_us": 13.241,
+            "p95_us": 14.82,
+            "core": "AI_CORE",
+            "pipeline": {
+              "coverage": 100.0,
+              "measured_calls": 424,
+              "scores": {
+                "MTE1": 4.9,
+                "MTE2": 12.74,
+                "MTE3": 0.0,
+                "Vector": 0.0,
+                "Cube": 2.25,
+                "Scalar": 40.27,
+                "Fixpipe": 2.56
+              }
+            }
+          },
+          {
+            "batch": 4,
+            "calls": 424,
+            "total_us": 5952.577,
+            "mean_us": 14.0391,
+            "p50_us": 13.9205,
+            "p95_us": 15.501,
+            "core": "AI_CORE",
+            "pipeline": {
+              "coverage": 100.0,
+              "measured_calls": 424,
+              "scores": {
+                "MTE1": 5.49,
+                "MTE2": 14.37,
+                "MTE3": 0.0,
+                "Vector": 0.0,
+                "Cube": 3.11,
+                "Scalar": 38.58,
+                "Fixpipe": 3.03
+              }
+            }
+          },
+          {
+            "batch": 8,
+            "calls": 424,
+            "total_us": 5938.925,
+            "mean_us": 14.0069,
+            "p50_us": 13.88,
+            "p95_us": 15.581,
+            "core": "AI_CORE",
+            "pipeline": {
+              "coverage": 100.0,
+              "measured_calls": 424,
+              "scores": {
+                "MTE1": 7.05,
+                "MTE2": 17.55,
+                "MTE3": 0.0,
+                "Vector": 0.0,
+                "Cube": 3.63,
+                "Scalar": 38.22,
+                "Fixpipe": 7.61
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "fused_gdn_gating_kernel",
+        "points": [
+          {
+            "batch": 1,
+            "calls": 288,
+            "total_us": 3508.414,
+            "mean_us": 12.18199,
+            "p50_us": 12.02,
+            "p95_us": 13.06,
+            "core": "AI_VECTOR_CORE",
+            "pipeline": {
+              "coverage": 100.0,
+              "measured_calls": 288,
+              "scores": {
+                "MTE1": 0.0,
+                "MTE2": 4.28,
+                "MTE3": 0.38,
+                "Vector": 10.17,
+                "Cube": 0.0,
+                "Scalar": 6.88,
+                "Fixpipe": 0.0
+              }
+            }
+          },
+          {
+            "batch": 4,
+            "calls": 288,
+            "total_us": 3518.427,
+            "mean_us": 12.21676,
+            "p50_us": 12.001,
+            "p95_us": 13.421,
+            "core": "AI_VECTOR_CORE",
+            "pipeline": {
+              "coverage": 100.0,
+              "measured_calls": 288,
+              "scores": {
+                "MTE1": 0.0,
+                "MTE2": 5.18,
+                "MTE3": 0.35,
+                "Vector": 10.16,
+                "Cube": 0.0,
+                "Scalar": 6.79,
+                "Fixpipe": 0.0
+              }
+            }
+          },
+          {
+            "batch": 8,
+            "calls": 288,
+            "total_us": 3525.031,
+            "mean_us": 12.23969,
+            "p50_us": 12.0,
+            "p95_us": 13.46,
+            "core": "AI_VECTOR_CORE",
+            "pipeline": {
+              "coverage": 100.0,
+              "measured_calls": 288,
+              "scores": {
+                "MTE1": 0.0,
+                "MTE2": 5.31,
+                "MTE3": 0.54,
+                "Vector": 10.12,
+                "Cube": 0.0,
+                "Scalar": 7.32,
+                "Fixpipe": 0.0
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "verified": [
+      {
+        "batch": 1,
+        "submitted_batch": 1,
+        "kernel_csv": "profiles/Batch1_Qwen4Exp_dp0_pp0_tp0_dcp0_ep0_rank0_256_20261125031658504_ascend_pt/ASCEND_PROFILER_OUTPUT/kernel_details.csv",
+        "observed": {
+          "1": 8
+        },
+        "steps": 8,
+        "kernel_calls": 38223
+      },
+      {
+        "batch": 4,
+        "submitted_batch": 4,
+        "kernel_csv": "profiles/Batch1_Qwen4Exp_dp0_pp0_tp0_dcp0_ep0_rank0_256_20261125031743639_ascend_pt/ASCEND_PROFILER_OUTPUT/kernel_details.csv",
+        "observed": {
+          "4": 8
+        },
+        "steps": 8,
+        "kernel_calls": 39183
+      },
+      {
+        "batch": 8,
+        "submitted_batch": 8,
+        "kernel_csv": "profiles/Batch1_Qwen4Exp_dp0_pp0_tp0_dcp0_ep0_rank0_256_20261125031806824_ascend_pt/ASCEND_PROFILER_OUTPUT/kernel_details.csv",
+        "observed": {
+          "8": 8
+        },
+        "steps": 8,
+        "kernel_calls": 39087
+      }
+    ],
+    "failures": {},
+    "sort_batch": 8,
+    "mtp": 5,
+    "kernelContext": "950DT TP4/EP4 与 A3 TP8/EP8 · MTP5",
+    "tested": "2026-11-25",
+    "context": "W8A8 · DP1 · MTP5 · 128K 热前缀 → 96 tokens · A3 TP8/EP8 · 950DT TP4/EP4",
+    "runtime": {
+      "a3": {
+        "driver": "26.1.0",
+        "cann": "9.3.0",
+        "ep": 8,
+        "tp": 8,
+        "vllm": "0.33.0"
+      },
+      "950dt": {
+        "cann": "9.2.1",
+        "ep": 4,
+        "tp": 4,
+        "vllm": "0.30.0"
+      }
+    },
+    "note": "A3 使用 vLLM 0.33.0 / CANN 9.3.0，950DT 使用 vLLM 0.30.0 / CANN 9.2.1。两边的前缀命中率均为 99.61%。A3 图表采用关闭 profiler 的复测轮。首次 B4 的 TPOT 为 140.30 ms，复测为 77.59 ms，两轮数据均可下载。结果反映各自部署配置的性能。",
+    "baselinePrefixCache": {
+      "4": {
+        "prefix_cache_queries": 524288,
+        "prefix_cache_hits": 522240
+      },
+      "8": {
+        "prefix_cache_queries": 1048576,
+        "prefix_cache_hits": 1044480
+      },
+      "1": {
+        "prefix_cache_queries": 131072,
+        "prefix_cache_hits": 130560
+      }
+    },
+    "kernelNote": "在下方「对照工况」选择 950DT / A3，即可按实际 Batch 对照 rank 0 的算子曲线和流水线读数。三档各保留 8 个 Decode 步。MoE 的 V2 / V3 等不同 Profiling Type 分别显示，某端未采集的档位留空。",
+    "firstPassPerf": [
+      {
+        "batch": 1,
+        "input_tokens_per_request": 131072,
+        "output_tokens_per_request": 96,
+        "ttft_mean_ms": 817.8139,
+        "tpot_mean_ms": 80.63969,
+        "decoded_tokens_per_s": 12.40084,
+        "itl_mean_ms": 368.81205,
+        "itl_samples": 21,
+        "drafted": 105,
+        "accepted": 78,
+        "acceptance_rate": 0.74286,
+        "prefix_cache_queries": 131072,
+        "prefix_cache_hits": 130560
+      },
+      {
+        "batch": 4,
+        "input_tokens_per_request": 131072,
+        "output_tokens_per_request": 96,
+        "ttft_mean_ms": 18726.12542,
+        "tpot_mean_ms": 140.30118,
+        "decoded_tokens_per_s": 11.77266,
+        "itl_mean_ms": 652.72872,
+        "itl_samples": 83,
+        "drafted": 415,
+        "accepted": 302,
+        "acceptance_rate": 0.72771,
+        "prefix_cache_queries": 524288,
+        "prefix_cache_hits": 522240
+      },
+      {
+        "batch": 8,
+        "input_tokens_per_request": 131072,
+        "output_tokens_per_request": 96,
+        "ttft_mean_ms": 2003.59658,
+        "tpot_mean_ms": 80.13351,
+        "decoded_tokens_per_s": 80.39524,
+        "itl_mean_ms": 388.53848,
+        "itl_samples": 164,
+        "drafted": 820,
+        "accepted": 622,
+        "acceptance_rate": 0.75854,
+        "prefix_cache_queries": 1048576,
+        "prefix_cache_hits": 1044480
+      }
+    ]
   }
 };

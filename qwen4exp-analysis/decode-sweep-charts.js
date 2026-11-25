@@ -26,11 +26,13 @@
   const kernelStat = element("batch-kernel-stat");
   const kernelDataset = element("batch-kernel-dataset");
   const comparison = data.comparison;
+  const a3 = data.a3;
   const operatorGroups = [
     ["GDN · 状态更新与门控", ["RecurrentGatedDeltaRule", "fused_gdn_gating_kernel"]],
-    ["QSA · 稀疏索引与注意力", ["LightningIndexerV2", "GenericBlockSparseAttention"]],
-    ["MoE · 分发、专家计算与回收", ["MoeDistributeDispatchV3", "GroupedMatmulSwigluQuantV2", "GroupedMatmul", "MoeDistributeCombineV3"]],
-    ["投影与 HC · 高频矩阵乘和跨层混合", ["MatMulV3", "_hc_combine_norm_kernel"]],
+    ["QSA · 稀疏索引与注意力", ["LightningIndexerV2", "LightningIndexer", "GenericBlockSparseAttention", "SparseFlashAttention", "FusedInferAttentionScore"]],
+    ["MoE · 分发、专家计算与回收", ["MoeDistributeDispatchV3", "MoeDistributeDispatchV2",
+      "GroupedMatmulSwigluQuantV2", "GroupedMatmulSwigluQuant", "GroupedMatmul", "MoeDistributeCombineV3", "MoeDistributeCombineV2"]],
+    ["投影与 HC · 高频矩阵乘和跨层混合", ["MatMulV3", "MatMulV2", "_hc_combine_norm_kernel"]],
     ["集合通信 · AllReduce / AllGather", ["hcom_allReduce_", "hcom_allGather_"]],
   ];
   let disconnectOperators = [];
@@ -273,26 +275,30 @@
     disconnectOperators.forEach(disconnect => disconnect());
     const container = element("batch-operators");
     container.replaceChildren();
-    const compare = kernelDataset.value === "compare" && comparison;
-    const compareSteps = new Map((comparison?.verified ?? []).map(row => [row.batch, row.steps]));
-    const batches = data.verified.map(row => row.batch).filter(batch => !compare || compareSteps.has(batch));
-    const stepsByBatch = new Map(data.verified.map(row => [row.batch, row.steps]));
-    const kernels = new Map(data.kernels.map(kernel => [kernel.name, kernel]));
-    const otherKernels = new Map((comparison?.kernels ?? []).map(kernel => [kernel.name, kernel]));
+    const hardware = kernelDataset.value === "a3";
+    const baseData = hardware && a3.mtp === 0 ? comparison : data;
+    const otherData = hardware ? a3 : kernelDataset.value === "compare" ? comparison : null;
+    const compare = Boolean(otherData);
+    const labels = hardware ? ["950DT", "A3"] : ["MTP5", "MTP 关闭"];
+    const compareSteps = new Map((otherData?.verified ?? []).map(row => [row.batch, row.steps]));
+    const batches = baseData.verified.map(row => row.batch).filter(batch => !compare || compareSteps.has(batch));
+    const stepsByBatch = new Map(baseData.verified.map(row => [row.batch, row.steps]));
+    const kernels = new Map(baseData.kernels.map(kernel => [kernel.name, kernel]));
+    const otherKernels = new Map((otherData?.kernels ?? []).map(kernel => [kernel.name, kernel]));
+    const visible = new Set(hardware ? [...kernels.keys(), ...otherKernels.keys()] : kernels.keys());
     if (compare) kernelStat.value = "step_ms";
     const stat = kernelStat.value;
     const perStep = stat === "step_ms";
     kernelStat.disabled = Boolean(compare);
-    element("batch-kernel-context").textContent = batches.length
-      ? `950DT · Decode rank 0 · ${compare ? "MTP5 / MTP 关闭" : "MTP5"} · ${batches.map(batch => "B" + batch).join(" / ")}`
-      : "Decode rank 0";
+    const mode = hardware ? a3.kernelContext : compare ? "950DT · MTP5 / MTP 关闭" : "950DT · MTP5";
+    element("batch-kernel-context").textContent = `${mode} · Decode rank 0 · ${batches.map(batch => "B" + batch).join(" / ")}`;
     disconnectOperators = [];
     function addCharts(parent, names) {
       const grid = add(parent, "div", "decode-chart-grid");
       for (const name of names) {
         const kernel = kernels.get(name);
-        if (!kernel) continue;
-        const points = kernel.points.map(point => ({ ...point, steps: stepsByBatch.get(point.batch) }));
+        if (!visible.has(name)) continue;
+        const points = (kernel?.points ?? []).map(point => ({ ...point, steps: stepsByBatch.get(point.batch) }));
         const series = perStep ? [{ label: "每步累计", value: point => point.total_us / point.steps / 1000 }] : [
           { label: "均值", value: point => point.mean_us },
           { label: stat === "p95_us" ? "P95" : "P50", value: point => point[stat] },
@@ -300,16 +306,17 @@
         if (compare) {
           const baseline = new Map(points.map(point => [point.batch, point]));
           const other = new Map((otherKernels.get(name)?.points ?? []).map(point => [point.batch, point]));
-          const paired = batches.map(batch => ({ batch, baseline: baseline.get(batch), off: other.get(batch) }));
+          const paired = batches.map(batch => ({ batch, baseline: baseline.get(batch), other: other.get(batch) }));
+          if (!paired.some(point => point.baseline || point.other)) continue;
           disconnectOperators.push(chart(grid, { title: name,
             axis: "ms / rank / Decode 调度步 · 相同实际 Batch", unit: "ms", batches, points: paired, isKernel: true,
             series: [
-              { label: "MTP5", value: point => point.baseline ? point.baseline.total_us / point.baseline.steps / 1000 : null },
-              { label: "MTP 关闭", value: point => point.off ? point.off.total_us / compareSteps.get(point.batch) / 1000 : null },
+              { label: labels[0], value: point => point.baseline ? point.baseline.total_us / point.baseline.steps / 1000 : null },
+              { label: labels[1], value: point => point.other ? point.other.total_us / compareSteps.get(point.batch) / 1000 : null },
             ],
-            pipelines: [{ label: "MTP5", sample: point => point.baseline?.pipeline }, { label: "MTP 关闭", sample: point => point.off?.pipeline }],
-            pointDetail: point => [point.baseline && `MTP5 ${count(point.baseline.calls)} 次 / ${point.baseline.steps} 步`,
-              point.off && `关闭 ${count(point.off.calls)} 次 / ${compareSteps.get(point.batch)} 步`].filter(Boolean),
+            pipelines: [{ label: labels[0], sample: point => point.baseline?.pipeline }, { label: labels[1], sample: point => point.other?.pipeline }],
+            pointDetail: point => [point.baseline && `${labels[0]} ${count(point.baseline.calls)} 次 / ${point.baseline.steps} 步`,
+              point.other && `${labels[1]} ${count(point.other.calls)} 次 / ${compareSteps.get(point.batch)} 步`].filter(Boolean),
           }));
           continue;
         }
@@ -319,14 +326,16 @@
           pipelines: [{ label: "MTP5", sample: point => point.pipeline }] }));
       }
     }
+    const hasPoint = name => [kernels.get(name), otherKernels.get(name)]
+      .some(kernel => kernel?.points.some(point => batches.includes(point.batch)));
     for (const [label, names] of operatorGroups) {
-      if (!names.some(name => kernels.has(name))) continue;
+      if (!names.some(name => visible.has(name) && hasPoint(name))) continue;
       const section = add(container, "section", "decode-operator-group");
       add(section, "h3", "decode-group-title", label);
       addCharts(section, names);
     }
     const featured = new Set(operatorGroups.flatMap(([, names]) => names));
-    const remaining = data.kernels.map(kernel => kernel.name).filter(name => !featured.has(name));
+    const remaining = [...visible].filter(name => !featured.has(name) && hasPoint(name));
     if (remaining.length) {
       const extra = add(container, "details", "decode-operator-extra");
       add(extra, "summary", "decode-group-title", `其他已采集算子（${remaining.length}）`);
@@ -361,7 +370,6 @@
     const batchesWithProfiling = new Set(comparison.verified.map(row => row.batch));
     if (data.verified.some(row => batchesWithProfiling.has(row.batch))) {
       element("batch-kernel-dataset-field").hidden = false;
-      kernelDataset.addEventListener("change", renderOperators);
     }
     const basePerformance = new Map(data.perf.map(row => [row.batch, row]));
     const comparable = comparison.perf.filter(row => basePerformance.has(row.batch));
@@ -376,6 +384,60 @@
       }).join("");
     }
   }
+  if (a3) {
+    const baseline = a3.mtp === 0 ? comparison : data;
+    const baselinePerf = new Map(baseline.perf.map(row => [row.batch, row]));
+    const paired = a3.perf.filter(row => baselinePerf.has(row.batch)).map(row => ({
+      batch: row.batch, baseline: baselinePerf.get(row.batch), a3: row,
+    }));
+    const baselineBatches = new Set(baseline.verified.map(row => row.batch));
+    if (a3.verified.some(row => baselineBatches.has(row.batch))) {
+      element("batch-kernel-dataset-field").hidden = false;
+      add(kernelDataset, "option", "", "950DT / A3 · 相同实际 Batch").value = "a3";
+    }
+    if (paired.length) {
+      element("ascend-intro").textContent = "950DT 与 A3 的在线 Decode 跑分及 rank 0 算子采集。";
+      element("a3-comparison").hidden = false;
+      element("a3-comparison-context").textContent = a3.context;
+      element("a3-comparison-note").textContent = a3.note;
+      element("a3-comparison-kernel-note").textContent = a3.kernelNote;
+      const tbody = element("a3-comparison-rows");
+      const rows = [
+        ["ttft_mean_ms", "ms"],
+        ["tpot_mean_ms", "ms"],
+        ["itl_mean_ms", "ms"],
+        ["decoded_tokens_per_s", "tok/s"],
+        ["acceptance_rate", "%", 100],
+      ];
+      for (const point of paired) {
+        for (const [key, label] of [["baseline", "950DT"], ["a3", "A3"]]) {
+          const row = add(tbody, "tr");
+          add(row, "th", "", `B${point.batch}`).scope = "row";
+          add(row, "td", "", `${label} · MTP${a3.mtp || " 关闭"}`);
+          for (const [metric, unit, scale = 1] of rows) {
+            const value = point[key][metric];
+            add(row, "td", "number", Number.isFinite(value) ? `${format(value * scale)} ${unit}` : "—");
+          }
+          const observed = key === "a3" ? point.a3 : a3.baselinePrefixCache?.[point.batch];
+          const cached = observed?.prefix_cache_queries > 0
+            ? 100 * observed.prefix_cache_hits / observed.prefix_cache_queries : null;
+          add(row, "td", "number", cached === null ? "—" : `${format(cached)} %`);
+        }
+      }
+      const charts = element("a3-comparison-charts");
+      const shared = { points: paired, batches: paired.map(point => point.batch) };
+      for (const [title, metric, unit] of [
+        ["客户端 TPOT", "tpot_mean_ms", "ms"],
+        ["输出步 ITL", "itl_mean_ms", "ms"],
+        ["生成吞吐", "decoded_tokens_per_s", "tokens/s"],
+      ]) {
+        chart(charts, { ...shared, title, unit, axis: `${unit} · 提交 Batch（每 DP rank）`,
+          series: [{ label: "950DT", value: point => point.baseline[metric] }, { label: "A3", value: point => point.a3[metric] }],
+        });
+      }
+    }
+  }
+  kernelDataset.addEventListener("change", renderOperators);
   if (points.length) {
     const download = element("batch-download");
     download.href = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: "application/json" }));

@@ -219,8 +219,16 @@ function showTab(id) {
 }
 function renderHash() {
   const id = location.hash.slice(1);
-  if (tabs.some(tab => tab.getAttribute("aria-controls") === id)) showTab(id);
-  else if (!id) showTab("operators");
+  if (!id) {
+    showTab("operators");
+    return;
+  }
+  const target = byId(id);
+  const panel = target?.closest("[role=tabpanel]");
+  if (panel) {
+    showTab(panel.id);
+    if (target !== panel) requestAnimationFrame(() => target.scrollIntoView());
+  }
 }
 for (const [index, tab] of tabs.entries()) {
   tab.addEventListener("click", event => {
