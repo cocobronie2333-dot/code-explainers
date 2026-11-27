@@ -315,10 +315,14 @@
     const stat = kernelStat.value;
     const perStep = stat === "step_ms";
     kernelStat.disabled = compare && !reducedMode;
-    const mode = reducedMode ? "950DT / A3 · 4 层 + MTP5 · TP4/EP4" : hardware ? a3.kernelContext
-      : compare ? "950DT · MTP5 / MTP 关闭" : "950DT · MTP5";
+    const mode = reducedMode ? "950DT / A3 · 4 层 + MTP5 · TP4/EP4" : hardware ? `48 层 · ${a3.kernelContext}`
+      : compare ? "仅 950DT · 48 层 · MTP5 / MTP 关闭" : "仅 950DT · 48 层 · MTP5";
     const batchLabel = reducedMode ? "B1–B80" : batches.map(batch => "B" + batch).join(" / ");
     element("batch-kernel-context").textContent = `${mode} · Decode rank 0 · ${batchLabel}`;
+    const calculation = "每步累计为同一 Profiling Type 的设备耗时之和除以保留的调度步数。";
+    element("batch-kernel-note").textContent = hardware || reducedMode
+      ? `紫色实线为 950DT，橙色虚线为 A3。按相同 Profiling Type 配对，设备无该算子样本时会标出。${calculation}`
+      : `${calculation}不同 Stream 的事件可重叠。${stat === "step_ms" && !compare ? baselineBatchNote : ""}`;
     if (reduced) element("reduced-decode-sweep").hidden = !reducedMode;
     disconnectOperators = [];
     function addCharts(parent, names) {
@@ -343,12 +347,12 @@
             unit, batches, points: paired, isKernel: true,
             series: [
               {
-                label: labels[0], value: point => point.baseline
+                label: paired.some(point => point.baseline) ? labels[0] : `${labels[0]} · 无样本`, value: point => point.baseline
                   ? (perStep ? point.baseline.total_us / point.baseline.steps / 1000 : point.baseline.mean_us)
                   : null,
               },
               {
-                label: labels[1], value: point => point.other
+                label: paired.some(point => point.other) ? labels[1] : `${labels[1]} · 无样本`, value: point => point.other
                   ? (perStep ? point.other.total_us / compareSteps.get(point.batch) / 1000 : point.other.mean_us)
                   : null,
               },
@@ -391,20 +395,12 @@
   element("batch-note").textContent = points.length
     ? "Batch 是同一 API 请求提交的序列数，横轴为等距档位。每档进行一轮正式跑分，关闭 profiler，使用相同已预热的 128K 输入。"
     : "Batch 扫描正在采集，下方保留此前的多 token Decode 实测。";
-  element("batch-kernel-note").textContent = data.kernels.length
-    ? "横轴为实际 Batch 的等距档位。每步累计 = 同一 Profiling Type 的设备耗时之和 ÷ 保留的调度步数。MTP5 曲线含主模型和草稿。不同 Stream 的事件可重叠，整轮延迟请看上方 ITL。"
-    : "设备侧 Batch 与稳态步数校验通过后，显示各算子的曲线。";
-  const adjustedBatches = data.verified.filter(row => row.steps < 8 || row.batch !== row.submitted_batch);
-  if (adjustedBatches.length) {
-    const notes = adjustedBatches.map(row => row.batch === row.submitted_batch
-      ? `B${row.batch} 保留 ${row.steps}/8 步`
+  const adjustedBatches = data.verified.filter(row => row.steps < 8 || row.batch !== row.submitted_batch)
+    .map(row => row.batch === row.submitted_batch ? `B${row.batch} 保留 ${row.steps}/8 步`
       : `提交 B${row.submitted_batch} 的回放取实际 B${row.batch} 的 ${row.steps}/8 步`);
-    element("batch-kernel-note").append(` ${notes.join("，")}。`);
-  }
   const failedBatches = Object.keys(data.failures);
-  if (failedBatches.length) {
-    element("batch-kernel-note").append(` 待复核档位 ${failedBatches.map(batch => "B" + batch).join(" / ")}。`);
-  }
+  const baselineBatchNote = (adjustedBatches.length ? ` ${adjustedBatches.join("，")}。` : "") +
+    (failedBatches.length ? ` 待复核档位 ${failedBatches.map(batch => "B" + batch).join(" / ")}。` : "");
   if (comparison) {
     const batchesWithProfiling = new Set(comparison.verified.map(row => row.batch));
     if (data.verified.some(row => batchesWithProfiling.has(row.batch))) {
@@ -432,7 +428,8 @@
     const baselineBatches = new Set(baseline.verified.map(row => row.batch));
     if (a3.verified.some(row => baselineBatches.has(row.batch))) {
       element("batch-kernel-dataset-field").hidden = false;
-      add(kernelDataset, "option", "", "950DT / A3 · 相同实际 Batch").value = "a3";
+      kernelDataset.prepend(new Option("950DT / A3 · 48 层对照", "a3"));
+      kernelDataset.value = "a3";
     }
     if (paired.length) {
       element("ascend-intro").textContent = "950DT 与 A3 的在线 Decode 跑分及 rank 0 算子采集。";
@@ -480,11 +477,11 @@
     const a3Batches = new Set(reduced.a3.verified.map(row => row.batch));
     const paired = reduced.dt.verified.filter(row => a3Batches.has(row.batch));
     element("batch-kernel-dataset-field").hidden = false;
-    add(kernelDataset, "option", "", "950DT / A3 · 4 层 · B1–B80").value = "reduced";
+    kernelDataset.prepend(new Option("950DT / A3 · 4 层 · B1–B80", "reduced"));
+    kernelDataset.value = "reduced";
     element("reduced-decode-context").textContent = `已核实 950DT ${reduced.dt.verified.length}/80 档、A3 ${reduced.a3.verified.length}/80 档，同 Batch 配对 ${paired.length} 档。未验证或未采到该算子的档位留空。`;
     element("reduced-decode-data").href = URL.createObjectURL(new Blob([JSON.stringify(reduced, null, 2)], { type: "application/json" }));
     if (location.hash === "#reduced-decode-sweep") {
-      kernelDataset.value = "reduced";
       element("reduced-decode-sweep").open = true;
     }
   }

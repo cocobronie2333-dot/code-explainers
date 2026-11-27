@@ -265,7 +265,7 @@
           <div><h2>各算子耗时随 Batch 变化</h2><p id="batch-kernel-context"></p></div>
           <div class="decode-chart-controls">
             <label for="batch-kernel-dataset" id="batch-kernel-dataset-field" hidden>对照工况
-              <select id="batch-kernel-dataset"><option value="baseline">MTP5 · 全部采样档</option><option value="compare">MTP5 / 关闭 · 相同实际 Batch</option></select>
+              <select id="batch-kernel-dataset"><option value="baseline">仅 950DT · 48 层 MTP5</option><option value="compare">仅 950DT · MTP5 / 关闭</option></select>
             </label>
             <label for="batch-kernel-stat">对照统计
               <select id="batch-kernel-stat">
@@ -290,8 +290,8 @@
           <p>活跃度 = profiler 流水线耗时字段之和 ÷ 有计数的 kernel 设备耗时之和。Scalar、MTE2、MTE3 在单次调用内取 AIC/AIV 较大值。各流水线可以重叠，百分比之和可能超过 100%。</p>
           <p>达到最高项 90% 的流水线并列，超过两项显示 Mixed。PMU 覆盖低于设备耗时的 80% 时，标为通信或计数不足。标签用于定位值得检查的流水线，确认瓶颈还需结合等待时间与优化前后验证。<a href="https://github.com/Ascend/msopprof/blob/master/docs/zh/user_guide/msopprof_performance_data.md">Ascend 计数说明 ↗</a></p>
         </details>
-        <div id="batch-operators" class="decode-operator-groups"></div>
         <p id="batch-kernel-note" class="footnote"></p>
+        <div id="batch-operators" class="decode-operator-groups"></div>
       </article>
       <article class="panel cache-panel" id="batch-comparison" hidden>
         <header class="panel-top"><div><h2>950DT · MTP5 与 MTP 关闭</h2><p id="batch-comparison-context"></p></div></header>
