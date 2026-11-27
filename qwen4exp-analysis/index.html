@@ -6,16 +6,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#101114">
   <title>Qwen4Exp · 推理分析</title>
-  <link rel="stylesheet" href="style.css?v=2bb8038711">
+  <link rel="stylesheet" href="style.css?v=9a24a21cf0">
   <script defer src="evidence.js"></script>
   <script defer src="app.js?v=ca0c1500"></script>
-  <script defer src="memory.js"></script>
+  <script defer src="memory.js?v=71a0f514a1"></script>
   <script defer src="validation-104.js"></script>
   <script defer src="performance.js?v=7b2bf60367"></script>
   <script defer src="decode-sweep-data.js"></script>
-  <script defer src="performance-simulator.js?v=d532e12272"></script>
+  <script defer src="performance-simulator.js?v=e95d2865de"></script>
   <script defer src="reduced-decode-sweep-data.js?v=dbbabd29"></script>
-  <script defer src="decode-sweep-charts.js?v=8eafb655"></script>
+  <script defer src="full-decode-hotspots-data.js?v=14ab5891ca"></script>
+  <script defer src="decode-sweep-charts.js?v=0b4cd34c22"></script>
+  <script defer src="gdn-pipeline-data.js?v=e88deb2f37"></script>
+  <script defer src="gdn-pipeline.js?v=fab4d7da6d"></script>
   <script defer src="tensor-flow.js"></script>
   <script defer src="operator-diagram.js"></script>
 </head>
@@ -225,6 +228,10 @@
         <div class="sim-grid">
           <aside class="panel sim-pools">
             <div class="sim-pool-head"><h2>独立机器池</h2><button type="reset" class="sim-button">还原</button></div>
+            <label class="sim-case">实测工况预设
+              <select id="sim-case"><option value="">选择工况</option></select>
+              <small id="sim-case-note"></small>
+            </label>
             <fieldset class="sim-pool">
               <legend>Prefill</legend>
               <label>校准配置
@@ -238,7 +245,9 @@
                 <label>DP 副本<input id="sim-p-replicas" type="number" min="1" max="256" value="1" required></label>
                 <label>最大 Batch / DP<input id="sim-p-batch" type="number" min="1" max="16" value="16" required></label>
               </div>
+              <label>固定 Batch / DP<input id="sim-p-fixed" type="number" min="0" max="16" value="0" required><small>0 扫描全部档位</small></label>
               <label>已驻留前缀 <small>%</small><input id="sim-p-prefix" type="number" min="0" max="100" step="any" value="0" required></label>
+              <label>KV 预算来源<select id="sim-p-budget-source"><option value="reference">同布局实测</option><option value="calculator">第 3 页匹配预算</option></select></label>
             </fieldset>
             <fieldset class="sim-pool sim-pool-decode">
               <legend>Decode</legend>
@@ -247,12 +256,16 @@
                   <option value="dt">950DT · MTP5</option>
                   <option value="a3">A3 · MTP5</option>
                   <option value="noMtp">950DT · MTP 关闭</option>
+                  <option value="dt8">950DT · 独立 D · 8K C1</option>
+                  <option value="dt128">950DT · 独立 D · 128K C1</option>
                 </select>
               </label>
               <div class="sim-fields">
                 <label>DP 副本<input id="sim-d-replicas" type="number" min="1" max="256" value="1" required></label>
                 <label>最大 Batch / DP<input id="sim-d-batch" type="number" min="1" max="32" value="16" required></label>
               </div>
+              <label>固定 Batch / DP<input id="sim-d-fixed" type="number" min="0" max="32" value="0" required><small>0 扫描全部档位</small></label>
+              <label>D 时延约束<select id="sim-d-constraint"><option value="both">ITL 与 TPOT 同时</option><option value="tpot">仅 TPOT</option><option value="itl">仅 ITL</option></select></label>
               <label>超出校准 Batch
                 <select id="sim-d-range">
                   <option value="limit">限制在校准范围</option>
@@ -260,12 +273,14 @@
                 </select>
               </label>
               <label>跨请求物理共享前缀 <small>%</small><input id="sim-d-prefix" type="number" min="0" max="100" step="any" value="100" required></label>
+              <label>KV 预算来源<select id="sim-d-budget-source"><option value="reference">部署参考值</option><option value="calculator">第 3 页匹配预算</option></select></label>
               <label>D KV 容量 <small>tokens / rank</small><input id="sim-d-capacity" type="number" min="1" max="32000000" placeholder="沿用配置参考值"></label>
               <details class="sim-extra">
                 <summary>上下文长度外推</summary>
                 <label>随上下文变化的时延占比 <small>%</small><input id="sim-d-context" type="number" min="0" max="100" step="any" value="0" required></label>
               </details>
             </fieldset>
+            <a class="sim-memory-link" href="#memory">打开第 3 页显存计算器 ↗</a>
           </aside>
           <article class="panel sim-result" id="sim-p-result" aria-label="纯 Prefill 搜索结果"></article>
           <article class="panel sim-result sim-decode" id="sim-d-result" aria-label="纯 Decode 搜索结果"></article>
@@ -283,11 +298,22 @@
             <p>48 层 128K 热前缀 → 96。950DT TP4 / EP4 MTP5 使用 B1、2、4、8、16。A3 TP8 / EP8 MTP5 与 950DT MTP 关闭使用 B1、4、8。线上耗时与独立 trace 核对 Batch 后配对。950DT 提交 B32 的 trace 主要运行在 B17，该档从校准中排除。</p>
             <p>Batch 档间线性插值 ITL 和 TPOT。外推到最大测点之后时，沿用末个测点的时延。默认上下文占比为 0%，沿用 128K 的时延。可用比例 <code>f</code> 按 <code>(1 − f) + f × 平均上下文 / 参考上下文</code> 调整时延。平均上下文包含首 token 后生成区间的中点。</p>
             <p>手动填写每轮产出时，TPOT = ITL ÷ 平均产出。MTP 关闭时沿用实测 ITL 和 TPOT。D QPS = DP 副本 × Batch ÷ [(输出长度 − 1) × TPOT]。QPS 是稳态模型估计。</p>
-            <p>KV 容量按请求末尾的上下文估算，重复存储部分扣除已共享的对齐前缀。仅计算 QSA 历史的近似容量。950DT 参考同拓扑验证日志的 624,286 tokens / rank。A3 可填写实际容量。</p>
+            <p>KV 容量按请求末尾的上下文估算，重复存储部分扣除已共享的对齐前缀。950DT MTP5 参考同拓扑验证日志的 624,286 tokens / rank，按 1,536 tokens 对齐。A3 和 MTP 关闭工况可填写实际容量。</p>
             <a href="#batch-results">48 层实测与对照 ↗</a>
           </section>
         </div>
         <p class="sim-limit">限制按平均值筛选。DP 按独立副本等比例扩展，TP / EP 保持校准配置。估算未计入排队、P→D KV 传输时间与跨副本竞争。D 的共享前缀默认 100%，请按实际共享情况调整。</p>
+        <p>选择第 3 页预算后，两端各沿用本次打开页面后对应布局的最新 HBM、权重、预留和整块 KV 预算。需匹配独立 DP1 副本的 TP / EP、MTP 和缓存布局。950DT MTP5 的逻辑容量使用 624,286 tokens ÷ 544 IDs 的实测比率，随整块预算缩放。手填 D 容量在联动时作为额外上限。</p>
+        <div class="sim-calibration">
+          <h3>现有校准与待补测配置</h3>
+          <div class="table-scroll"><table class="sim-table">
+            <thead><tr><th scope="col">阶段</th><th scope="col">可复用</th><th scope="col">待补测</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">Prefill</th><td>950PR TP8 / EP8 · B48、B2、B4 · 128K→1 冷请求 C1</td><td>同拓扑优先跑 B48 · 16K / 128K · B1、2、4、8 · 冷请求及 90% 前缀；记录完整批次耗时、chunk、峰值 HBM 与 KV IDs。</td></tr>
+              <tr><th scope="row">Decode</th><td>48 层 128K→96 · 950DT TP4 / EP4 MTP5 B1/2/4/8/16 · A3 TP8 / EP8 MTP5 和 950DT MTP0 B1/4/8。另有 950DT 8K / 128K C1 的独立 D 端测点用于交叉核对。</td><td>两设备同一 MTP5 工况跑 16K / 128K→1024 · 实际 B1、4、8、16；B16 以上按容量扩展。采集稳态 ITL、TPOT、接受产出、实际 Batch 和每 rank 峰值。A3 同时导出 KV 配置及可用容量。</td></tr>
+            </tbody>
+          </table></div>
+        </div>
       </details>
       <dialog id="sim-dialog" class="panel sim-dialog" aria-labelledby="sim-dialog-title">
         <header><h2 id="sim-dialog-title"></h2><form method="dialog"><button class="sim-button">关闭</button></form></header>
@@ -300,6 +326,25 @@
           <h1>延迟与算子开销</h1>
           <p class="intro" id="ascend-intro">950DT 在线 Decode 跑分，以及 Prefill 和 Decode 的 rank 0 设备采集。</p></div>
       </div>
+      <article class="panel trace-panel" id="full-model-itl">
+        <header class="panel-top">
+          <div><h2>整模 ITL 对照 · 48 层</h2><p>128K 热前缀 → 96 · MTP5 · 线上稳态均值</p></div>
+          <a id="full-itl-download" class="text-link" download="qwen4exp-full-model-itl.csv">下载 ITL CSV ↗</a>
+        </header>
+        <div id="full-itl-chart" class="decode-chart-grid"></div>
+        <p class="footnote">按输出步统计整模 ITL。950DT 为 TP4 / EP4，A3 为 TP8 / EP8。B1、B4、B8 可对照，B2、B16 仅 950DT 有样本。提交 B32 的单独 trace 主要观察到 B17，未把该次在线 ITL 绑定到 B17。</p>
+      </article>
+      <article class="panel trace-panel" id="full-hotspots">
+        <header class="panel-top"><div><h2>满层热点算子 · 按设备累计耗时排序</h2><p id="full-hotspot-note"></p></div>
+          <a id="full-hotspot-download" class="text-link" download="qwen4exp-full-decode-hotspots.csv">下载热点与曲线 CSV ↗</a>
+        </header>
+        <div class="hotspot-controls">
+          <label>热点排名来源<select id="full-hotspot-rank"><option value="dt">950DT · C1 全窗口 · Top 15</option><option value="a3">A3 · B8 核对调度步 · Top 16</option></select></label>
+          <label>曲线统计<select id="full-hotspot-stat"><option value="step_ms">每调度步累计</option><option value="mean_us">单次调用均值</option></select></label>
+        </div>
+        <div id="full-hotspot-charts" class="decode-chart-grid hotspot-charts"></div>
+        <p class="footnote">同名 Profiling Type 才同图配对。两组排名取样窗口不同，各自的设备累计耗时包含可能重叠的 stream 事件。曲线使用核对过实际 Batch 的 48 层 sweep；空档表示缺少同名测点。950DT 的 B17 来自提交 B32 的 trace，仅用于算子曲线。</p>
+      </article>
       <article class="panel trace-panel" id="batch-results">
         <header class="panel-top">
           <div><h2>Decode 随 Batch 变化</h2><p id="batch-context"></p></div>
@@ -398,9 +443,38 @@
     <section id="pipeline" role="tabpanel" aria-labelledby="tab-pipeline" hidden>
       <div class="hero compact">
         <div><p class="eyebrow">NPU TRACE <span>·</span> RANK 0</p>
-          <h1>算子流水</h1>
-          <p class="intro">在同一时间轴上查看各 stream 的设备事件、耗时与重叠。</p></div>
+          <h1>GDN 整层视角与算子流水</h1>
+          <p class="intro">从逐层统计下钻到 NPU Stream 的单次调用，再查看该调用的 PMU 计数。</p></div>
       </div>
+      <article class="panel trace-panel" id="gdn-layer-pipeline">
+        <header class="panel-top">
+          <div><h2>GDN Attention Core · 设备时间轴</h2><p id="gdn-context"></p></div>
+          <label class="hero-control">执行阶段<select id="gdn-phase"><option value="prefill">Prefill · Chunk GDN</option><option value="decode">Decode · Recurrent GDN</option></select></label>
+        </header>
+        <div class="gdn-content">
+          <div id="gdn-layer-controls">
+            <div class="gdn-dayline"><label>选择 GDN 层<select id="gdn-layer"></select></label><span>层号从 L00 开始，格内为 3 次采样的平均跨时 · μs</span></div>
+            <div id="gdn-layer-grid" class="gdn-layer-grid" aria-label="已核对层号的 GDN 层"></div>
+          </div>
+          <div id="gdn-summary" class="gdn-summary"></div>
+          <div class="gdn-chart-wrap" tabindex="0" aria-label="可横向滚动的设备时间轴"><div id="gdn-chart"></div></div>
+          <div class="gdn-split">
+            <section aria-labelledby="gdn-calls-title">
+              <h3 id="gdn-calls-title">调用明细 · 单次设备耗时</h3><div id="gdn-calls"></div>
+            </section>
+            <section aria-labelledby="gdn-pmu-title">
+              <h3 id="gdn-pmu-title">所选调用 · 核内 PMU</h3><div id="gdn-pmu" aria-live="polite"></div>
+            </section>
+          </div>
+          <p class="muted" id="gdn-footnote"></p>
+          <p><a id="gdn-download" class="text-link" download="qwen4exp-gdn-device-events.json">下载层统计与事件 JSON ↗</a> · <a class="text-link" href="https://github.com/vllm-project/vllm-ascend/blob/c64ace678d12d5a48671d929c76f723f8158876c/vllm_ascend/ops/gdn.py">GDN 执行源码 ↗</a></p>
+        </div>
+      </article>
+      <article class="panel trace-panel" id="gdn-device-comparison">
+        <header class="panel-top"><div><h2>RecurrentGatedDeltaRule · 双设备单次均值</h2><p>48 层 Decode sweep · rank 0 · 同名 kernel · 128K 热前缀 · MTP5</p></div></header>
+        <div id="gdn-compare-chart" class="decode-chart-grid"></div>
+        <p class="footnote">同实际 Batch 的单次调用均值。A3 为 TP8 / EP8，950DT 为 TP4 / EP4。该统计来自整模采集窗口，聚合各层同名调用。</p>
+      </article>
       <article class="panel trace-panel">
         <header class="panel-top"><div><h2>局部时间窗</h2><p id="timeline-context"></p></div>
           <label class="hero-control" for="timeline-source">选取窗口<select id="timeline-source"></select></label>

@@ -60,16 +60,18 @@
     return unit * place * 4;
   }
 
-  function chart(parent, { title, axis, unit, batches, points, series, ceiling, isKernel = false, pointDetail, pipelines = [] }) {
+  function chart(parent, { title, axis, unit, batches, points, series, ceiling, isKernel = false, pointDetail, pipelines = [], scope, rank, linearBatch = false }) {
     const frame = add(parent, "figure", "decode-chart");
     const heading = add(frame, "h3");
+    if (rank) add(heading, "span", "hotspot-rank", String(rank).padStart(2, "0"));
     if (isKernel) add(heading, "code", "", title);
     else heading.textContent = title;
+    if (scope) add(heading, "span", "chart-scope", scope);
     add(frame, "p", "curve-unit", axis);
     const canvas = add(frame, "canvas");
     canvas.tabIndex = 0;
     canvas.setAttribute("role", "img");
-    canvas.setAttribute("aria-label", `${title}，单位 ${unit}，用方向键查看 Batch 采样点`);
+    canvas.setAttribute("aria-label", `${title}${scope ? " · " + scope : ""}，单位 ${unit}，用方向键查看 Batch 采样点`);
     const detail = add(frame, "figcaption", "curve-detail");
     detail.id = `decode-curve-detail-${++chartCount}`;
     canvas.setAttribute("aria-describedby", detail.id);
@@ -86,6 +88,7 @@
     const tickIndices = dense ? [0, 19, 39, 59, batches.length - 1] : [...batches.keys()];
     const values = points.flatMap(point => series.map(metric => metric.value(point))).filter(Number.isFinite);
     const max = ceiling ?? yCeiling(values);
+    const position = index => linearBatch ? (batches[index] - batches[0]) / (batches.at(-1) - batches[0]) : index / (batches.length - 1);
     let active = batches.findLastIndex(batch => byBatch.has(batch));
     let plot = null;
     const batchButtons = [];
@@ -177,7 +180,7 @@
       const top = pipelines.length ? 16 : 8;
       const right = width - 15;
       const bottom = height - 24;
-      const x = index => batches.length > 1 ? left + (right - left) * index / (batches.length - 1) : (left + right) / 2;
+      const x = index => batches.length > 1 ? left + (right - left) * position(index) : (left + right) / 2;
       const y = value => bottom - ((bottom - top) * value / max);
       plot = { left, right };
       context.font = '10px "Cascadia Mono", Consolas, monospace';
@@ -205,7 +208,7 @@
         context.stroke();
         context.textAlign = "center";
         context.fillStyle = i === active ? "#f5f2fb" : "#a8a8b7";
-        if (!dense || i === active || Math.abs(x(i) - x(active)) >= 18) {
+        if ((!dense && !linearBatch) || i === active || Math.abs(x(i) - x(active)) >= 18) {
           context.fillText(String(batches[i]), line, bottom + 12);
         }
       }
@@ -277,7 +280,9 @@
       if (!plot || batches.length === 1) return;
       const offset = event.clientX - canvas.getBoundingClientRect().left;
       const relative = Math.max(0, Math.min(1, (offset - plot.left) / (plot.right - plot.left)));
-      select(Math.round(relative * (batches.length - 1)));
+      const nearest = batches.reduce((best, _, index) =>
+        Math.abs(position(index) - relative) < Math.abs(position(best) - relative) ? index : best, 0);
+      select(nearest);
     }
 
     canvas.addEventListener("pointermove", pointAt);
@@ -350,6 +355,7 @@
           if (!paired.length) continue;
           const unit = perStep ? "ms" : "μs";
           disconnectOperators.push(chart(grid, { title: name,
+            scope: perStep ? "每调度步累计" : "单次调用均值",
             axis: `${unit} / rank / ${perStep ? "Decode 调度步" : "次调用"} · 相同实际 Batch`,
             unit, batches, points: paired, isKernel: true,
             series: [
@@ -371,6 +377,7 @@
           continue;
         }
         disconnectOperators.push(chart(grid, { title: name,
+          scope: perStep ? "每调度步累计" : "单次调用均值与分位",
           axis: `${perStep ? "ms / rank / Decode 调度步" : "μs / rank / 次调用"} · 实际 Batch（每 DP rank）`,
           unit: perStep ? "ms" : "μs", batches, points, isKernel: true, series,
           pipelines: [{ label: "MTP5", sample: point => point.pipeline }] }));
@@ -411,6 +418,7 @@
     const batches = pairs.map(point => point.batch);
     for (const title of operators) {
       chart(plots, { title, axis: "ms / rank / Decode 步 · 实际 Batch", unit: "ms", batches, points: pairs, isKernel: true,
+        scope: "减层 · 每步累计",
         series: devices.map(([device, label]) => ({ label, value: point => elapsedPerStep(point, device, title) })),
       });
     }
@@ -569,5 +577,114 @@
       series: [{ label: "接受 / 草稿", value: point => point.acceptance_rate * 100 }],
     });
   }
+  function csvDownload(id, header, rows) {
+    const csv = [header, ...rows].map(row => row.map(value =>
+      '"' + String(value ?? "").replaceAll('"', '""') + '"').join(",")).join("\r\n");
+    const link = element(id);
+    if (link.href.startsWith("blob:")) URL.revokeObjectURL(link.href);
+    link.href = URL.createObjectURL(new Blob(["\uFEFF", csv], { type: "text/csv;charset=utf-8" }));
+  }
+
+  function renderFullItl() {
+    const runs = [["950DT", "TP4/EP4", data], ["A3", "TP8/EP8", a3]];
+    const points = new Map();
+    const rows = [];
+    for (const [device, topology, run] of runs) {
+      const matched = new Set(run.verified.filter(trace => trace.batch === trace.submitted_batch).map(trace => trace.batch));
+      for (const sample of run.perf.filter(row => matched.has(row.batch))) {
+        if (!points.has(sample.batch)) points.set(sample.batch, { batch: sample.batch });
+        points.get(sample.batch)[device] = sample.itl_mean_ms;
+        rows.push([device, topology, 48, 5, sample.input_tokens_per_request, sample.output_tokens_per_request,
+          sample.batch, sample.itl_mean_ms, sample.itl_samples, sample.tpot_mean_ms, sample.decoded_tokens_per_s]);
+      }
+    }
+    const ordered = [...points.values()].sort((left, right) => left.batch - right.batch);
+    chart(element("full-itl-chart"), { title: "整模 ITL · 48 层输出步均值", axis: "ms / 输出步 · 已核对的 Batch 档位 / DP",
+      linearBatch: true,
+      unit: "ms", batches: ordered.map(point => point.batch), points: ordered,
+      series: runs.map(([device]) => ({ label: device, value: point => point[device] })) });
+    csvDownload("full-itl-download", ["device", "topology", "layers", "mtp_draft_tokens", "input_tokens",
+      "output_tokens", "batch", "itl_mean_ms", "itl_samples", "tpot_mean_ms", "generated_tokens_per_s"], rows);
+  }
+
+  function setupFullHotspots() {
+    const full = window.qwenFullDecodeHotspots;
+    const ranks = {
+      dt: window.qwenValidation.profile.top_kernels_by_sum.slice(0, 15)
+        .map(row => ({ name: row.type, total_us: row.sum_device_ms * 1000, calls: row.count })),
+      a3: full.a3Rank,
+    };
+    const devices = [
+      { label: "950DT", topology: "TP4/EP4", steps: new Map(data.verified.map(row => [row.batch, row])),
+        kernels: new Map(data.kernels.map(kernel => [kernel.name, kernel.points])) },
+      { label: "A3", topology: "TP8/EP8", steps: new Map(a3.verified.map(row => [row.batch, row])),
+        kernels: new Map([...a3.kernels, ...full.a3Kernels].map(kernel => [kernel.name, kernel.points])) },
+    ];
+    const batches = [...new Set(devices.flatMap(device => [...device.steps.keys()]))].sort((a, b) => a - b);
+    const rankPicker = element("full-hotspot-rank");
+    const statsPicker = element("full-hotspot-stat");
+    const container = element("full-hotspot-charts");
+    let release = [];
+    function render() {
+      release.forEach(disconnect => disconnect());
+      release = [];
+      container.replaceChildren();
+      const perStep = statsPicker.value === "step_ms";
+      const ranking = ranks[rankPicker.value];
+      const scopeName = rankPicker.value === "dt" ? "950DT C1 · 原始长窗" : "A3 B8 · 8 个核对调度步";
+      element("full-hotspot-note").textContent = `排名参考 ${scopeName} · 48 层 + MTP5 · rank 0 · Top ${ranking.length}`;
+      const rows = [];
+      for (const [offset, entry] of ranking.entries()) {
+        const tracks = devices.map(device => new Map((device.kernels.get(entry.name) ?? []).map(point => [point.batch, point])));
+        const points = batches.map(batch => ({ batch, samples: tracks.map(track => track.get(batch)) }));
+        const rank = offset + 1;
+        for (const point of points) {
+          devices.forEach((device, index) => {
+            const trace = device.steps.get(point.batch);
+            const sample = point.samples[index];
+            if (!trace) return;
+            rows.push([scopeName, rank, entry.name, entry.total_us, entry.calls, device.label, device.topology, 48, 5,
+              trace.submitted_batch, point.batch, trace.steps, sample?.calls, sample?.total_us, sample?.mean_us,
+              sample ? sample.total_us / trace.steps / 1000 : null, sample ? "sample" : "missing_type"]);
+          });
+        }
+        const unit = perStep ? "ms" : "μs";
+        release.push(chart(container, { title: entry.name, rank, isKernel: true, unit, batches, points, linearBatch: true,
+          scope: perStep ? "满层 · 每步累计" : "满层 · 单次均值",
+          axis: `参考累计 ${format(entry.total_us / 1000)} ms · ${count(entry.calls)} 次 · ${unit} / rank / ${perStep ? "调度步" : "次调用"}`,
+          series: devices.map((device, index) => ({
+            label: tracks[index].size ? device.label : `${device.label} · 缺测`,
+            value: point => {
+              const sample = point.samples[index];
+              if (!sample) return null;
+              return perStep ? sample.total_us / device.steps.get(point.batch).steps / 1000 : sample.mean_us;
+            },
+          })),
+          pointDetail: point => point.samples.map((sample, index) =>
+            sample && `${devices[index].label} ${count(sample.calls)} 次 / ${devices[index].steps.get(point.batch).steps} 步`).filter(Boolean),
+          pipelines: devices.map((device, index) => ({ label: device.label, sample: point => point.samples[index]?.pipeline })),
+        }));
+      }
+      csvDownload("full-hotspot-download", ["rank_source", "rank", "profiling_type", "rank_total_device_us", "rank_calls",
+        "device", "topology", "layers", "mtp_draft_tokens", "submitted_batch", "actual_batch", "steps", "calls",
+        "sum_device_us", "per_call_mean_us", "per_step_sum_ms", "sample_status"], rows);
+    }
+    rankPicker.addEventListener("change", render);
+    statsPicker.addEventListener("change", render);
+    render();
+  }
+
   renderOperators();
+  renderFullItl();
+  setupFullHotspots();
+  const gdnType = "RecurrentGatedDeltaRule";
+  const gdnRuns = [["950DT", data], ["A3", a3]].map(([label, run]) => ({
+    label, samples: new Map(run.kernels.find(kernel => kernel.name === gdnType).points.map(point => [point.batch, point])),
+  }));
+  const gdnBatches = [1, 4, 8];
+  chart(element("gdn-compare-chart"), {
+    title: gdnType, isKernel: true, scope: "满层 · 单次均值", unit: "μs",
+    axis: "μs / 次调用 · 实际 Batch / DP", batches: gdnBatches, points: gdnBatches.map(batch => ({ batch })), linearBatch: true,
+    series: gdnRuns.map(run => ({ label: run.label, value: point => run.samples.get(point.batch)?.mean_us })),
+  });
 })();

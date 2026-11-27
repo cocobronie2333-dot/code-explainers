@@ -7,6 +7,8 @@
   const weightMode = byId("memory-weight-mode");
   const weightRows = byId("memory-weight-rows");
   const inputs = ["card-gib", "utilization", "weights-gib", "runtime-gib", "kv-override"];
+  const budgets = new Map();
+  window.qwenRankBudgets = budgets;
   const parallelInputs = ["memory-dp", "memory-tp", "memory-ep", "memory-mtp", "memory-vision", "memory-shared", "memory-ple", "memory-etp"];
   const decodeRegistration = { bytes: 11996200960, blocks: 544 };
   const kvOverride = 12014242304 / GIB;
@@ -142,7 +144,10 @@
     }) || custom && !manualCost.validity.valid;
 
     const budgetNote = byId("budget-note");
+    const budgetKey = `${preset.value}/${layout.value}`;
     if (!validRanks || invalidCapacity) {
+      budgets.delete(budgetKey);
+      window.dispatchEvent(new Event("qwen-rank-budget"));
       for (const id of ["budget-weights", "budget-kv", "budget-ranks", "budget-blocks"]) byId(id).textContent = "—";
       for (const id of ["budget-weight-note", "budget-kv-note", "budget-parallel-note", "budget-capacity", "budget-bar", "budget-ledger",
         "budget-formula", "memory-weight-rows", "weight-breakdown-note", "memory-kv-rows", "memory-kv-foot", "memory-kv-specs"]) byId(id).replaceChildren();
@@ -164,6 +169,11 @@
     const remainder = kvBytes - allocated;
     const totalDemand = weights + reserved + kvBytes / GIB;
     const expectedBlocks = config?.blocks ?? (layout.value === "dt" ? decodeRegistration.blocks : null);
+    budgets.set(budgetKey, {
+      preset: preset.value, layout: layout.value, dp, tp, ep, mtp, vision, shared, ple, etp: settings.etp,
+      card, cap, weights, reserved, kvBytes, blocks, cost,
+    });
+    window.dispatchEvent(new Event("qwen-rank-budget"));
 
     byId("budget-weights").textContent = gib(weights * GIB);
     byId("budget-weight-note").textContent = `${formatMb(weights * GIB)} · ${checkpointMode ? "checkpoint 估算" : matchesPreset && loaded === current.values[2] ? "加载日志" : "手动预算值"}`;
