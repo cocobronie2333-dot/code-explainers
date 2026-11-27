@@ -259,6 +259,12 @@ select, input { display: block; width: 100%; min-width: 0; margin-top: 6px; padd
 input::placeholder { color: #9797a6; }
 .tag { flex: none; align-self: start; border: 1px solid #6c597e; color: var(--lilac); border-radius: 5px; padding: 3px 7px; font-size: 12px; }
 .table-scroll { max-width: 100%; overflow-x: auto; }
+.reduced-comparison-table { max-height: 25rem; }
+.reduced-comparison-table thead { position: sticky; top: 0; z-index: 1; }
+.reduced-comparison-table thead th[colspan] { color: #c8b9ff; }
+.reduced-comparison-table thead th:last-child[colspan] { color: #f5c987; }
+.reduced-comparison-table td { white-space: nowrap; }
+.a3-full-results { margin-bottom: 16px; }
 table { width: 100%; border-collapse: collapse; text-align: left; white-space: nowrap; font-size: 13px; }
 th, td { padding: 10px 13px; border-bottom: 1px solid #2c2d35; }
 th:first-child, td:first-child { padding-left: 22px; }

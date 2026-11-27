@@ -253,12 +253,33 @@
       </article>
       <article class="panel trace-panel" id="a3-comparison" hidden>
         <header class="panel-top"><div><h2>A3 与 950DT · Decode 对照</h2><p id="a3-comparison-context"></p></div></header>
-        <div id="a3-comparison-charts" class="decode-chart-grid"></div>
-        <div class="table-scroll" tabindex="0" aria-label="A3 与 950DT Decode 对照">
-          <table><thead><tr><th scope="col">提交 Batch</th><th scope="col">设备 · MTP</th><th scope="col">平均 TTFT</th><th scope="col">客户端 TPOT</th><th scope="col">D 端 ITL</th><th scope="col">生成吞吐</th><th scope="col">MTP 接受率</th><th scope="col">前缀命中率</th></tr></thead><tbody id="a3-comparison-rows"></tbody></table>
-        </div>
-        <p id="a3-comparison-note" class="footnote"></p>
-        <p id="a3-comparison-kernel-note" class="footnote"></p>
+        <section id="a3-reduced-results" aria-label="减层实测" hidden>
+          <div id="a3-reduced-charts" class="decode-chart-grid"></div>
+          <p class="footnote" id="a3-reduced-note">耗时为 rank 0 上同一算子的每 Decode 步累计，单位 ms。每档核实后取 3 个调度步。MTP 接受率按整批请求统计。 <a id="a3-reduced-kernel-link" class="text-link" href="#batch-kernels">看完整算子与 PMU ↗</a></p>
+          <div class="table-scroll reduced-comparison-table" tabindex="0" role="region" aria-label="B1–B80 减层实测对照" aria-describedby="a3-reduced-note">
+            <table>
+              <colgroup span="1"></colgroup><colgroup span="4"></colgroup><colgroup span="4"></colgroup>
+              <thead>
+                <tr><th scope="col" rowspan="2">实际 Batch</th><th scope="colgroup" colspan="4">950DT</th><th scope="colgroup" colspan="4">A3</th></tr>
+                <tr>
+                  <th scope="col"><abbr title="RecurrentGatedDeltaRule">RGDR</abbr></th><th scope="col"><abbr title="GenericBlockSparseAttention">GBSA</abbr></th><th scope="col"><abbr title="LightningIndexerV2">LI V2</abbr></th><th scope="col">MTP 接受率</th>
+                  <th scope="col"><abbr title="RecurrentGatedDeltaRule">RGDR</abbr></th><th scope="col"><abbr title="GenericBlockSparseAttention">GBSA</abbr></th><th scope="col"><abbr title="LightningIndexerV2">LI V2</abbr></th><th scope="col">MTP 接受率</th>
+                </tr>
+              </thead>
+              <tbody id="a3-reduced-rows"></tbody>
+            </table>
+          </div>
+        </section>
+        <details id="a3-full-results" class="pipeline-method a3-full-results" hidden open>
+          <summary>48 层在线对照 · B1 / B4 / B8</summary>
+          <p id="a3-full-comparison-context"></p>
+          <div id="a3-comparison-charts" class="decode-chart-grid"></div>
+          <div class="table-scroll" tabindex="0" aria-label="48 层在线 Decode 对照">
+            <table><thead><tr><th scope="col">提交 Batch</th><th scope="col">设备 · MTP</th><th scope="col">平均 TTFT</th><th scope="col">客户端 TPOT</th><th scope="col">D 端 ITL</th><th scope="col">生成吞吐</th><th scope="col">MTP 接受率</th><th scope="col">前缀命中率</th></tr></thead><tbody id="a3-comparison-rows"></tbody></table>
+          </div>
+          <p id="a3-comparison-note" class="footnote"></p>
+          <p id="a3-comparison-kernel-note" class="footnote"></p>
+        </details>
       </article>
       <article class="panel trace-panel" id="batch-kernels">
         <header class="panel-top">

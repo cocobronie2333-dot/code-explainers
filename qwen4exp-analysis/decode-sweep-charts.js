@@ -392,6 +392,50 @@
     }
   }
 
+  function renderReducedComparison(pairs) {
+    if (!pairs.length) return;
+    const devices = [["dt", "950DT"], ["a3", "A3"]];
+    const operators = ["RecurrentGatedDeltaRule", "GenericBlockSparseAttention", "LightningIndexerV2"];
+    const durations = Object.fromEntries(devices.map(([device]) => [device, new Map(
+      reduced[device].kernels.filter(kernel => operators.includes(kernel.name)).map(kernel => [
+        kernel.name, new Map(kernel.points.map(point => [point.batch, point.total_us])),
+      ]),
+    )]));
+    function elapsedPerStep(point, device, operator) {
+      return durations[device].get(operator)?.get(point.batch) / point[device].steps / 1000;
+    }
+    const plots = element("a3-reduced-charts");
+    const batches = pairs.map(point => point.batch);
+    for (const title of operators) {
+      chart(plots, { title, axis: "ms / rank / Decode 步 · 实际 Batch", unit: "ms", batches, points: pairs, isKernel: true,
+        series: devices.map(([device, label]) => ({ label, value: point => elapsedPerStep(point, device, title) })),
+      });
+    }
+    const tbody = element("a3-reduced-rows");
+    for (const point of pairs) {
+      const row = add(tbody, "tr");
+      add(row, "th", "", `B${point.batch}`).scope = "row";
+      for (const [device] of devices) {
+        for (const operator of operators) {
+          const value = elapsedPerStep(point, device, operator);
+          add(row, "td", "number", Number.isFinite(value) ? format(value) : "—");
+        }
+        const { accepted, drafted } = point[device];
+        add(row, "td", "number", drafted > 0 ? `${(100 * accepted / drafted).toFixed(3)}%` : "—");
+      }
+    }
+    element("a3-comparison-context").textContent = `减层实测 · B${batches[0]}–B${batches.at(-1)} · ${batches.length} 档 · 4 层 + MTP5 · W8A8 · TP4/EP4`;
+    element("a3-reduced-results").hidden = false;
+    element("a3-comparison").hidden = false;
+    element("a3-full-results").open = false;
+    element("a3-reduced-kernel-link").addEventListener("click", () => {
+      if (kernelDataset.value !== "reduced") {
+        kernelDataset.value = "reduced";
+        renderOperators();
+      }
+    });
+  }
+
   const points = data.perf;
   const batches = points.map(point => point.batch);
   const batchSummary = batches.map(batch => "B" + batch).join(" / ");
@@ -441,6 +485,8 @@
       element("ascend-intro").textContent = "950DT 与 A3 的在线 Decode 跑分及 rank 0 算子采集。";
       element("a3-comparison").hidden = false;
       element("a3-comparison-context").textContent = a3.context;
+      element("a3-full-results").hidden = false;
+      element("a3-full-comparison-context").textContent = a3.context;
       element("a3-comparison-note").textContent = a3.note;
       element("a3-comparison-kernel-note").textContent = a3.kernelNote;
       const tbody = element("a3-comparison-rows");
@@ -480,8 +526,9 @@
     }
   }
   if (reduced) {
-    const a3Batches = new Set(reduced.a3.verified.map(row => row.batch));
+    const a3Batches = new Map(reduced.a3.verified.map(row => [row.batch, row]));
     const paired = reduced.dt.verified.filter(row => a3Batches.has(row.batch));
+    renderReducedComparison(paired.map(dt => ({ batch: dt.batch, dt, a3: a3Batches.get(dt.batch) })));
     element("batch-kernel-dataset-field").hidden = false;
     kernelDataset.prepend(new Option("950DT / A3 · 4 层 · B1–B80", "reduced"));
     kernelDataset.value = "reduced";
