@@ -218,10 +218,15 @@
         context.lineWidth = 1.75;
         context.setLineDash(i === 0 ? [] : [5, 3]);
         context.beginPath();
+        let connect = false;
         for (const [j, value] of readings.entries()) {
-          if (!Number.isFinite(value)) continue;
-          if (j > 0 && Number.isFinite(readings[j - 1])) context.lineTo(x(j), y(value));
+          if (!Number.isFinite(value)) {
+            if (!metric.sampledBatches || metric.sampledBatches.has(batches[j])) connect = false;
+            continue;
+          }
+          if (connect) context.lineTo(x(j), y(value));
           else context.moveTo(x(j), y(value));
+          connect = true;
         }
         context.stroke();
         context.setLineDash([]);
@@ -614,14 +619,20 @@
         .map(row => ({ name: row.type, total_us: row.sum_device_ms * 1000, calls: row.count })),
       a3: full.a3Rank,
     };
-    const devices = [
-      { label: "950DT", topology: "TP4/EP4", steps: new Map(data.verified.map(row => [row.batch, row])),
-        kernels: new Map(data.kernels.map(kernel => [kernel.name, kernel.points])) },
-      { label: "A3", topology: "TP8/EP8", steps: new Map(a3.verified.map(row => [row.batch, row])),
-        kernels: new Map([...a3.kernels, ...full.a3Kernels].map(kernel => [kernel.name, kernel.points])) },
+    const device = (label, topology, run, kernels = run.kernels) => ({
+      label, topology, steps: new Map(run.verified.map(row => [row.batch, row])),
+      kernels: new Map(kernels.map(kernel => [kernel.name, kernel.points])),
+    });
+    const fullRuns = [
+      device("950DT", "TP4/EP4", data),
+      device("A3", "TP8/EP8", a3, [...a3.kernels, ...full.a3Kernels]),
     ];
-    const batches = [...new Set(devices.flatMap(device => [...device.steps.keys()]))].sort((a, b) => a - b);
+    const reducedRuns = [
+      device("950DT", "TP4/EP4", reduced.dt),
+      device("A3", "TP4/EP4", reduced.a3),
+    ];
     const rankPicker = element("full-hotspot-rank");
+    const sweepPicker = element("full-hotspot-sweep");
     const statsPicker = element("full-hotspot-stat");
     const container = element("full-hotspot-charts");
     let release = [];
@@ -630,9 +641,17 @@
       release = [];
       container.replaceChildren();
       const perStep = statsPicker.value === "step_ms";
+      const reducedSweep = sweepPicker.value === "reduced";
+      const devices = reducedSweep ? reducedRuns : fullRuns;
+      const batches = [...new Set(devices.flatMap(run => [...run.steps.keys()]))].sort((a, b) => a - b);
+      const layers = reducedSweep ? reduced.targetLayers : 48;
+      const sweepLabel = reducedSweep ? "4 层减层" : "48 层满层";
       const ranking = ranks[rankPicker.value];
       const scopeName = rankPicker.value === "dt" ? "950DT C1 · 原始长窗" : "A3 B8 · 8 个核对调度步";
-      element("full-hotspot-note").textContent = `排名参考 ${scopeName} · 48 层 + MTP5 · rank 0 · Top ${ranking.length}`;
+      element("full-hotspot-note").textContent = `排名参考 48 层 ${scopeName} · Top ${ranking.length}。曲线使用${sweepLabel} trace · rank 0 · ${devices.map(run => `${run.label} ${run.steps.size} 档`).join(" / ")}。`;
+      element("full-hotspot-coverage-note").textContent = reducedSweep
+        ? "两台设备都核对了 B1–B80，每档取 3 个实际 Decode 调度步。覆盖数字统计已导出的同名 Profiling Type。当前导出缺少 Slice、Mul 和 _hc_gate_mix_kernel 等类型，V2、V3 等不同类型各自保留。"
+        : "950DT 的实测档位为 B1、B2、B4、B8、B16、B17，A3 为 B1、B4、B8。950DT 的 B17 来自提交 B32 的 trace。连线连接各设备相邻的已采点，空档表示本设备已采该 Batch，但导出中缺少同名 Type。";
       const rows = [];
       for (const [offset, entry] of ranking.entries()) {
         const tracks = devices.map(device => new Map((device.kernels.get(entry.name) ?? []).map(point => [point.batch, point])));
@@ -643,17 +662,28 @@
             const trace = device.steps.get(point.batch);
             const sample = point.samples[index];
             if (!trace) return;
-            rows.push([scopeName, rank, entry.name, entry.total_us, entry.calls, device.label, device.topology, 48, 5,
-              trace.submitted_batch, point.batch, trace.steps, sample?.calls, sample?.total_us, sample?.mean_us,
+            rows.push([scopeName, rank, entry.name, entry.total_us, entry.calls, device.label, device.topology, layers, 5,
+              trace.submitted_batch ?? trace.batch, point.batch, trace.steps, sample?.calls, sample?.total_us, sample?.mean_us,
               sample ? sample.total_us / trace.steps / 1000 : null, sample ? "sample" : "missing_type"]);
           });
         }
+        const coverage = devices.map((run, index) => `${run.label} ${tracks[index].size}/${run.steps.size} 档`);
+        if (tracks.every(track => track.size === 0)) {
+          const missing = add(container, "figure", "decode-chart");
+          const title = add(missing, "h3");
+          add(title, "span", "hotspot-rank", String(rank).padStart(2, "0"));
+          add(title, "code", "", entry.name);
+          add(missing, "p", "curve-unit", `${sweepLabel} · ${coverage.join(" · ")}`);
+          add(missing, "p", "curve-detail", "当前曲线数据未导出同名 Type。");
+          continue;
+        }
         const unit = perStep ? "ms" : "μs";
         release.push(chart(container, { title: entry.name, rank, isKernel: true, unit, batches, points, linearBatch: true,
-          scope: perStep ? "满层 · 每步累计" : "满层 · 单次均值",
-          axis: `参考累计 ${format(entry.total_us / 1000)} ms · ${count(entry.calls)} 次 · ${unit} / rank / ${perStep ? "调度步" : "次调用"}`,
+          scope: `${sweepLabel} · ${perStep ? "每步累计" : "单次均值"}`,
+          axis: `${coverage.join(" · ")} · ${unit} / rank / ${perStep ? "调度步" : "次调用"} · 排名参考 ${format(entry.total_us / 1000)} ms`,
           series: devices.map((device, index) => ({
-            label: tracks[index].size ? device.label : `${device.label} · 缺测`,
+            label: coverage[index],
+            sampledBatches: device.steps,
             value: point => {
               const sample = point.samples[index];
               if (!sample) return null;
@@ -665,11 +695,13 @@
           pipelines: devices.map((device, index) => ({ label: device.label, sample: point => point.samples[index]?.pipeline })),
         }));
       }
+      element("full-hotspot-download").download = `qwen4exp-hotspots-${reducedSweep ? "4-layer-b1-b80" : "48-layer"}.csv`;
       csvDownload("full-hotspot-download", ["rank_source", "rank", "profiling_type", "rank_total_device_us", "rank_calls",
         "device", "topology", "layers", "mtp_draft_tokens", "submitted_batch", "actual_batch", "steps", "calls",
         "sum_device_us", "per_call_mean_us", "per_step_sum_ms", "sample_status"], rows);
     }
     rankPicker.addEventListener("change", render);
+    sweepPicker.addEventListener("change", render);
     statsPicker.addEventListener("change", render);
     render();
   }

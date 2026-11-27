@@ -16,7 +16,7 @@
   <script defer src="performance-simulator.js?v=e95d2865de"></script>
   <script defer src="reduced-decode-sweep-data.js?v=dbbabd29"></script>
   <script defer src="full-decode-hotspots-data.js?v=14ab5891ca"></script>
-  <script defer src="decode-sweep-charts.js?v=0b4cd34c22"></script>
+  <script defer src="decode-sweep-charts.js?v=c0e96aef7d"></script>
   <script defer src="gdn-pipeline-data.js?v=e88deb2f37"></script>
   <script defer src="gdn-pipeline.js?v=fab4d7da6d"></script>
   <script defer src="tensor-flow.js"></script>
@@ -335,15 +335,16 @@
         <p class="footnote">按输出步统计整模 ITL。950DT 为 TP4 / EP4，A3 为 TP8 / EP8。B1、B4、B8 可对照，B2、B16 仅 950DT 有样本。提交 B32 的单独 trace 主要观察到 B17，未把该次在线 ITL 绑定到 B17。</p>
       </article>
       <article class="panel trace-panel" id="full-hotspots">
-        <header class="panel-top"><div><h2>满层热点算子 · 按设备累计耗时排序</h2><p id="full-hotspot-note"></p></div>
+        <header class="panel-top"><div><h2>48 层热点排名与 Batch 曲线</h2><p id="full-hotspot-note"></p></div>
           <a id="full-hotspot-download" class="text-link" download="qwen4exp-full-decode-hotspots.csv">下载热点与曲线 CSV ↗</a>
         </header>
         <div class="hotspot-controls">
           <label>热点排名来源<select id="full-hotspot-rank"><option value="dt">950DT · C1 全窗口 · Top 15</option><option value="a3">A3 · B8 核对调度步 · Top 16</option></select></label>
+          <label>曲线数据<select id="full-hotspot-sweep"><option value="reduced">4 层 + MTP5 · B1–B80</option><option value="full">48 层 + MTP5 · 已采档位</option></select></label>
           <label>曲线统计<select id="full-hotspot-stat"><option value="step_ms">每调度步累计</option><option value="mean_us">单次调用均值</option></select></label>
         </div>
         <div id="full-hotspot-charts" class="decode-chart-grid hotspot-charts"></div>
-        <p class="footnote">同名 Profiling Type 才同图配对。两组排名取样窗口不同，各自的设备累计耗时包含可能重叠的 stream 事件。曲线使用核对过实际 Batch 的 48 层 sweep；空档表示缺少同名测点。950DT 的 B17 来自提交 B32 的 trace，仅用于算子曲线。</p>
+        <p id="full-hotspot-coverage-note" class="footnote"></p>
       </article>
       <article class="panel trace-panel" id="batch-results">
         <header class="panel-top">
