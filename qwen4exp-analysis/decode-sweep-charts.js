@@ -36,6 +36,7 @@
     ["投影与 HC · 高频矩阵乘和跨层混合", ["MatMulV3", "MatMulV2", "_hc_combine_norm_kernel"]],
     ["集合通信 · AllReduce / AllGather", ["hcom_allReduce_", "hcom_allGather_"]],
   ];
+  const openOperatorGroups = new Map([[operatorGroups[0][0], true]]);
   let disconnectOperators = [];
   let chartCount = 0;
 
@@ -294,6 +295,9 @@
   function renderOperators() {
     disconnectOperators.forEach(disconnect => disconnect());
     const container = element("batch-operators");
+    for (const group of container.querySelectorAll(".decode-operator-group")) {
+      openOperatorGroups.set(group.dataset.operatorGroup, group.open);
+    }
     container.replaceChildren();
     const hardware = kernelDataset.value === "a3";
     const reducedMode = kernelDataset.value === "reduced";
@@ -373,8 +377,10 @@
       .some(kernel => kernel?.points.some(point => batches.includes(point.batch)));
     for (const [label, names] of operatorGroups) {
       if (!names.some(name => visible.has(name) && hasPoint(name))) continue;
-      const section = add(container, "section", "decode-operator-group");
-      add(section, "h3", "decode-group-title", label);
+      const section = add(container, "details", "decode-operator-group");
+      section.dataset.operatorGroup = label;
+      section.open = openOperatorGroups.get(label) ?? false;
+      add(section, "summary", "decode-group-title", label);
       addCharts(section, names);
     }
     const featured = new Set(operatorGroups.flatMap(([, names]) => names));
