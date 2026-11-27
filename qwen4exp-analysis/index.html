@@ -13,7 +13,7 @@
   <script defer src="validation-104.js"></script>
   <script defer src="performance.js"></script>
   <script defer src="decode-sweep-data.js"></script>
-  <script defer src="reduced-decode-sweep-data.js?v=f2700f63"></script>
+  <script defer src="reduced-decode-sweep-data.js?v=dbbabd29"></script>
   <script defer src="decode-sweep-charts.js?v=8eafb655"></script>
   <script defer src="tensor-flow.js"></script>
   <script defer src="operator-diagram.js"></script>
@@ -303,7 +303,7 @@
           <p id="reduced-decode-context"></p>
           <p>保留原模型前 4 层的 3 层 GDN、1 层 QSA、MoE 和 PLE，另保留 1 个 MTP 层。两台设备均用 W8A8、TP4/EP4、DP1、MTP5，输入 130,561 tokens，每请求生成 72 tokens。每档在 rank 0 上核对实际 Batch 后聚合 3 个 Decode 调度步。曲线展示减层配置下的算子行为。</p>
           <p>软件版本为 950DT vLLM 0.30.0 / CANN 9.2.1，A3 vLLM 0.33.0 / CANN 9.3.0。减层后的 MTP 接受数及草稿数可在数据中查看。</p>
-          <p>950DT 的 6 条热点曲线从同批 trace 补导出，位于 QSA 和集合通信分组。AI CPU 调度事件按原始 Profiling Type 显示。</p>
+          <p>补导出的 4 个 QSA 与索引 Type 在两台设备上各覆盖 B1–B80，可同图对照。集合通信中的两个 AI CPU Type 来自 950DT，覆盖 B2–B80。</p>
           <p><a id="reduced-decode-data" class="text-link" download="qwen4exp-reduced-b1-b80.json">下载减层实测数据 ↗</a></p>
         </details>
         <details class="pipeline-method">
