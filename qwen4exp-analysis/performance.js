@@ -9,36 +9,6 @@
   const escape = value => String(value).replace(/[&<>"']/g, character =>
     ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[character]);
   const workload = row => `${row.input_tokens / 1024}K → 128 · C${row.concurrency}`;
-  const card = (name, value) => `<div><span>${name}</span><strong>${value}</strong></div>`;
-  const prefillAnchor = byId("sim-p-anchor");
-  const prefillBudget = byId("sim-p-budget");
-  const decodeAnchor = byId("sim-d-anchor");
-  const decodeTokens = byId("sim-d-tokens");
-
-  function renderPrefill() {
-    const sample = evidence.cache[prefillAnchor.value];
-    const budget = prefillBudget.valueAsNumber;
-    byId("sim-p-output").innerHTML = card("实测平均 TTFT", number(sample.ttft) + " s") +
-      card("首 token SLO 余量", prefillBudget.validity.valid && Number.isFinite(budget)
-        ? number(budget - sample.ttft) + " s" : "—");
-    byId("sim-p-note").textContent = "余量为预算减实测均值。这个工况固定为 128K 冷请求和单并发，结果只适用于该采样条件。";
-  }
-
-  function renderDecode() {
-    const row = rows.find(sample => sample.label === decodeAnchor.value);
-    if (!row) {
-      byId("sim-d-output").innerHTML = card("实测 TPOT", "—") + card("预计生成用时", "—");
-      byId("sim-d-note").textContent = validation.status;
-      return;
-    }
-    const tpot = row.d_metrics.tpot_mean_ms ?? row.client_stream_tpot_mean_ms;
-    const count = decodeTokens.valueAsNumber;
-    const projected = decodeTokens.validity.valid && Number.isFinite(count) ? count * tpot : null;
-    byId("sim-d-output").innerHTML = card("实测 TPOT", ms(tpot)) +
-      card("预计生成用时", projected === null ? "—" : number(projected / 1000) + " s");
-    byId("sim-d-note").textContent = `生成用时 = 首 token 后的 token 数 × 该工况平均 TPOT。锚点为 ${workload(row)}，超出实测输出长度时采用常速外推。`;
-  }
-
   const pSources = Object.entries(evidence.profiles).map(([group, profile]) => ({
     id: "p-" + group,
     label: "114 · Prefill " + group,
@@ -131,12 +101,6 @@
     select.disabled = options.length === 0;
   }
 
-  setupOptions(decodeAnchor, rows.map(row => [row.label, workload(row)]), "decode-128k-c1");
-  decodeTokens.disabled = rows.length === 0;
-  prefillAnchor.addEventListener("change", renderPrefill);
-  prefillBudget.addEventListener("input", renderPrefill);
-  decodeAnchor.addEventListener("change", renderDecode);
-  decodeTokens.addEventListener("input", renderDecode);
   byId("decode-context").textContent = validation.context;
   byId("decode-status").textContent = validation.result;
   byId("decode-measurements").innerHTML = rows.length ? rows.map(row => {
@@ -164,8 +128,6 @@
     <div><dt>QSA</dt><dd>更新索引和 KV → 选择稀疏块 → 执行 Attention。查找 <code>LightningIndexerV2</code>、<code>GenericBlockSparseAttention</code> 及 metadata。</dd></div>
     <div><dt>GDN</dt><dd>卷积状态更新 → gated delta recurrence。Prefill 走 chunk 路径，Decode 按当前步更新历史状态。具体融合路径由运行时决定。</dd></div>
     <div><dt>HyperConnection / MoE</dt><dd>查看 stream 上的 HC gate / combine、门控专家投影及 EP 通信。结合形状和源码定位一次调用属于主模型还是 MTP 草稿。</dd></div>`;
-  renderPrefill();
-  renderDecode();
   renderKernels();
   renderTimeline();
 })();

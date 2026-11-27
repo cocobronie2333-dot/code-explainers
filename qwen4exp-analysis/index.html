@@ -6,13 +6,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#101114">
   <title>Qwen4Exp · 推理分析</title>
-  <link rel="stylesheet" href="style.css?v=be81fb52">
+  <link rel="stylesheet" href="style.css?v=2bb8038711">
   <script defer src="evidence.js"></script>
   <script defer src="app.js?v=ca0c1500"></script>
   <script defer src="memory.js"></script>
   <script defer src="validation-104.js"></script>
-  <script defer src="performance.js"></script>
+  <script defer src="performance.js?v=7b2bf60367"></script>
   <script defer src="decode-sweep-data.js"></script>
+  <script defer src="performance-simulator.js?v=d532e12272"></script>
   <script defer src="reduced-decode-sweep-data.js?v=dbbabd29"></script>
   <script defer src="decode-sweep-charts.js?v=8eafb655"></script>
   <script defer src="tensor-flow.js"></script>
@@ -206,36 +207,92 @@
       </div>
     </section>
     <section id="performance" role="tabpanel" aria-labelledby="tab-performance" hidden>
-      <div class="hero compact">
-        <div><p class="eyebrow">PREFILL / DECODE <span>·</span> 实测校准</p>
-          <h1>首 token 与生成时延</h1>
-          <p class="intro">选择实测工况，分别估算首 token 预算和后续输出时延。</p></div>
-      </div>
-      <div class="perf-grid">
-        <article class="panel">
-          <header class="panel-top"><div><h2>纯 Prefill</h2><p>950PR / W8A8 / TP8 + EP / 128K → 1 / 冷请求 C1</p></div><span class="tag">实测锚点</span></header>
-          <div class="perf-body">
-            <div class="input-grid perf-inputs">
-              <label>KV 配置<select id="sim-p-anchor"><option value="b48">B48 常驻</option><option value="b2">B2 轮转</option><option value="b4">B4 轮转</option></select></label>
-              <label>平均 TTFT 预算（秒）<input id="sim-p-budget" type="number" min="0" step="0.1" value="25"></label>
-            </div>
-            <div id="sim-p-output" class="budget-cards" aria-live="polite"></div>
-            <p id="sim-p-note" class="muted"></p>
+      <header class="hero compact sim-heading">
+        <div><p class="eyebrow">PREFILL / DECODE <span>·</span> CAPACITY PLANNING</p>
+          <h1>纯 P / 纯 D 性能仿真</h1>
+          <p class="intro">按请求长度、时延上限和 KV 容量，分别搜索两个机器池的最高估算 QPS。</p></div>
+        <button type="button" class="sim-button" id="sim-method-link">建模与校准来源 ↓</button>
+      </header>
+      <form class="sim-form" id="sim-form">
+        <fieldset class="panel sim-workload" aria-label="请求与时延约束">
+          <label>输入长度 <small>tokens</small><input id="sim-input" type="number" min="1" max="262144" value="131072" required></label>
+          <label>输出长度 <small>tokens</small><input id="sim-output" type="number" min="1" max="16384" value="128" required></label>
+          <label>平均 TTFT 上限 <small>秒</small><input id="sim-ttft" type="number" min="0.001" max="600" step="any" value="25" required></label>
+          <label>平均 ITL 上限 <small>秒</small><input id="sim-itl" type="number" min="0.001" max="60" step="any" value="0.40" required></label>
+          <label>平均 TPOT 上限 <small>秒</small><input id="sim-tpot" type="number" min="0.001" max="60" step="any" value="0.09" required></label>
+          <label>D 每轮平均产出 <small>tokens</small><input id="sim-yield" type="number" min="1" max="6" step="any" placeholder="随 Batch 校准" title="留空沿用实测 TPOT；手动输入时通过 ITL 除以该值估算 TPOT"></label>
+        </fieldset>
+        <div class="sim-grid">
+          <aside class="panel sim-pools">
+            <div class="sim-pool-head"><h2>独立机器池</h2><button type="reset" class="sim-button">还原</button></div>
+            <fieldset class="sim-pool">
+              <legend>Prefill</legend>
+              <label>校准配置
+                <select id="sim-p-profile">
+                  <option value="b48">950PR · B48 常驻</option>
+                  <option value="b2">950PR · B2 轮转</option>
+                  <option value="b4">950PR · B4 轮转</option>
+                </select>
+              </label>
+              <div class="sim-fields">
+                <label>DP 副本<input id="sim-p-replicas" type="number" min="1" max="256" value="1" required></label>
+                <label>最大 Batch / DP<input id="sim-p-batch" type="number" min="1" max="16" value="16" required></label>
+              </div>
+              <label>已驻留前缀 <small>%</small><input id="sim-p-prefix" type="number" min="0" max="100" step="any" value="0" required></label>
+            </fieldset>
+            <fieldset class="sim-pool sim-pool-decode">
+              <legend>Decode</legend>
+              <label>校准配置
+                <select id="sim-d-profile">
+                  <option value="dt">950DT · MTP5</option>
+                  <option value="a3">A3 · MTP5</option>
+                  <option value="noMtp">950DT · MTP 关闭</option>
+                </select>
+              </label>
+              <div class="sim-fields">
+                <label>DP 副本<input id="sim-d-replicas" type="number" min="1" max="256" value="1" required></label>
+                <label>最大 Batch / DP<input id="sim-d-batch" type="number" min="1" max="32" value="16" required></label>
+              </div>
+              <label>超出校准 Batch
+                <select id="sim-d-range">
+                  <option value="limit">限制在校准范围</option>
+                  <option value="extend">按末个测点时延估算</option>
+                </select>
+              </label>
+              <label>跨请求物理共享前缀 <small>%</small><input id="sim-d-prefix" type="number" min="0" max="100" step="any" value="100" required></label>
+              <label>D KV 容量 <small>tokens / rank</small><input id="sim-d-capacity" type="number" min="1" max="32000000" placeholder="沿用配置参考值"></label>
+              <details class="sim-extra">
+                <summary>上下文长度外推</summary>
+                <label>随上下文变化的时延占比 <small>%</small><input id="sim-d-context" type="number" min="0" max="100" step="any" value="0" required></label>
+              </details>
+            </fieldset>
+          </aside>
+          <article class="panel sim-result" id="sim-p-result" aria-label="纯 Prefill 搜索结果"></article>
+          <article class="panel sim-result sim-decode" id="sim-d-result" aria-label="纯 Decode 搜索结果"></article>
+        </div>
+      </form>
+      <details class="panel sim-method" id="sim-method">
+        <summary>建模方法与校准来源</summary>
+        <div class="sim-method-grid">
+          <section><h3>纯 Prefill</h3>
+            <p>950PR W8A8 · TP8 / EP8 · MTP 关闭。2026-11-13 冷请求 128K → 1、C1，三种布局各 8 个正式样本。B48、B2、B4 平均 TTFT 分别为 20.2415、25.1624、26.4207 秒。</p>
+            <p>按每 DP 一批的未命中 token 总量做线性估算。每批耗时下限取 128K 锚点折算的一个 chunk（1,536 tokens），短输入及热前缀仍需另测。缓存命中仍占池空间，QPS = DP 副本 × Batch ÷ TTFT。缓存按每请求对齐到 768 tokens，另计 9 个状态和索引 ID，再加 1 个池级 null ID。</p>
             <a href="https://app.notion.com/p/40d498fd324f811684c9cba91489e771">950PR 实测记录 ↗</a>
-          </div>
-        </article>
-        <article class="panel">
-          <header class="panel-top"><div><h2>纯 Decode</h2><p>950DT · 104 / W8A8 / TP4 + EP / MTP5</p></div><span class="tag">实测与推算</span></header>
-          <div class="perf-body">
-            <div class="input-grid perf-inputs">
-              <label>Decode 工况<select id="sim-d-anchor"></select></label>
-              <label>首 token 后的输出量<input id="sim-d-tokens" type="number" min="0" max="4096" step="1" value="127"></label>
-            </div>
-            <div id="sim-d-output" class="budget-cards" aria-live="polite"></div>
-            <p id="sim-d-note" class="muted"></p>
-          </div>
-        </article>
-      </div>
+          </section>
+          <section><h3>纯 Decode</h3>
+            <p>48 层 128K 热前缀 → 96。950DT TP4 / EP4 MTP5 使用 B1、2、4、8、16。A3 TP8 / EP8 MTP5 与 950DT MTP 关闭使用 B1、4、8。线上耗时与独立 trace 核对 Batch 后配对。950DT 提交 B32 的 trace 主要运行在 B17，该档从校准中排除。</p>
+            <p>Batch 档间线性插值 ITL 和 TPOT。外推到最大测点之后时，沿用末个测点的时延。默认上下文占比为 0%，沿用 128K 的时延。可用比例 <code>f</code> 按 <code>(1 − f) + f × 平均上下文 / 参考上下文</code> 调整时延。平均上下文包含首 token 后生成区间的中点。</p>
+            <p>手动填写每轮产出时，TPOT = ITL ÷ 平均产出。MTP 关闭时沿用实测 ITL 和 TPOT。D QPS = DP 副本 × Batch ÷ [(输出长度 − 1) × TPOT]。QPS 是稳态模型估计。</p>
+            <p>KV 容量按请求末尾的上下文估算，重复存储部分扣除已共享的对齐前缀。仅计算 QSA 历史的近似容量。950DT 参考同拓扑验证日志的 624,286 tokens / rank。A3 可填写实际容量。</p>
+            <a href="#batch-results">48 层实测与对照 ↗</a>
+          </section>
+        </div>
+        <p class="sim-limit">限制按平均值筛选。DP 按独立副本等比例扩展，TP / EP 保持校准配置。估算未计入排队、P→D KV 传输时间与跨副本竞争。D 的共享前缀默认 100%，请按实际共享情况调整。</p>
+      </details>
+      <dialog id="sim-dialog" class="panel sim-dialog" aria-labelledby="sim-dialog-title">
+        <header><h2 id="sim-dialog-title"></h2><form method="dialog"><button class="sim-button">关闭</button></form></header>
+        <div id="sim-dialog-content"></div>
+      </dialog>
     </section>
     <section id="ascend" role="tabpanel" aria-labelledby="tab-ascend" hidden>
       <div class="hero compact">
