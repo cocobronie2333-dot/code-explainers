@@ -35,7 +35,7 @@
       "SparseFlashAttention", "FusedInferAttentionScore"]],
     ["MoE · 分发、专家计算与回收", ["MoeDistributeDispatchV3", "MoeDistributeDispatchV2",
       "GroupedMatmulSwigluQuantV2", "GroupedMatmulSwigluQuant", "GroupedMatmul", "MoeDistributeCombineV3", "MoeDistributeCombineV2"]],
-    ["投影与 HC · 高频矩阵乘和跨层混合", ["MatMulV3", "MatMulV2", "_hc_combine_norm_kernel"]],
+    ["投影与 HC · 高频矩阵乘和跨层混合", ["MatMulV3", "MatMulV2", "_hc_combine_norm_kernel", "_hc_gate_mix_kernel"]],
     ["集合通信 · AllReduce / AllGather", ["hcom_allReduce_", "hcom_allGather_",
       "hcom_allGather_AicpuKernel", "HcclLaunchAicpuKernel"]],
   ];
@@ -650,7 +650,7 @@
       const scopeName = rankPicker.value === "dt" ? "950DT C1 · 原始长窗" : "A3 B8 · 8 个核对调度步";
       element("full-hotspot-note").textContent = `排名参考 48 层 ${scopeName} · Top ${ranking.length}。曲线使用${sweepLabel} trace · rank 0 · ${devices.map(run => `${run.label} ${run.steps.size} 档`).join(" / ")}。`;
       element("full-hotspot-coverage-note").textContent = reducedSweep
-        ? "两台设备都核对了 B1–B80，每档取 3 个实际 Decode 调度步。覆盖数字统计已导出的同名 Profiling Type。当前导出缺少 Slice、Mul 和 _hc_gate_mix_kernel 等类型，V2、V3 等不同类型各自保留。"
+        ? "两台设备都核对了 B1–B80，每档取 3 个实际 Decode 调度步。Slice、Mul 和 _hc_gate_mix_kernel 均有双机同名曲线。覆盖数字统计已导出的同名 Profiling Type，V2、V3 等不同类型各自保留。"
         : "950DT 的实测档位为 B1、B2、B4、B8、B16、B17，A3 为 B1、B4、B8。950DT 的 B17 来自提交 B32 的 trace。连线连接各设备相邻的已采点，空档表示本设备已采该 Batch，但导出中缺少同名 Type。";
       const rows = [];
       for (const [offset, entry] of ranking.entries()) {
