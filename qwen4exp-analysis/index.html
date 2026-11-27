@@ -99,7 +99,7 @@
       <section id="cache-summary" aria-label="KV cache 内存占用"></section>
       <article class="panel cache-panel cache-matrix-panel" aria-labelledby="cache-matrix-title">
         <header class="panel-top cache-matrix-heading">
-          <div><h2 id="cache-matrix-title">KVCacheTensor × 调度组</h2><p>逐层显示缓存 shape。点击任一层查看 dtype、padding 和存储偏移。</p></div>
+          <div><h2 id="cache-matrix-title">KVCacheTensor × 调度组</h2><p>每行对齐同一起始 offset，向下按字节偏移递增。点击任一层查看 shape、dtype 和 padding。</p></div>
           <div id="cache-shape-mode" class="switch" role="group" aria-label="张量形状显示范围">
             <button type="button" data-shape="pool" aria-pressed="true">全池 shape</button><button type="button" data-shape="block" aria-pressed="false">每块 spec shape</button>
           </div>

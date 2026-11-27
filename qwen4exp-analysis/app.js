@@ -81,17 +81,20 @@ function cacheSlices(config) {
   config.descriptors.forEach((tensor, tensorId) => tensor.layers.forEach((owner, ordinal) => {
     const entry = ownerGroups.get(owner);
     const offset = tensor.offset + ordinal * tensor.layer_stride;
-    const key = `${tensor.size}:${offset}:${tensor.block_stride}`;
-    if (!slices.has(key)) slices.set(key, { offset, stride: tensor.block_stride, groups: config.groups.map(() => []), tensors: new Set() });
-    const slice = slices.get(key);
-    slice.groups[entry.groupId].push({ ...entry, tensorId });
-    slice.tensors.add(tensorId);
+    if (!slices.has(offset)) slices.set(offset, { offset, groups: config.groups.map(() => []), views: new Map() });
+    const slice = slices.get(offset);
+    const backing = config.pleSeparate && owner.endsWith(".ple") ? "PLE 独立 backing" : "主 backing";
+    const stride = tensor.block_stride;
+    const viewKey = `${backing}:${stride}`;
+    if (!slice.views.has(viewKey)) slice.views.set(viewKey, { backing, stride, tensors: new Set() });
+    slice.views.get(viewKey).tensors.add(tensorId);
+    slice.groups[entry.groupId].push({ ...entry, tensorId, stride });
   }));
-  return [...slices.values()];
+  return [...slices.values()].sort((a, b) => a.offset - b.offset);
 }
 
-function cacheLayerCell(entry, stride, blocks) {
-  const { member, tensorId, groupId, memberId } = entry;
+function cacheLayerCell(entry, blocks) {
+  const { member, tensorId, groupId, memberId, stride } = entry;
   const { name, payload } = cacheSpec(member);
   const shapes = member.shapes.map(shape => tensorShape(cacheShape === "pool" ? [blocks, ...shape] : shape));
   const layer = `L${member.owner.split(".")[0].padStart(2, "0")}`;
@@ -104,17 +107,21 @@ function cacheLayerCell(entry, stride, blocks) {
 }
 
 function renderCacheMatrix(config) {
-  byId("cache-matrix-head").innerHTML = `<tr><th scope="col">KVCacheTensor<small>字节视图 · INT8</small></th>
+  byId("cache-matrix-head").innerHTML = `<tr><th scope="col">Offset ↓<small>KVCacheTensor · INT8 字节视图</small></th>
     ${config.groups.map((group, i) => `<th scope="col" class="cache-g${i}" title="${group.name}">
       <strong>Group ${i} · ${cacheGroupLabels[i]}</strong><small>${group.members.length} 个 spec · block=${group.blockSize}</small></th>`).join("")}</tr>`;
-  cacheMatrixRows.innerHTML = cacheSlices(config).map(({ offset, stride, groups, tensors }, index) => {
-    const size = config.blocks * stride;
-    const references = [...tensors].map(id => `T${id}`).join(" / ");
+  cacheMatrixRows.innerHTML = cacheSlices(config).map(({ offset, groups, views }) => {
+    const viewLabels = [...views.values()].map(({ backing, stride, tensors }) => {
+      const size = config.blocks * stride;
+      const references = [...tensors].map(id => `T${id}`).join(" / ");
+      return `<span class="cache-tensor-view" title="block stride ${integer(stride)} B">
+        <span class="cache-tensor-title">${backing} · ${references}</span>
+        <span class="cache-tensor-bytes">[${size}] i8 · ${decimalMegabytes(size)} MB</span></span>`;
+    }).join("");
     return `<tr>
-      <th scope="row" title="backing 内偏移 ${integer(offset)} B · block stride ${integer(stride)} B">
-        <span class="cache-tensor-title"><b>${String(index + 1).padStart(2, "0")}</b> ${references}</span><span class="cache-tensor-bytes">[${size}] i8 · ${decimalMegabytes(size)} MB</span></th>
+      <th scope="row"><strong class="cache-row-offset">${integer(offset)} B</strong>${viewLabels}</th>
       ${groups.map(entries => entries.length
-        ? `<td>${entries.map(entry => cacheLayerCell(entry, stride, config.blocks)).join("")}</td>`
+        ? `<td>${entries.map(entry => cacheLayerCell(entry, config.blocks)).join("")}</td>`
         : `<td class="cache-empty" aria-label="无映射">—</td>`).join("")}</tr>`;
   }).join("");
 }
@@ -192,9 +199,10 @@ function renderCache() {
   const config = evidence.cache[key];
   const isPlan = key === "a3";
   byId("cache-context").textContent = `${config.label} · ${config.date} · W8A8 · V2 eager · ${config.layout} · ${config.descriptors.length} 个描述符`;
-  byId("backing-note").textContent = config.pleSeparate
-    ? "同一行对齐共享 backing、地址和步长的视图。QSA 主 KV 与 GDN 的行可共用地址，PLE 独立分配。"
-    : "同一行对齐共享 backing、地址和步长的视图。轮转槽在不同时间服务多个层，多个 owner 的容量按该槽计一次。";
+  const offsetOrder = "自上而下按层视图的起始字节偏移排序。起点 = 描述符 offset + 层在描述符中的序号 × layer stride。";
+  byId("backing-note").textContent = offsetOrder + (config.pleSeparate
+    ? "QSA 主 K/V 与 GDN 在主 backing 内按槽对齐。PLE 的偏移以其独立 backing 为起点。"
+    : "同一轮转槽可分时服务多个层，容量按槽计一次。");
   renderCacheSummary(config, isPlan);
   renderCacheMatrix(config);
 }

@@ -298,8 +298,9 @@ td.number { font: 12px var(--mono); }
 .cache-matrix tr > th:first-child { position: sticky; left: 0; width: 172px; padding-inline: 6px; }
 .cache-matrix thead th:first-child { z-index: 3; }
 .cache-matrix tbody th { z-index: 2; background: #142537; border-bottom: 1px solid #293e50; vertical-align: top; padding-top: 4px; }
+.cache-row-offset { display: block; color: #f0f6fb; font: 650 11px/1.4 var(--mono); white-space: nowrap; }
+.cache-tensor-view { display: block; margin: 2px 0 4px; }
 .cache-tensor-title { display: block; color: #c0d9e9; font: 10px/1.35 var(--mono); }
-.cache-tensor-title b { padding-right: 4px; color: #7aa9c3; }
 .cache-tensor-bytes { display: block; color: #aec8db; font: 9px/1.4 var(--mono); }
 .cache-matrix td { background: #0e1b29; vertical-align: top; }
 .cache-matrix .cache-empty { padding-top: 5px; text-align: center; color: #617889; background: #101e2a; border-bottom: 1px dashed #213646; font-size: 10px; }
