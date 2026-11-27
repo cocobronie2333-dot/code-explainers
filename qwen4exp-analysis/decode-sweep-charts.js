@@ -30,11 +30,14 @@
   const reduced = window.qwenReducedDecodeSweep;
   const operatorGroups = [
     ["GDN · 状态更新与门控", ["RecurrentGatedDeltaRule", "fused_gdn_gating_kernel"]],
-    ["QSA · 稀疏索引与注意力", ["LightningIndexerV2", "LightningIndexer", "GenericBlockSparseAttention", "SparseFlashAttention", "FusedInferAttentionScore"]],
+    ["QSA · 稀疏索引与注意力", ["LightningIndexerV2", "LightningIndexerV2Metadata", "LightningIndexer",
+      "Index", "SearchSorted", "GenericBlockSparseAttention", "GenericBlockSparseAttentionMetadata",
+      "SparseFlashAttention", "FusedInferAttentionScore"]],
     ["MoE · 分发、专家计算与回收", ["MoeDistributeDispatchV3", "MoeDistributeDispatchV2",
       "GroupedMatmulSwigluQuantV2", "GroupedMatmulSwigluQuant", "GroupedMatmul", "MoeDistributeCombineV3", "MoeDistributeCombineV2"]],
     ["投影与 HC · 高频矩阵乘和跨层混合", ["MatMulV3", "MatMulV2", "_hc_combine_norm_kernel"]],
-    ["集合通信 · AllReduce / AllGather", ["hcom_allReduce_", "hcom_allGather_"]],
+    ["集合通信 · AllReduce / AllGather", ["hcom_allReduce_", "hcom_allGather_",
+      "hcom_allGather_AicpuKernel", "HcclLaunchAicpuKernel"]],
   ];
   const openOperatorGroups = new Map([[operatorGroups[0][0], true]]);
   let disconnectOperators = [];
@@ -76,7 +79,7 @@
       add(entry, "i").style.setProperty("--curve", colors[i]);
       entry.append(metric.label);
     }
-    const communication = title.startsWith("hcom_");
+    const communication = title.startsWith("hcom_") || title === "HcclLaunchAicpuKernel";
     const context = canvas.getContext("2d");
     const byBatch = new Map(points.map(point => [point.batch, point]));
     const dense = batches.length > 24;
