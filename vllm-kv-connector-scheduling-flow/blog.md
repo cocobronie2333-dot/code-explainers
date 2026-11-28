@@ -12,3 +12,5 @@ Scheduler 查询可复用的 KV，分配本地 blocks。EngineCore 通过 Execut
 4. [AscendStore 的 KV 保存与复用](04-save-and-reuse.md)：查询共享池、在 forward 前加载前缀、计算后保存 KV。
 
 [网页版本](index.html)
+
+补充导览 · [进程间时序](01-scheduler.html#overview) · [加载方式对照](02-runner-v2.html#load-modes) · [P / D 失败回收](03-async-load.html#receive-failure) · [PUT 结果](04-save-and-reuse.html#put-result)

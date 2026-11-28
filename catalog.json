@@ -228,7 +228,7 @@
       "slug": "vllm-kv-connector-scheduling-flow",
       "category": "code",
       "title": "vLLM KV Connector 调度流程",
-      "summary": "grant 的四篇系列经授权同步，从 Scheduler、Model Runner V2 到 Mooncake Pull 的 P/D 交接和 AscendStore 的池化读写。",
+      "summary": "grant 的四篇系列经授权同步，覆盖 Scheduler、Model Runner V2、Mooncake Pull 和 AscendStore，补充进程间时序、三种加载方式和失败回收。",
       "tags": [
         "vLLM",
         "Ascend",

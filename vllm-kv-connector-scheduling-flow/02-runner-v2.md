@@ -20,6 +20,18 @@ Runner 调用 `pre_forward()`，通过 `ActiveKVConnector` 把调度计划绑定
 
 [Runner 的加载分支](https://github.com/vllm-project/vllm/blob/v0.30.0/vllm/v1/worker/gpu/kv_connector.py#L66-L91) · [Mooncake Pull 提交接收任务](https://github.com/vllm-project/vllm-ascend/blob/v0.30.0/vllm_ascend/distributed/kv_transfer/kv_p2p/mooncake/pull_worker.py#L1588-L1600)
 
+### 三种加载方式的等待点
+
+`has_sync_kv_loads` 是整轮 `SchedulerOutput` 的标志。只要本轮包含一条依赖同步外部 KV 的请求，Runner 就在 `pre_forward()` 调用加载入口。实际搬运和等待由 Connector 实现决定。若没有这类请求，入口延后到 `post_forward()`，零计算 token 的一轮也可以通过 `no_forward()` 触发。
+
+| 加载方式 | 何时提交 | 谁等待 | 等待远端 KV 状态 |
+| --- | --- | --- | --- |
+| [AscendStore 非逐层同步 GET](04-save-and-reuse.html#section-2) | `pre_forward()` 中执行 GET。 | 模型线程等同步 GET 返回，再进入 forward。 | 本轮直接调度计算。 |
+| [AscendStore 逐层预取](02-runner-v2.html#section-2) | 绑定 metadata 时准备任务。每层 attention 前提交本层及预取范围内的任务。 | 本层 KV 未就绪时，模型线程在 `wait_for_layer_load()` 等接收线程的 `threading.Event`。 | 本轮直接调度计算。 |
+| [Mooncake Pull 异步 READ](03-async-load.html#section-2) | 对只有异步加载的这条路径，`post_forward()` 或 `no_forward()` 提交接收任务。 | D 端后台接收线程等 READ 返回。请求等接收结果，Scheduler 可继续调度其他请求。 | 进入 `WAITING_FOR_REMOTE_KVS`。 |
+
+[调度批次标志](https://github.com/vllm-project/vllm/blob/ced6857afa0ea7b2e3f0846a62e1394e90f15607/vllm/v1/core/sched/scheduler.py#L1220-L1244) · [Runner 调用入口](https://github.com/vllm-project/vllm/blob/ced6857afa0ea7b2e3f0846a62e1394e90f15607/vllm/v1/worker/gpu/kv_connector.py#L66-L133) · [AscendStore 逐层入口](https://github.com/vllm-project/vllm-ascend/blob/c09d3e20b9c45c80b34ae3781440d90904a44023/vllm_ascend/distributed/kv_transfer/kv_pool/ascend_store/ascend_store_connector.py#L320-L374)
+
 ## 一层 attention，谁在等谁
 
 attention 的 Python wrapper 在调用后端前等 KV，在后端调用返回后安排保存。下面以 AscendStore layerwise 的 GET 和 PUT 为例。

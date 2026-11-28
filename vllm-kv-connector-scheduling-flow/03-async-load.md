@@ -115,3 +115,13 @@ if finished_sending:
 回调返回到 vLLM 的 `Scheduler._update_from_kv_xfer_finished()` 后，P 的 Scheduler 遍历同一个对象中的 `finished_sending`，调用 `_free_blocks(self.requests[req_id])` 回收源 blocks。[`Scheduler._update_from_kv_xfer_finished()`](https://github.com/vllm-project/vllm/blob/v0.30.0/vllm/v1/core/sched/scheduler.py#L3022-L3025)
 
 接收失败时，D 根据配置重算缺失的 KV 或结束请求。D 仍会通知 P 这次接收已经结束。[`Scheduler.update_from_output()` 的加载失败处理](https://github.com/vllm-project/vllm/blob/v0.30.0/vllm/v1/core/sched/scheduler.py#L1902-L1916) · [D 端发送确认](https://github.com/vllm-project/vllm-ascend/blob/v0.30.0/vllm_ascend/distributed/kv_transfer/kv_p2p/mooncake/pull_scheduler.py#L724-L745)
+
+### 一个 D rank 读取失败时如何回收
+
+假设这次接收需要两个 D rank 报告完成。Rank 0 读成功，Rank 1 读失败。Rank 1 可以同时报告 `finished_recving` 和 `failed_recving`。这两个字段分别表示接收流程已结束和接收结果失败。
+
+1. **D 的 Executor 汇总回包。** 完成计数归零前，聚合器保留失败标记。达到预期回包数后，同一个 D 请求 ID 出现在汇总的两个集合中。
+2. **D 的 Scheduler 处理失败。** 对于仍在 `WAITING_FOR_REMOTE_KVS` 的请求，`recompute` 策略把 `num_computed_tokens` 清零，使请求回到计算路径。`fail` 策略结束请求并返回错误。
+3. **D 仍向 P 发释放通知。** D 的调度侧 Connector 根据 `finished_recving` 找到 P 的请求 ID，将 `DONE_RECVING_MSG` 入队。P 收到确认后回收源 blocks。如果确认最终送不到，P 用暂留超时回收。
+
+[完成计数](https://github.com/vllm-project/vllm/blob/ced6857afa0ea7b2e3f0846a62e1394e90f15607/vllm/distributed/kv_transfer/kv_connector/utils.py#L78-L121) · [失败标记汇总](https://github.com/vllm-project/vllm/blob/ced6857afa0ea7b2e3f0846a62e1394e90f15607/vllm/distributed/kv_transfer/kv_connector/utils.py#L159-L177) · [D 端失败策略](https://github.com/vllm-project/vllm/blob/ced6857afa0ea7b2e3f0846a62e1394e90f15607/vllm/v1/core/sched/scheduler.py#L3166-L3179) · [D 端通知入队](https://github.com/vllm-project/vllm-ascend/blob/c09d3e20b9c45c80b34ae3781440d90904a44023/vllm_ascend/distributed/kv_transfer/kv_p2p/mooncake/pull_scheduler.py#L724-L745) · [P 端超时回收](https://github.com/vllm-project/vllm-ascend/blob/c09d3e20b9c45c80b34ae3781440d90904a44023/vllm_ascend/distributed/kv_transfer/kv_p2p/mooncake/pull_scheduler.py#L392-L405)

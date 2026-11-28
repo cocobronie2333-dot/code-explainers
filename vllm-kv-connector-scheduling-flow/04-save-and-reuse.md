@@ -7,6 +7,8 @@ date: 2026-10-27
 
 原作 grant（bowgneo），经授权转载。[原文](https://bowgneo.github.io/posts/vllm-kv-connector-scheduling-flow/04-save-and-reuse.html) · [原站仓库快照](https://github.com/bowgneo/bowgneo.github.io/tree/f813884e8075b08f894467de3172e946badae402/posts/vllm-kv-connector-scheduling-flow)
 
+vLLM 调度与 Runner 使用 v0.30.0，本文的 AscendStore 源码链接固定在 [`0d2c9f7`](https://github.com/vllm-project/vllm-ascend/tree/0d2c9f7cea2d1c9ea8a5bf83a9fd1508abe416aa)。
+
 这一节讨论 AscendStore 池化的非逐层模式（`use_layerwise=False`）。假设共享池里已有一段前缀 KV。Scheduler 先查能复用多少，Worker 再把命中的 KV 读入 NPU，执行 forward 后保存本轮可复用的 KV。下面以同步加载（`load_async=False`）为例。
 
 ## get_num_new_matched_tokens：Scheduler 查询前缀
@@ -86,3 +88,9 @@ if self.m_store.put(keys, addrs, sizes) is False:
 PUT 直接从设备 blocks 读取 KV。假如本轮要保存 block 12，后续 forward 却先把新 KV 写进同一个 block，发送线程就可能把新 KV 存到旧前缀的 key 下。这就是模型线程要等保存队列处理完的原因。
 
 ![当前轮的 PUT 结束后，后续 forward 才能覆写 block 12](assets/39-ascend-store-reuse-blocks-sketch.svg)
+
+### 保存队列结束与 PUT 结果
+
+`request_queue.join()` 在队列中的每个任务都调用 `task_done()` 后返回，因此后续 forward 可以继续复用设备 blocks。发送线程在 `finally` 中调用 `task_done()`，PUT 失败的任务也会结束。一个 key 是否成功写入共享池，要以存储后端的 PUT 结果为准。
+
+[发送线程的任务收尾](https://github.com/vllm-project/vllm-ascend/blob/0d2c9f7cea2d1c9ea8a5bf83a9fd1508abe416aa/vllm_ascend/distributed/kv_transfer/kv_pool/ascend_store/kv_transfer.py#L1046-L1064) · [PUT 返回值](https://github.com/vllm-project/vllm-ascend/blob/0d2c9f7cea2d1c9ea8a5bf83a9fd1508abe416aa/vllm_ascend/distributed/kv_transfer/kv_pool/ascend_store/kv_transfer.py#L1229-L1232)

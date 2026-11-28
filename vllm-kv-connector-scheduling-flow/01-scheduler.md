@@ -14,6 +14,25 @@ date: 2026-10-28
 - **EngineCore 进程**里，`engine` 是一个 `EngineCore` 实例，一轮执行从它的 `step()` 开始。它先调用 Scheduler（`self.scheduler`）生成计划，再通过 Executor（`self.model_executor`）把计划发给 Worker。收到 `ModelRunnerOutput` 后，它把结果交回 Scheduler 更新状态。启用 KV 传输时，Scheduler 会创建调度侧 Connector（`SCHEDULER` 角色），保存在 `self.connector` 中。[EngineCore.step() 源码](https://github.com/vllm-project/vllm/blob/v0.30.0/vllm/v1/engine/core.py#L589-L619) · [EngineCore 初始化](https://github.com/vllm-project/vllm/blob/v0.30.0/vllm/v1/engine/core.py#L133-L170) · [Scheduler 创建 Connector](https://github.com/vllm-project/vllm/blob/v0.30.0/vllm/v1/core/sched/scheduler.py#L140-L159)
 - **Worker 子进程**通过消息队列接收 Executor 发来的 `SchedulerOutput`，其中有本轮的 token 计划、block IDs 和传输计划。执行结果再经 Executor 返回。[跨进程派发源码](https://github.com/vllm-project/vllm/blob/v0.30.0/vllm/v1/executor/multiproc_executor.py#L340-L448) · [第二篇的 Worker 执行路径](02-runner-v2.html)
 
+## 一次 KV 传输的进程间时序
+
+在多进程执行模式中，`Scheduler.schedule()` 和 `SCHEDULER` 角色的 Connector 都在 EngineCore 进程里。Model Runner V2 在各 Worker 进程中使用各自的 `WORKER` 角色实例。
+
+| 阶段 | EngineCore 进程 | Worker 进程 | 外部 KV |
+| --- | --- | --- | --- |
+| [查询与分配](01-scheduler.html#section-2) | Scheduler 先查本地前缀，再调用 `SCHEDULER` Connector，并分配本地 blocks。 | — | 以 AscendStore 为例，调度侧按前缀哈希查询共享池。 |
+| [下发计划](02-runner-v2.html#section-1) | Executor 发送 `SchedulerOutput`，其中携带 `kv_connector_metadata`。 | → Runner 将 metadata 绑定到 `WORKER` Connector。 | — |
+| [执行传输](02-runner-v2.html#load-modes) | — | 按 metadata 用本地 block ID 定位设备缓存。 | READ / GET 将 KV 搬入 Worker，PUT 将 KV 写回共享池。 |
+| [回传结果](02-runner-v2.html#section-3) | ← Executor 汇总各 Worker 的 KV 状态，Scheduler 据此更新请求和 blocks。 | `ModelRunnerOutput` 携带 `KVConnectorOutput`。 | — |
+
+### Mooncake Pull 跨 P / D 实例的三条路径
+
+1. **交接参数**由 P 端随请求输出交给 proxy，再转入 D 端请求。`kv_transfer_params` 随请求跨实例传递，包含 P 端源 block IDs 和请求 ID。
+2. D Worker 发起 READ，传输**实际 KV 数据**，将 P 端源 blocks 的 KV 读入 D 端目标 blocks。
+3. D 调度侧 Connector 汇总接收完成信息后，向 P 调度侧 Connector 发送**释放确认**，P 据此回收暂留的源 blocks。
+
+[看完整的 P / D 交接](03-async-load.html) · [调度计划源码](https://github.com/vllm-project/vllm/blob/ced6857afa0ea7b2e3f0846a62e1394e90f15607/vllm/v1/core/sched/scheduler.py#L1433-L1461) · [Worker 回包汇总源码](https://github.com/vllm-project/vllm/blob/ced6857afa0ea7b2e3f0846a62e1394e90f15607/vllm/distributed/kv_transfer/kv_connector/utils.py#L159-L180)
+
 ## add_request：通知 Connector 新请求到达
 
 新请求进入 EngineCore 后，先交给 `Scheduler.add_request()`。Scheduler 把请求加入等待队列、登记到 `self.requests`，随后调用调度侧 Connector 的 `on_new_request(request)`。这发生在第一次 `schedule()` 查询前缀之前。[`EngineCore.add_request(request, request_wave=0)`](https://github.com/vllm-project/vllm/blob/v0.30.0/vllm/v1/engine/core.py#L444-L484) · [`Scheduler.add_request(request)`](https://github.com/vllm-project/vllm/blob/v0.30.0/vllm/v1/core/sched/scheduler.py#L2470-L2494)
