@@ -1,17 +1,47 @@
 window.qwenColdPrefill128k = {
   "ttft": [
     {
-      "device": "950DT",
+      "device": "950DT · 10 GiB/rank",
       "concurrency": 1,
       "samples": 3,
       "mean_ms": 20893.859,
       "median_ms": 19929.201,
       "peak_running": 1,
+      "peak_waiting": 0,
       "simulated_body_ms": 5485.47,
       "values_ms": [
         22865.78,
         19886.595,
         19929.201
+      ]
+    },
+    {
+      "device": "950DT · 200 GiB/rank",
+      "concurrency": 1,
+      "samples": 3,
+      "mean_ms": 27919.44,
+      "median_ms": 19860.282,
+      "peak_running": 1,
+      "peak_waiting": 0,
+      "simulated_body_ms": 5485.47,
+      "values_ms": [
+        45648.281,
+        18249.756,
+        19860.282
+      ]
+    },
+    {
+      "device": "950DT · 200 GiB/rank",
+      "concurrency": 2,
+      "samples": 2,
+      "mean_ms": 26876.926,
+      "median_ms": 26876.926,
+      "peak_running": 1,
+      "peak_waiting": 1,
+      "simulated_body_ms": null,
+      "values_ms": [
+        35145.336,
+        18608.516
       ]
     }
   ],
@@ -26,7 +56,7 @@ window.qwenColdPrefill128k = {
       "scalar": 14.333,
       "fixpipe": 14.802,
       "coverage": 100.0,
-      "device": "950DT",
+      "device": "950DT · 10 GiB/rank",
       "phase": "冷 Prefill C1 · rank 0 前 3 步",
       "shape": "A [1536, 10240] · B [336, 10240] · BF16/BF16",
       "visible": true
@@ -41,7 +71,7 @@ window.qwenColdPrefill128k = {
       "scalar": 14.474,
       "fixpipe": 94.51,
       "coverage": 100.0,
-      "device": "950DT",
+      "device": "950DT · 10 GiB/rank",
       "phase": "冷 Prefill C1 · rank 0 前 3 步",
       "shape": "A [1536, 320] · B [10240, 320] · BF16/BF16",
       "visible": true
@@ -56,7 +86,7 @@ window.qwenColdPrefill128k = {
       "scalar": 10.626,
       "fixpipe": 26.672,
       "coverage": 100.0,
-      "device": "950DT",
+      "device": "950DT · 10 GiB/rank",
       "phase": "冷 Prefill C1 · rank 0 前 3 步",
       "shape": "A [1536, 2560] · B [4096, 2560] · BF16/BF16",
       "visible": false
@@ -71,7 +101,7 @@ window.qwenColdPrefill128k = {
       "scalar": 15.617,
       "fixpipe": 43.177,
       "coverage": 100.0,
-      "device": "950DT",
+      "device": "950DT · 10 GiB/rank",
       "phase": "冷 Prefill C1 · rank 0 前 3 步",
       "shape": "A [1536, 1536] · B [2560, 1536] · BF16/BF16",
       "visible": false
@@ -86,7 +116,7 @@ window.qwenColdPrefill128k = {
       "scalar": 22.372,
       "fixpipe": 22.171,
       "coverage": 100.0,
-      "device": "950DT",
+      "device": "950DT · 10 GiB/rank",
       "phase": "冷 Prefill C1 · rank 0 前 3 步",
       "shape": "A [1536, 2560] · B [512, 2560] · BF16/BF16",
       "visible": true
@@ -101,7 +131,7 @@ window.qwenColdPrefill128k = {
       "scalar": 24.983,
       "fixpipe": 20.041,
       "coverage": 100.0,
-      "device": "950DT",
+      "device": "950DT · 10 GiB/rank",
       "phase": "冷 Prefill C1 · rank 0 前 3 步",
       "shape": "A [1536, 2560] · B [320, 2560] · BF16/BF16",
       "visible": false
@@ -116,7 +146,7 @@ window.qwenColdPrefill128k = {
       "scalar": 23.943,
       "fixpipe": 77.794,
       "coverage": 100.0,
-      "device": "950DT",
+      "device": "950DT · 10 GiB/rank",
       "phase": "冷 Prefill C1 · rank 0 前 3 步",
       "shape": "A [1536, 160] · B [2560, 160] · BF16/BF16",
       "visible": false
@@ -131,7 +161,7 @@ window.qwenColdPrefill128k = {
       "scalar": 40.751,
       "fixpipe": 25.65,
       "coverage": 100.0,
-      "device": "950DT",
+      "device": "950DT · 10 GiB/rank",
       "phase": "冷 Prefill C1 · rank 0 前 3 步",
       "shape": "A [1536, 2560] · B [1, 2560] · BF16/BF16",
       "visible": false
@@ -146,7 +176,7 @@ window.qwenColdPrefill128k = {
       "scalar": 11.117,
       "fixpipe": 31.371,
       "coverage": 100.0,
-      "device": "950DT",
+      "device": "950DT · 10 GiB/rank",
       "phase": "冷 Prefill C1 · rank 0 前 3 步",
       "shape": "A [1536, 2560] · B [12800, 2560] · BF16/BF16",
       "visible": false
@@ -161,7 +191,7 @@ window.qwenColdPrefill128k = {
       "scalar": 38.16,
       "fixpipe": 22.781,
       "coverage": 100.0,
-      "device": "950DT",
+      "device": "950DT · 10 GiB/rank",
       "phase": "冷 Prefill C1 · rank 0 前 3 步",
       "shape": "A [1536, 2560] · B [24, 2560] · BF16/BF16",
       "visible": false
@@ -176,7 +206,7 @@ window.qwenColdPrefill128k = {
       "scalar": 23.983,
       "fixpipe": 10.44,
       "coverage": 100.0,
-      "device": "950DT",
+      "device": "950DT · 10 GiB/rank",
       "phase": "冷 Prefill C1 · rank 0 前 3 步",
       "shape": "A [1, 2560] · B [62080, 2560] · BF16/BF16",
       "visible": false
@@ -191,7 +221,7 @@ window.qwenColdPrefill128k = {
       "scalar": 15.216,
       "fixpipe": 13.479,
       "coverage": 100.0,
-      "device": "950DT",
+      "device": "950DT · 10 GiB/rank",
       "phase": "冷 Prefill C1 · rank 0 前 3 步",
       "shape": "A [1536, 10240] · B [320, 10240] · BF16/BF16",
       "visible": false
@@ -208,6 +238,186 @@ window.qwenColdPrefill128k = {
       "cube": 10.74
     },
     {
+      "calls": 288,
+      "mean_us": 46.68936,
+      "mte2": 79.604,
+      "mte3": 1.15,
+      "vector": 0.665,
+      "cube": 79.71,
+      "scalar": 14.669,
+      "fixpipe": 14.917,
+      "coverage": 100.0,
+      "device": "950DT · 200 GiB/rank",
+      "phase": "冷 Prefill C1 · rank 0 前 3 步",
+      "shape": "A [1536, 10240] · B [336, 10240] · BF16/BF16",
+      "visible": true
+    },
+    {
+      "calls": 291,
+      "mean_us": 36.19475,
+      "mte2": 71.688,
+      "mte3": 0.003,
+      "vector": 0.0,
+      "cube": 68.789,
+      "scalar": 14.478,
+      "fixpipe": 94.463,
+      "coverage": 100.0,
+      "device": "950DT · 200 GiB/rank",
+      "phase": "冷 Prefill C1 · rank 0 前 3 步",
+      "shape": "A [1536, 320] · B [10240, 320] · BF16/BF16",
+      "visible": true
+    },
+    {
+      "calls": 108,
+      "mean_us": 81.13761,
+      "mte2": 76.091,
+      "mte3": 0.001,
+      "vector": 0.0,
+      "cube": 93.999,
+      "scalar": 10.6,
+      "fixpipe": 26.824,
+      "coverage": 100.0,
+      "device": "950DT · 200 GiB/rank",
+      "phase": "冷 Prefill C1 · rank 0 前 3 步",
+      "shape": "A [1536, 2560] · B [4096, 2560] · BF16/BF16",
+      "visible": false
+    },
+    {
+      "calls": 108,
+      "mean_us": 38.12421,
+      "mte2": 75.583,
+      "mte3": 0.003,
+      "vector": 0.0,
+      "cube": 83.893,
+      "scalar": 15.523,
+      "fixpipe": 43.296,
+      "coverage": 100.0,
+      "device": "950DT · 200 GiB/rank",
+      "phase": "冷 Prefill C1 · rank 0 前 3 步",
+      "shape": "A [1536, 1536] · B [2560, 1536] · BF16/BF16",
+      "visible": false
+    },
+    {
+      "calls": 144,
+      "mean_us": 16.34378,
+      "mte2": 74.795,
+      "mte3": 0.006,
+      "vector": 0.0,
+      "cube": 62.21,
+      "scalar": 22.446,
+      "fixpipe": 21.945,
+      "coverage": 100.0,
+      "device": "950DT · 200 GiB/rank",
+      "phase": "冷 Prefill C1 · rank 0 前 3 步",
+      "shape": "A [1536, 2560] · B [512, 2560] · BF16/BF16",
+      "visible": true
+    },
+    {
+      "calls": 144,
+      "mean_us": 14.56713,
+      "mte2": 73.902,
+      "mte3": 0.007,
+      "vector": 0.0,
+      "cube": 45.618,
+      "scalar": 25.084,
+      "fixpipe": 19.927,
+      "coverage": 100.0,
+      "device": "950DT · 200 GiB/rank",
+      "phase": "冷 Prefill C1 · rank 0 前 3 步",
+      "shape": "A [1536, 2560] · B [320, 2560] · BF16/BF16",
+      "visible": false
+    },
+    {
+      "calls": 144,
+      "mean_us": 8.72317,
+      "mte2": 53.099,
+      "mte3": 0.011,
+      "vector": 0.0,
+      "cube": 39.42,
+      "scalar": 24.199,
+      "fixpipe": 77.349,
+      "coverage": 100.0,
+      "device": "950DT · 200 GiB/rank",
+      "phase": "冷 Prefill C1 · rank 0 前 3 步",
+      "shape": "A [1536, 160] · B [2560, 160] · BF16/BF16",
+      "visible": false
+    },
+    {
+      "calls": 144,
+      "mean_us": 5.38613,
+      "mte2": 46.447,
+      "mte3": 0.019,
+      "vector": 0.0,
+      "cube": 17.793,
+      "scalar": 41.617,
+      "fixpipe": 26.237,
+      "coverage": 100.0,
+      "device": "950DT · 200 GiB/rank",
+      "phase": "冷 Prefill C1 · rank 0 前 3 步",
+      "shape": "A [1536, 2560] · B [1, 2560] · BF16/BF16",
+      "visible": false
+    },
+    {
+      "calls": 3,
+      "mean_us": 255.276,
+      "mte2": 73.643,
+      "mte3": 0.0,
+      "vector": 0.0,
+      "cube": 97.776,
+      "scalar": 11.133,
+      "fixpipe": 31.193,
+      "coverage": 100.0,
+      "device": "950DT · 200 GiB/rank",
+      "phase": "冷 Prefill C1 · rank 0 前 3 步",
+      "shape": "A [1536, 2560] · B [12800, 2560] · BF16/BF16",
+      "visible": false
+    },
+    {
+      "calls": 108,
+      "mean_us": 5.93819,
+      "mte2": 54.989,
+      "mte3": 0.017,
+      "vector": 0.0,
+      "cube": 18.83,
+      "scalar": 38.236,
+      "fixpipe": 22.734,
+      "coverage": 100.0,
+      "device": "950DT · 200 GiB/rank",
+      "phase": "冷 Prefill C1 · rank 0 前 3 步",
+      "shape": "A [1536, 2560] · B [24, 2560] · BF16/BF16",
+      "visible": false
+    },
+    {
+      "calls": 3,
+      "mean_us": 97.52,
+      "mte2": 97.421,
+      "mte3": 0.001,
+      "vector": 0.0,
+      "cube": 26.204,
+      "scalar": 24.044,
+      "fixpipe": 10.455,
+      "coverage": 100.0,
+      "device": "950DT · 200 GiB/rank",
+      "phase": "冷 Prefill C1 · rank 0 前 3 步",
+      "shape": "A [1, 2560] · B [62080, 2560] · BF16/BF16",
+      "visible": false
+    },
+    {
+      "calls": 3,
+      "mean_us": 42.64067,
+      "mte2": 81.414,
+      "mte3": 1.121,
+      "vector": 0.704,
+      "cube": 80.956,
+      "scalar": 14.79,
+      "fixpipe": 13.989,
+      "coverage": 100.0,
+      "device": "950DT · 200 GiB/rank",
+      "phase": "冷 Prefill C1 · rank 0 前 3 步",
+      "shape": "A [1536, 10240] · B [320, 10240] · BF16/BF16",
+      "visible": false
+    },
+    {
       "device": "A3",
       "phase": "历史 Decode B1 · 4 层 · 原 A3",
       "shape": "A [1, 2560] · B [512, 2560] · BF16/BF16",
@@ -220,6 +430,6 @@ window.qwenColdPrefill128k = {
     }
   ],
   "context": "48 层 W8A8 · TP4 / EP4 · 131,072 输入 + 1 输出 · 1,536-token chunk · 冷前缀 · AscendStore / Memcache",
-  "capacity": "950DT 使用 3.5 GiB KV 预算与 URMA，NPU KV 容量为 256,533 token。替代 A3 使用 SDMA，3.5 GiB 在池化注册阶段 OOM，复测用 2.125 GiB，NPU KV 容量为 155,306 token。每台仅有一条完整 128K 历史的常驻空间。横轴显示目标 C1–C80，实测仅覆盖 C1。两边采用 48 个层缓冲的常驻布局，逐层换入换出的 2 缓冲方案在混合 GDN 状态的配置阶段失败。替代 A3 的旧运行时在首个请求中因 GBSA 元数据算子只接受 headDim 128 而退出，模型要求 256。A3 TTFT 仍待完成验证。",
-  "comparison": "TTFT 从客户端提交到收到首个 token，包含服务端开销。MindIE 128K 设备段估计为 950DT 5.485 s、A3 16.638 s，由分段设备图插值得到，包含计算和通信，不含服务调度、池化管理与客户端开销。PMU 来自单独请求的 rank 0 前 3 个 Prefill 步，表内优先展示同投影与 950DT 耗时靠前的形状。各流水线活跃度按有计数样本的设备耗时加权，可能重叠；单项活跃度无法单独确定瓶颈。历史 Decode 使用 4 层近似和单行输入，A3 Decode 来自原测试机。A3 Prefill PMU 等待有效采样。"
+  "capacity": "10 GiB/rank 试验使用常驻布局。950DT 采用 URMA 和 3.5 GiB NPU KV 预算，得到 256,533 token。替代 A3 使用 SDMA，3.5 GiB 在池化注册阶段 OOM，复测用 2.125 GiB，NPU KV 容量为 155,306 token。10 GiB/rank 工况每台最多常驻一条完整 128K 历史。横轴显示目标 C1–C80，实测点按图例列出。两边采用 48 个层缓冲的常驻布局，逐层换入换出的 2 缓冲方案在混合 GDN 状态的配置阶段失败。替代 A3 的旧运行时因 GBSA 不支持所需 headDim 256 而退出。200 GiB/rank 复测期间，A3 尚无可用的四卡组合。200 GiB/rank 复测的 Memcache DRAM 确认注册 800 GiB。配置改用 4 个逐层复用缓冲和 11.19 GiB/rank NPU KV 预算。引擎报告 1,946,880 token，最多容纳 14 条完整 128K 历史。C2 两条请求均完成，监控峰值为 1 条活跃、1 条等待。图上的 C2 是提交并发。",
+  "comparison": "TTFT 从客户端提交到收到首个 token，包含服务端开销。MindIE 128K 设备段估计为 950DT 5.485 s、A3 16.638 s，由分段设备图插值得到，包含计算和通信，不含服务调度、池化管理与客户端开销。PMU 来自单独请求的 rank 0 前 3 个 Prefill 步，表内优先展示同投影与 950DT 耗时靠前的形状。各流水线活跃度按有计数样本的设备耗时加权，可能重叠；单项活跃度无法单独确定瓶颈。历史 Decode 使用 4 层近似和单行输入，A3 Decode 来自原测试机。两个 950DT 工况同时改变了运行主机、逐层缓冲和 NPU KV 预算。A3 Prefill PMU 等待有效采样。"
 };

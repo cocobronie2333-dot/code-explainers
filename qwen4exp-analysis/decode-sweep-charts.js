@@ -60,7 +60,7 @@
     return unit * place * 4;
   }
 
-  function chart(parent, { title, axis, unit, batches, points, series, ceiling, isKernel = false, pointDetail, pipelines = [], scope, rank, linearBatch = false }) {
+  function chart(parent, { title, axis, unit, batches, points, series, ceiling, isKernel = false, pointDetail, pipelines = [], scope, rank, linearBatch = false, batchPrefix = "B" }) {
     const frame = add(parent, "figure", "decode-chart");
     const heading = add(frame, "h3");
     if (rank) add(heading, "span", "hotspot-rank", String(rank).padStart(2, "0"));
@@ -138,7 +138,7 @@
         readings.push(`${count(point.calls)} 次 / ${point.steps} 步 · 执行核 ${cores[point.core] ?? point.core}`);
       }
       if (point && pointDetail) readings.push(...pointDetail(point));
-      detail.textContent = `B${batch} · ${readings.join(" · ")}`;
+      detail.textContent = `${batchPrefix}${batch} · ${readings.join(" · ")}`;
       if (pipelineDetail) showPipelines(batch, point);
     }
 
@@ -620,7 +620,7 @@
     element("prefill-cold-context").textContent = run.context;
     element("prefill-cold-capacity").textContent = run.capacity;
     element("prefill-cold-comparison").textContent = run.comparison;
-    const devices = ["950DT", "A3"];
+    const devices = [...new Set([...run.ttft.map(row => row.device), "A3"])];
     const batches = Array.from({ length: 80 }, (_, index) => index + 1);
     const points = [...new Set(run.ttft.map(row => row.concurrency))].sort((left, right) => left - right)
       .map(batch => ({ batch }));
@@ -628,7 +628,7 @@
     chart(element("prefill-cold-charts"), {
       title: "冷 Prefill · 无 profiler 平均 TTFT",
       axis: "秒 / 请求 · 提交并发 C1–C80 · 仅绘制通过验证的档位",
-      unit: "s", batches, points, linearBatch: true,
+      unit: "s", batches, points, linearBatch: true, batchPrefix: "C",
       series: devices.map(device => {
         const selected = new Set(run.ttft.filter(row => row.device === device).map(row => row.concurrency));
         return { label: `${device} ${selected.size}/80 档`, value: point => {
@@ -655,9 +655,9 @@
         add(row, "td", "", value);
       }
     }
-    csvDownload("prefill-cold-download", ["device", "concurrency", "ttft_samples", "mean_ttft_ms", "median_ttft_ms", "peak_running",
+    csvDownload("prefill-cold-download", ["device", "concurrency", "ttft_samples", "mean_ttft_ms", "median_ttft_ms", "peak_running", "peak_waiting",
       "prefill_simulated_body_ms", "individual_ttft_ms"], run.ttft.map(item => [item.device, item.concurrency,
-      item.samples, item.mean_ms, item.median_ms, item.peak_running, item.simulated_body_ms, item.values_ms.join("/")]));
+      item.samples, item.mean_ms, item.median_ms, item.peak_running, item.peak_waiting, item.simulated_body_ms, item.values_ms.join("/")]));
     csvDownload("prefill-cold-pmu-download", ["device", "phase", "input_shape_and_dtype", "calls", "mean_us", ...activity],
       run.pmu.map(item => [item.device, item.phase, item.shape, item.calls, item.mean_us, ...activity.map(key => item[key] ?? "")]));
   }
