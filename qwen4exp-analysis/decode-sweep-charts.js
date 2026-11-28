@@ -612,6 +612,56 @@
       "output_tokens", "batch", "itl_mean_ms", "itl_samples", "tpot_mean_ms", "generated_tokens_per_s"], rows);
   }
 
+  function renderColdPrefill() {
+    const run = window.qwenColdPrefill128k;
+    if (!run?.ttft.length) return;
+    const panel = element("prefill-128k-cold");
+    panel.hidden = false;
+    element("prefill-cold-context").textContent = run.context;
+    element("prefill-cold-capacity").textContent = run.capacity;
+    element("prefill-cold-comparison").textContent = run.comparison;
+    const devices = ["950DT", "A3"];
+    const batches = Array.from({ length: 80 }, (_, index) => index + 1);
+    const points = [...new Set(run.ttft.map(row => row.concurrency))].sort((left, right) => left - right)
+      .map(batch => ({ batch }));
+    const runs = new Map(run.ttft.map(row => [`${row.device}/${row.concurrency}`, row]));
+    chart(element("prefill-cold-charts"), {
+      title: "冷 Prefill · 无 profiler 平均 TTFT",
+      axis: "秒 / 请求 · 提交并发 C1–C80 · 仅绘制通过验证的档位",
+      unit: "s", batches, points, linearBatch: true,
+      series: devices.map(device => {
+        const selected = new Set(run.ttft.filter(row => row.device === device).map(row => row.concurrency));
+        return { label: `${device} ${selected.size}/80 档`, value: point => {
+          const sample = runs.get(`${device}/${point.batch}`);
+          return sample ? sample.mean_ms / 1000 : null;
+        } };
+      }),
+    });
+    const seconds = value => value == null ? "—" : `${(value / 1000).toFixed(3)} s`;
+    for (const item of run.ttft) {
+      const row = add(element("prefill-cold-rows"), "tr");
+      add(row, "th", "", item.device).scope = "row";
+      for (const value of [`C${item.concurrency}`, String(item.samples), seconds(item.mean_ms), seconds(item.median_ms),
+        String(item.peak_running ?? "—"), seconds(item.simulated_body_ms)]) {
+        add(row, "td", "number", value);
+      }
+    }
+    const activity = ["mte2", "mte3", "vector", "cube", "scalar", "fixpipe", "coverage"];
+    for (const item of run.pmu.filter(row => row.visible)) {
+      const row = add(element("prefill-cold-pmu"), "tr");
+      add(row, "th", "", item.device).scope = "row";
+      for (const value of [item.phase, item.shape, String(item.calls), format(item.mean_us),
+        ...activity.map(key => item[key] == null ? "—" : `${format(item[key])}%`)]) {
+        add(row, "td", "", value);
+      }
+    }
+    csvDownload("prefill-cold-download", ["device", "concurrency", "ttft_samples", "mean_ttft_ms", "median_ttft_ms", "peak_running",
+      "prefill_simulated_body_ms", "individual_ttft_ms"], run.ttft.map(item => [item.device, item.concurrency,
+      item.samples, item.mean_ms, item.median_ms, item.peak_running, item.simulated_body_ms, item.values_ms.join("/")]));
+    csvDownload("prefill-cold-pmu-download", ["device", "phase", "input_shape_and_dtype", "calls", "mean_us", ...activity],
+      run.pmu.map(item => [item.device, item.phase, item.shape, item.calls, item.mean_us, ...activity.map(key => item[key] ?? "")]));
+  }
+
   function setupFullHotspots() {
     const full = window.qwenFullDecodeHotspots;
     const ranks = {
@@ -707,6 +757,7 @@
   }
 
   renderOperators();
+  renderColdPrefill();
   renderFullItl();
   setupFullHotspots();
   const gdnType = "RecurrentGatedDeltaRule";
