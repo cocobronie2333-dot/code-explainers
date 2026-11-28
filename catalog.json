@@ -223,6 +223,28 @@
       ],
       "updated": "2026-11-24",
       "source_revisions": {}
+    },
+    {
+      "slug": "vllm-kv-connector-scheduling-flow",
+      "category": "code",
+      "title": "vLLM KV Connector 调度流程",
+      "summary": "grant 的四篇系列经授权同步，从 Scheduler、Model Runner V2 到 Mooncake Pull 的 P/D 交接和 AscendStore 的池化读写。",
+      "tags": [
+        "vLLM",
+        "Ascend",
+        "KV-Cache",
+        "Scheduler",
+        "Model Runner V2",
+        "Mooncake",
+        "AscendStore"
+      ],
+      "updated": "2026-11-28",
+      "source_revisions": {
+        "vllm": "ced6857afa0ea7b2e3f0846a62e1394e90f15607",
+        "vllm-ascend": "c09d3e20b9c45c80b34ae3781440d90904a44023",
+        "vllm-ascend-ascendstore": "0d2c9f7cea2d1c9ea8a5bf83a9fd1508abe416aa",
+        "article-series": "f813884e8075b08f894467de3172e946badae402"
+      }
     }
   ],
   "references": [

@@ -17,3 +17,10 @@ In code walkthroughs, the explanations, illustrative identifiers, addresses
 and timeline layouts are educational adaptations, not captured traces or
 upstream source changes. Performance pages are listed separately and retain
 their own captured-data provenance, timing boundaries and statistical rules.
+
+The vLLM KV Connector scheduling series in vllm-kv-connector-scheduling-flow/
+reproduces articles and illustrations by grant (bowgneo) with permission.
+Original material retains its attribution and copyright and is reproduced
+under that permission.
+Original site: https://bowgneo.github.io/posts/vllm-kv-connector-scheduling-flow/
+Source snapshot: https://github.com/bowgneo/bowgneo.github.io/tree/f813884e8075b08f894467de3172e946badae402/posts/vllm-kv-connector-scheduling-flow
