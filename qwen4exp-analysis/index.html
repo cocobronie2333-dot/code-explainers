@@ -17,8 +17,7 @@
   <script defer src="reduced-decode-sweep-data.js?v=dbbabd29"></script>
   <script defer src="reduced-decode-hotspots-data.js?v=be3c82b5fa"></script>
   <script defer src="full-decode-hotspots-data.js?v=14ab5891ca"></script>
-  <script defer src="prefill-128k-pooled-data.js?v=6b440230c6"></script>
-  <script defer src="decode-sweep-charts.js?v=34b5d47b40"></script>
+  <script defer src="decode-sweep-charts.js?v=74342e681a"></script>
   <script defer src="gdn-pipeline-data.js?v=e88deb2f37"></script>
   <script defer src="gdn-pipeline.js?v=fab4d7da6d"></script>
   <script defer src="tensor-flow.js"></script>
@@ -328,30 +327,6 @@
           <h1>延迟与算子开销</h1>
           <p class="intro" id="ascend-intro">950DT 在线 Decode 跑分，以及 Prefill 和 Decode 的 rank 0 设备采集。</p></div>
       </div>
-      <article class="panel trace-panel" id="prefill-128k-cold" hidden>
-        <header class="panel-top">
-          <div><h2>128K 冷 Prefill · 池化实测</h2><p id="prefill-cold-context"></p></div>
-          <a id="prefill-cold-download" class="text-link" download="qwen4exp-prefill-128k-pooled-ttft.csv">下载 TTFT CSV ↗</a>
-        </header>
-        <div id="prefill-cold-charts" class="decode-chart-grid"></div>
-        <div class="table-scroll">
-          <table><thead><tr><th scope="col">设备</th><th scope="col">提交并发</th><th scope="col">TTFT 样本</th><th scope="col">平均 TTFT</th><th scope="col">中位 TTFT</th><th scope="col">活跃请求采样峰值</th><th scope="col">MindIE 设备段估计</th></tr></thead><tbody id="prefill-cold-rows"></tbody></table>
-        </div>
-        <p class="footnote" id="prefill-cold-capacity"></p>
-        <a id="prefill-cold-pmu-download" class="text-link" download="qwen4exp-prefill-128k-matmul-pmu.csv">下载 MatMulV3 PMU CSV ↗</a>
-        <div class="table-scroll">
-          <table><thead><tr><th scope="col">设备</th><th scope="col">阶段 / 工况</th><th scope="col">MatMulV3 输入</th><th scope="col">样本数</th><th scope="col">单次均值 · μs</th><th scope="col">MTE2</th><th scope="col">MTE3</th><th scope="col">Vector</th><th scope="col">Cube</th><th scope="col">Scalar</th><th scope="col">Fixpipe</th><th scope="col">PMU 覆盖</th></tr></thead><tbody id="prefill-cold-pmu"></tbody></table>
-        </div>
-        <p id="prefill-cold-comparison" class="footnote"></p>
-      </article>
-      <article class="panel trace-panel" id="full-model-itl">
-        <header class="panel-top">
-          <div><h2>整模 ITL 对照 · 48 层</h2><p>128K 热前缀 → 96 · MTP5 · 线上稳态均值</p></div>
-          <a id="full-itl-download" class="text-link" download="qwen4exp-full-model-itl.csv">下载 ITL CSV ↗</a>
-        </header>
-        <div id="full-itl-chart" class="decode-chart-grid"></div>
-        <p class="footnote">按输出步统计整模 ITL。950DT 为 TP4 / EP4，A3 为 TP8 / EP8。B1、B4、B8 可对照，B2、B16 仅 950DT 有样本。提交 B32 的单独 trace 主要观察到 B17，未把该次在线 ITL 绑定到 B17。</p>
-      </article>
       <article class="panel trace-panel" id="full-hotspots">
         <header class="panel-top"><div><h2>48 层热点排名与 Batch 曲线</h2><p id="full-hotspot-note"></p></div>
           <a id="full-hotspot-download" class="text-link" download="qwen4exp-full-decode-hotspots.csv">下载热点与曲线 CSV ↗</a>

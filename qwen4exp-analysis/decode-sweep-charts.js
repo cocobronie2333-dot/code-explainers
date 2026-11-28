@@ -60,7 +60,7 @@
     return unit * place * 4;
   }
 
-  function chart(parent, { title, axis, unit, batches, points, series, ceiling, isKernel = false, pointDetail, pipelines = [], scope, rank, linearBatch = false, batchPrefix = "B" }) {
+  function chart(parent, { title, axis, unit, batches, points, series, ceiling, isKernel = false, pointDetail, pipelines = [], scope, rank, linearBatch = false }) {
     const frame = add(parent, "figure", "decode-chart");
     const heading = add(frame, "h3");
     if (rank) add(heading, "span", "hotspot-rank", String(rank).padStart(2, "0"));
@@ -138,7 +138,7 @@
         readings.push(`${count(point.calls)} 次 / ${point.steps} 步 · 执行核 ${cores[point.core] ?? point.core}`);
       }
       if (point && pointDetail) readings.push(...pointDetail(point));
-      detail.textContent = `${batchPrefix}${batch} · ${readings.join(" · ")}`;
+      detail.textContent = `B${batch} · ${readings.join(" · ")}`;
       if (pipelineDetail) showPipelines(batch, point);
     }
 
@@ -590,78 +590,6 @@
     link.href = URL.createObjectURL(new Blob(["\uFEFF", csv], { type: "text/csv;charset=utf-8" }));
   }
 
-  function renderFullItl() {
-    const runs = [["950DT", "TP4/EP4", data], ["A3", "TP8/EP8", a3]];
-    const points = new Map();
-    const rows = [];
-    for (const [device, topology, run] of runs) {
-      const matched = new Set(run.verified.filter(trace => trace.batch === trace.submitted_batch).map(trace => trace.batch));
-      for (const sample of run.perf.filter(row => matched.has(row.batch))) {
-        if (!points.has(sample.batch)) points.set(sample.batch, { batch: sample.batch });
-        points.get(sample.batch)[device] = sample.itl_mean_ms;
-        rows.push([device, topology, 48, 5, sample.input_tokens_per_request, sample.output_tokens_per_request,
-          sample.batch, sample.itl_mean_ms, sample.itl_samples, sample.tpot_mean_ms, sample.decoded_tokens_per_s]);
-      }
-    }
-    const ordered = [...points.values()].sort((left, right) => left.batch - right.batch);
-    chart(element("full-itl-chart"), { title: "整模 ITL · 48 层输出步均值", axis: "ms / 输出步 · 已核对的 Batch 档位 / DP",
-      linearBatch: true,
-      unit: "ms", batches: ordered.map(point => point.batch), points: ordered,
-      series: runs.map(([device]) => ({ label: device, value: point => point[device] })) });
-    csvDownload("full-itl-download", ["device", "topology", "layers", "mtp_draft_tokens", "input_tokens",
-      "output_tokens", "batch", "itl_mean_ms", "itl_samples", "tpot_mean_ms", "generated_tokens_per_s"], rows);
-  }
-
-  function renderColdPrefill() {
-    const run = window.qwenColdPrefill128k;
-    if (!run?.ttft.length) return;
-    const panel = element("prefill-128k-cold");
-    panel.hidden = false;
-    element("prefill-cold-context").textContent = run.context;
-    element("prefill-cold-capacity").textContent = run.capacity;
-    element("prefill-cold-comparison").textContent = run.comparison;
-    const devices = [...new Set([...run.ttft.map(row => row.device), "A3"])];
-    const batches = Array.from({ length: 80 }, (_, index) => index + 1);
-    const points = [...new Set(run.ttft.map(row => row.concurrency))].sort((left, right) => left - right)
-      .map(batch => ({ batch }));
-    const runs = new Map(run.ttft.map(row => [`${row.device}/${row.concurrency}`, row]));
-    chart(element("prefill-cold-charts"), {
-      title: "冷 Prefill · 无 profiler 平均 TTFT",
-      axis: "秒 / 请求 · 提交并发 C1–C80 · 仅绘制通过验证的档位",
-      unit: "s", batches, points, linearBatch: true, batchPrefix: "C",
-      series: devices.map(device => {
-        const selected = new Set(run.ttft.filter(row => row.device === device).map(row => row.concurrency));
-        return { label: `${device} ${selected.size}/80 档`, value: point => {
-          const sample = runs.get(`${device}/${point.batch}`);
-          return sample ? sample.mean_ms / 1000 : null;
-        } };
-      }),
-    });
-    const seconds = value => value == null ? "—" : `${(value / 1000).toFixed(3)} s`;
-    for (const item of run.ttft) {
-      const row = add(element("prefill-cold-rows"), "tr");
-      add(row, "th", "", item.device).scope = "row";
-      for (const value of [`C${item.concurrency}`, String(item.samples), seconds(item.mean_ms), seconds(item.median_ms),
-        String(item.peak_running ?? "—"), seconds(item.simulated_body_ms)]) {
-        add(row, "td", "number", value);
-      }
-    }
-    const activity = ["mte2", "mte3", "vector", "cube", "scalar", "fixpipe", "coverage"];
-    for (const item of run.pmu.filter(row => row.visible)) {
-      const row = add(element("prefill-cold-pmu"), "tr");
-      add(row, "th", "", item.device).scope = "row";
-      for (const value of [item.phase, item.shape, String(item.calls), format(item.mean_us),
-        ...activity.map(key => item[key] == null ? "—" : `${format(item[key])}%`)]) {
-        add(row, "td", "", value);
-      }
-    }
-    csvDownload("prefill-cold-download", ["device", "concurrency", "ttft_samples", "mean_ttft_ms", "median_ttft_ms", "peak_running", "peak_waiting",
-      "prefill_simulated_body_ms", "individual_ttft_ms"], run.ttft.map(item => [item.device, item.concurrency,
-      item.samples, item.mean_ms, item.median_ms, item.peak_running, item.peak_waiting, item.simulated_body_ms, item.values_ms.join("/")]));
-    csvDownload("prefill-cold-pmu-download", ["device", "phase", "input_shape_and_dtype", "calls", "mean_us", ...activity],
-      run.pmu.map(item => [item.device, item.phase, item.shape, item.calls, item.mean_us, ...activity.map(key => item[key] ?? "")]));
-  }
-
   function setupFullHotspots() {
     const full = window.qwenFullDecodeHotspots;
     const ranks = {
@@ -757,8 +685,6 @@
   }
 
   renderOperators();
-  renderColdPrefill();
-  renderFullItl();
   setupFullHotspots();
   const gdnType = "RecurrentGatedDeltaRule";
   const gdnRuns = [["950DT", data], ["A3", a3]].map(([label, run]) => ({
